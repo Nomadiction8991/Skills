@@ -28,15 +28,28 @@ Com base no contexto do chamado (lido no Passo 2) e na mensagem bruta do usuári
 
 ### Passo 4 — Exibir Prévia para Aprovação
 
-Mostrar ao usuário o comentário melhorado e perguntar se deseja enviar:
+Mostrar ao usuário o comentário melhorado **em markdown/texto legível** (sem HTML), para que ele possa ler o conteúdo facilmente:
 
 ```
 Comentário no chamado #[número]
 
-  <comentário melhorado>
+[Comentário renderizado em markdown/texto — sem tags HTML]
+
 ```
 
 > "Deseja enviar este comentário? `[S] Sim` | `[N] Cancelar` | `[E] Editar mensagem`"
+
+**Regras de conversão HTML → markdown/texto para a prévia:**
+- `<h4>` → `### ` ou **negrito**
+- `<ul>/<li>` → `- item`
+- `<ol>/<li>` → `1. item`
+- `<strong>` → `**negrito**`
+- `<code>/<pre>` → `` `código` `` / ``` ```código``` ```
+- `<span style="color: ...">` → manter texto sem a cor
+- `<p>` → parágrafo
+- `<blockquote>` → `> citação`
+- `<hr>` → `---`
+- `<br>` → quebra de linha
 
 ### Passo 5 — Enviar
 
