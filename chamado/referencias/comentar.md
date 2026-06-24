@@ -28,7 +28,7 @@ Com base no contexto do chamado (lido no Passo 2) e na mensagem bruta do usuári
 
 ### Passo 4 — Exibir Prévia para Aprovação
 
-Mostrar ao usuário o comentário melhorado **em markdown/texto legível** (sem HTML), para que ele possa ler o conteúdo facilmente:
+Mostrar ao usuário o comentário melhorado **em markdown/texto legível** (sem HTML), para que ele possa ler o conteúdo facilmente. O comentário real enviado no passo 5 continuará sendo em HTML, seguindo as diretrizes de `referencias/ferramentas.md`.
 
 ```
 Comentário no chamado #[número]
@@ -53,7 +53,11 @@ Comentário no chamado #[número]
 
 ### Passo 5 — Enviar
 
-Chamar `mcp__tomticket__comentar_chamado(numero="<número>", mensagem="<comentário melhorado>")`.
+Enviar o comentário em **HTML**, seguindo as diretrizes de formatação de `referencias/ferramentas.md` (que a prévia em markdown do passo 4 representa visualmente):
+
+```
+mcp__tomticket__comentar_chamado(numero="<número>", mensagem="<HTML do comentário>")
+```
 
 Confirmar ao usuário: "Comentário adicionado ao chamado #[número] com sucesso."
 
