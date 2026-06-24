@@ -22,28 +22,24 @@ Chamar `mcp__tomticket__ver_chamado(numero="<número>")`.
 Após receber os dados, apresentar em formato legível:
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CHAMADO #<número>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Chamado #<número>
 
-  Título      : <título>
-  Status      : <status>
-  Prioridade  : <prioridade>
-  Departamento: <departamento>
-  Categoria   : <categoria>
-  Cliente     : <cliente>
-  Operador    : <operador>
-  Criado em   : <data_criação>
+Título      : <título>
+Status      : <status>
+Prioridade  : <prioridade>
+Departamento: <departamento>
+Categoria   : <categoria>
+Cliente     : <cliente>
+Operador    : <operador>
+Criado em   : <data_criação>
 
-━━━━━━━━━━━━━ DESCRIÇÃO ━━━━━━━━━━━━━━━
+--- Descrição ---
 
 <corpo da mensagem>
 
-━━━━━━━━━━━━━ HISTÓRICO ━━━━━━━━━━━━━━━
+--- Histórico ---
 
 <listar os eventos/histórico disponíveis>
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ### Passo 4 — Perguntar Próximo Passo (opcional)
