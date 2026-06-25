@@ -15,6 +15,7 @@ npx skills add Nomadiction8991/Skills --skill <nome-da-skill>
 | Skill | Descrição |
 |-------|-----------|
 | `chamado` | Abre, edita, lê e comenta chamados de suporte no TomTicket |
+| `commit-ello` | Gera mensagens de commit no padrão do Ello ERP |
 
 > Use `npx skills add Nomadiction8991/Skills --list` para ver todas as skills disponíveis no repositório.
 

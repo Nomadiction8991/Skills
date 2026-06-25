@@ -1,7 +1,7 @@
 ---
 name: chamado
 description: Abre, edita, lê ou comenta chamados de suporte no TomTicket. Use "/chamado <descrição>" para abrir, "/chamado editar <número>" para editar, "/chamado ler <número>" para consultar, ou "/chamado comentar <número> <mensagem>" para comentar.
-model: claude-haiku-4-5-20251001
+model: haiku
 argument-hint: "abrir <descrição> | editar <número> <o que editar> | ler <número> | comentar <número> <mensagem>"
 allowed-tools: Read Bash mcp__tomticket__buscar_cliente mcp__tomticket__listar_operadores mcp__tomticket__criar_chamado mcp__tomticket__editar_chamado mcp__tomticket__ver_chamado mcp__tomticket__comentar_chamado
 ---
@@ -19,7 +19,8 @@ Leia os arquivos relevantes antes de executar qualquer fluxo:
 - **Editar chamado:** `.claude/skills/chamado/referencias/editar.md`
 - **Ler chamado:** `.claude/skills/chamado/referencias/ler.md`
 - **Comentar chamado:** `.claude/skills/chamado/referencias/comentar.md`
-- **Formatação e ferramentas:** `.claude/skills/chamado/referencias/ferramentas.md`
+- **Formatação:** `.claude/skills/chamado/referencias/ferramentas.md`
+- **ToolSearch / deferred tools:** `.claude/skills/chamado/referencias/toolsearch.md`
 - **Template criação:** `.claude/skills/chamado/templates/criar.md`
 
 ## Departamentos e Categorias
