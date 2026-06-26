@@ -90,10 +90,10 @@ Guia de formatação HTML para o corpo dos chamados no TomTicket.
 <h1>Título H1</h1>
 <h2>Título H2</h2>
 <h3>Título H3</h3>
-<h4>Título H4</h4>
+<h4 style="font-size: 14px;">Título H4 (reduzido)</h4>
 ```
 
-> **Recomendação:** usar `<h4>` para seções dentro do corpo do chamado. H1–H3 ficam grandes demais.
+> **Recomendação:** usar `<h4 style="font-size: 14px;">` para seções dentro do corpo do chamado. H1–H3 ficam grandes demais e o `<h4>` padrão ainda é maior que o texto normal.
 
 ---
 
@@ -220,10 +220,10 @@ Inserir diretamente como caractere Unicode — o Froala os trata como texto:
 ## Estrutura recomendada do corpo (HTML completo)
 
 ```html
-<h4>Descrição</h4>
+<h4 style="font-size: 14px;">Descrição</h4>
 <p>[Contexto do problema, módulo afetado, frequência e quando começou.]</p>
 
-<h4>Passos para Reproduzir</h4>
+<h4 style="font-size: 14px;">Passos para Reproduzir</h4>
 <ol>
   <li>Acesse <strong>[Módulo]</strong></li>
   <li>Clique em <strong>[Ação]</strong></li>
@@ -231,14 +231,14 @@ Inserir diretamente como caractere Unicode — o Froala os trata como texto:
   <li>Confirme — o problema ocorre aqui</li>
 </ol>
 
-<h4>Comportamento Esperado</h4>
+<h4 style="font-size: 14px;">Comportamento Esperado</h4>
 <p>[O que deveria acontecer normalmente.]</p>
 
-<h4>Comportamento Observado</h4>
+<h4 style="font-size: 14px;">Comportamento Observado</h4>
 <blockquote><p>"[Mensagem de erro exibida ao usuário, se houver]"</p></blockquote>
 <p>[Descrição do que acontece de errado.]</p>
 
-<h4>Impacto</h4>
+<h4 style="font-size: 14px;">Impacto</h4>
 <ul>
   <li><strong>Usuários afetados:</strong> [número ou descrição]</li>
   <li><strong>Ambiente:</strong> [Produção / Homologação / Desenvolvimento]</li>
@@ -303,7 +303,7 @@ Para o `<tr>` de cabeçalho, use fundo cinza médio (visível em ambos os temas)
 
 | Elemento | Recomendado | Evitar |
 |----------|-------------|--------|
-| Seções do chamado | `<h4>` | `<h1>`, `<h2>`, `<h3>` (grandes demais) |
+| Seções do chamado | `<h4 style="font-size: 14px;">` | `<h1>`, `<h2>`, `<h3>`, `<h4>` padrão (todos grandes demais) |
 | Listagem de impacto | `<ul>` com `<strong>` | `<table>` (desnecessário) |
 | Comparação de valores | `<table>` | texto corrido |
 | Mensagens de erro | `<blockquote>` + `<pre>` | texto simples |
