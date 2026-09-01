@@ -37,6 +37,19 @@ Cada skill é uma pasta com `SKILL.md` enxuto + `references/` e `templates/` mod
 
 Padrões de criação/refatoração em `criar-skill/references/regras-gerais.md`.
 
+## Instalação
+
+Guia completo em **[INSTALL.md](./INSTALL.md)**.
+
+Via [skills.sh](https://skills.sh) (marketplace público, sem clonar):
+
+```bash
+npx skills add Nomadiction8991/Skills              # todas as skills
+npx skills add Nomadiction8991/Skills --skill commit  # só uma
+```
+
+Outros: `npx skills list` · `npx skills update Nomadiction8991/Skills` · `npx skills remove Nomadiction8991/Skills --skill <nome>`
+
 ## Uso
 
 Quando o working directory estiver dentro deste repositório, qualquer menção a *skill* (criar, editar, ler, listar, refatorar) refere-se às skills deste repo — não é preciso especificar caminho externo.
