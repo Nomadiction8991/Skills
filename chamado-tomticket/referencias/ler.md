@@ -1,0 +1,57 @@
+# Referência — Ler Chamado
+
+Passo a passo completo para consulta/exibição de chamados no TomTicket.
+
+---
+
+## Fluxo
+
+### Passo 1 — Validar o Número
+
+O formato esperado é `ler <número>`.
+
+Extrair o primeiro token numérico após "ler". Se não houver número, perguntar:
+> "Qual o número do chamado que deseja consultar?"
+
+### Passo 2 — Consultar o Chamado
+
+Chamar `mcp__tomticket__ver_chamado(numero="<número>")`.
+
+### Passo 3 — Exibir os Dados ao Usuário
+
+Após receber os dados, apresentar no mesmo formato do bloco de metadados de `../templates/chamado.md` (Seção 1), acrescentando os campos que só existem na leitura (Status, Criado em) e o Histórico ao final:
+
+```
+Título       : <título>
+Status       : <status>
+Cliente      : <cliente>
+Departamento : <departamento>
+Categoria    : <categoria>
+Prioridade   : <prioridade>
+Responsável  : <operador>
+Criado em    : <data_criação>
+
+**Descrição**
+<corpo da mensagem>
+
+**Histórico**
+<listar os eventos/histórico disponíveis>
+```
+
+### Passo 4 — Perguntar Próximo Passo (opcional)
+
+Após exibir, perguntar se o usuário deseja fazer algo com o chamado:
+> "Deseja fazer algo neste chamado? `[E] Editar` | `[C] Comentar` | `[T] Transferir` | `[N] Não, apenas isso`"
+
+- **E:** inicia fluxo de edição (ler `referencias/editar.md`)
+- **C:** inicia fluxo de comentário (ler `referencias/comentar.md`)
+- **T:** inicia fluxo de transferência (ler `referencias/transferir.md`)
+- **N:** encerra
+
+---
+
+## Notas
+
+- O histórico retornado pela API geralmente vem sem formatação (texto plano)
+- Se houver muitos eventos no histórico, exibir apenas os 5-10 mais recentes e perguntar se deseja ver mais
+- A ferramenta `ver_chamado` é apenas leitura — nenhuma alteração é feita

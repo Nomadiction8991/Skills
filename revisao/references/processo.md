@@ -1,0 +1,59 @@
+# Processo de Code Review — fluxo base
+
+Modos definidos em `regras.md`. Este arquivo descreve o fluxo comum; `commit.md` e `mr.md` descrevem os agents específicos de cada modo.
+
+## 0. Garantir Context7 e reaproveitar code-review genérico
+
+- **Context7:** identifique tecnologias no diff e use MCP `context7` (`context7.md`) se disponível. Se não estiver, instale em escopo user.
+- **Reaproveitamento (sempre que o Claude Code estiver instalado, existe a skill code-review oficial):** se `~/.claude/plugins/marketplaces/claude-plugins-official/plugins/code-review/commands/code-review.md` existir, considere-a a **base genérica**. Lance um agent `general-purpose` que siga os 5 agents paralelos dela (2× CLAUDE.md compliance, 1× bugs rasos, 1× histórico/blame, 1× comentários) e o scoring 0–100 com corte 80, e devolva os achados ≥80. A skill `revisao` então **trata o retorno**: filtra falsos positivos pré-existentes, reescreve em linguagem simples, ordena do mais crítico ao menor e **controla** a saída via `formato-saida.md` — nunca posta direto pelo code-review. Se a skill oficial não estiver instalada, pule este passo e use só `validacoes.md` + checklist.
+
+## 1. Fixar o ponto de referência
+
+- **commit/local:** `git status`; `git diff` + `git diff --cached`; `git log --oneline -5` (contexto). Falha se ambos vazios.
+- **mr/branch:** detectar base (`origin/main` → `main` → `master` → `develop` ou 2º token); `git diff <base>...HEAD`; `git log <base>..HEAD --oneline`; `git rev-parse <base>` para validar.
+- **ponto fixo / mr <numero>:** `git diff <ponto>...HEAD` + `git log <ponto>..HEAD`; para `mr <numero>` via API GitLab (`get_merge_request_diffs`). Validar `git rev-parse <ponto>` ou API.
+
+Em todos os modos, falhar se diff vazio antes de lançar agents. Agents são lançados por `commit.md` / `mr.md`.
+
+## 2. Ler arquivos completos
+
+Não revise só o diff — abra os arquivos inteiros que o diff toca. O diff esconde o método irmão que já valida, o outro lugar que calcula o mesmo dado e o padrão dos vizinhos.
+
+## 3. Passar o checklist obrigatório (genérico do code-review + 7 eixos + 15 validações pontuais)
+
+Para cada eixo, marque ok ou gere achado. Não deixe eixo silencioso:
+
+1. Autorização e escopo do dono do dado
+2. Mesma informação derivada de formas divergentes
+3. Código morto introduzido
+4. Estado assíncrono e timers no front
+5. Consistência com os arquivos vizinhos
+6. Correção e borda dos dados
+7. Testes
+
+Primeiro, se o passo 0 retornou achados genéricos do code-review, mantenha-os como base. Depois, passar as 15 validações pontuais de `references/validacoes.md` (autorização, divergência, código morto, indireção, duplicação, responsabilidade, API simples, separação de MR, padrões do stack, infra, pipeline/config, migração, idioma consistente, rodar testes, comentários só quando necessário) — são o diferencial que o genérico não pega. Inclua `code-smells.md` dentro dos eixos 3/5. A skill `revisao` controla e reescreve tudo: filtra <80, remove pré-existente fora do diff e reordena.
+
+## 3.5 Rodar todos os testes (sempre)
+
+Identifique como rodar os testes no repo em que está — procure nesta ordem: `Makefile` (`make test`/`make tests`/`make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Leia o arquivo e extraia o comando exato. Rode a suíte completa e veja se todos passam. Se quebrar, cada falha é um achado adicional — reporte quais testes falharam e por quê. Se não houver como rodar (sem Docker/env), declare "testes não executados — motivo" em vez de silenciar.
+
+## 4. Validar antes de reportar
+
+Para cada achado, antes de escrever:
+- Abra o arquivo e confirme no código atual; guarde `arquivo:linha`
+- Construa cenário concreto de falha ("usuário B abre /pedido/17 → vê pedido do A"); se não conseguir, descarte
+- Se já existia antes do diff e o diff não tocou, marque como `pré-existente / fora do escopo` — não conta para "Eixos verificados sem achado" e vai na seção separada do final
+- Não inflar severidade
+
+## 5. Agregar
+
+Una os dois eixos em um único relatório direto, seguindo obrigatoriamente `references/formato-saida.md`:
+
+1. Cabeçalho conforme o modo: `Revisão das alterações não commitadas (N arquivos). X achados, <resumo>.` — `X` conta só achados **dentro do escopo do diff**; fora do escopo não entra no cabeçalho
+2. Lista numerada **sempre do mais crítico ao menor, todo achado dentro do escopo numerado inclusive menor**: `1. Título — severidade` + parágrafo simples + `Onde: arquivo:linha` + `Sugestão: ...` (máx 5; se houver mais, manter os 5 mais relevantes)
+3. `Eixos verificados sem achado: ...` (um parágrafo — só para eixos que realmente não tiveram nenhum achado; se um eixo tem achado fora do escopo, ele não entra aqui)
+4. `Veredicto: ...` (uma linha — só sobre o diff)
+5. `Pontos fora do escopo (pré-existentes):` — seção separada no final com lista numerada também (`1. Título — menor (pré-existente)` + `Onde` + `Sugestão`), se houver; senão omita
+6. Pergunta final `Quer que eu aplique...`
+
+Não crie seções `## Padrões` / `## Especificação` separadas e não duplique `Linguagem simples / técnica` — mostre direto o achado em linguagem simples. Se corrigir relatório anterior, acrescente antes do veredicto: `Correção de relatório anterior: ...`
