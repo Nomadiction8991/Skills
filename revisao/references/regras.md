@@ -10,9 +10,11 @@ Detalhes de captura em `references/processo.md#1` e agents em `references/git.md
 
 ## Antes de analisar
 
+- Defina o escopo pelo modo escolhido: alterações locais (`git diff`/`git diff --cached`), branch atual contra a base (`git diff <base>...HEAD`) ou ponto SHA/tag (`git diff <ponto>...HEAD`). O escopo não pode ser ampliado durante a revisão.
 - Leia `validacoes.md` (15 validações pontuais, incluindo pipeline, migração, idioma, rodar testes e comentários só quando necessário) além do checklist de 7 eixos e do code-review genérico reaproveitado (`processo.md#0`) — todo diff passa pelos três
 - Identifique tecnologias no diff e use MCP `context7` (`context7.md`) se disponível; roda reinventada já está em `validacoes.md#4` e `#9`
 - Entregue no formato de `formato-saida.md`. Não há hook automático — revisão é sempre manual e nunca commita/corrige sozinha. A skill `revisao` controla o retorno do code-review genérico
+- Use arquivos completos, busca global, histórico, código vizinho, documentação e testes somente para entender o escopo. Reporte apenas problemas introduzidos pelo diff ou diretamente no conteúdo revisado; descarte achados pré-existentes, não relacionados ou fora do diff.
 
 ## Regras rígidas — permissão explícita (nunca automático)
 

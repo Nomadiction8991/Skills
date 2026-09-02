@@ -2,6 +2,10 @@
 
 Use como checklist **além** do code-review genérico do Claude (reaproveitado em `processo.md#0`) e dos 7 eixos. O genérico pega bugs rasos e CLAUDE.md compliance; estas 14 validações pegam o que reprova MR na prática e é específico do seu fluxo. Para cada item: o que buscar, como verificar, quando reprovar.
 
+## Escopo da revisão
+
+Todas as validações abaixo devem ser aplicadas ao diff do modo selecionado. Busca global, histórico, arquivos vizinhos e testes ajudam a confirmar o contexto, mas não ampliam o escopo. Só gere achado quando o problema for introduzido pelo diff ou estiver diretamente no conteúdo revisado.
+
 ## 1. Autorização e escopo do dono do dado
 **O que buscar:** qualquer endpoint/ação que recebe identificador de recurso (id, slug, token) e retorna ou altera o recurso.
 **Como verificar:** o recurso é filtrado pelo usuário autenticado E pelo escopo do tenant/organização/workspace do contexto? Autenticação não é autorização. Compare com código irmão no mesmo módulo que já valida — se ele valida e este não, é bug.
@@ -58,7 +62,7 @@ Use como checklist **além** do code-review genérico do Claude (reaproveitado e
 
 ## 14. Sempre rodar todos os testes
 **O que buscar:** diff que não foi validado com a suíte completa; testes que passam só no modo isolado mas quebram no conjunto.
-**Como verificar:** identificar como rodar os testes no repo em que está — procurar em ordem: `Makefile` (`make test`, `make tests`, `make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`Makefile`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Ler o arquivo e extrair o comando exato. Rodar a suíte completa (`make test` ou equivalente) e verificar se todos passam. Se falhar, cada falha é um achado adicional para correção — reportar quais testes quebraram e por quê. Se não houver como rodar (sem Docker, sem env), declarar "testes não executados — motivo" em vez de silenciar.
+**Como verificar:** identificar como rodar os testes no repo em que está — procurar em ordem: `Makefile` (`make test`, `make tests`, `make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`Makefile`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Ler o arquivo e extrair o comando exato. Rodar a suíte completa (`make test` ou equivalente) e verificar se todos passam. Se falhar, só reporte a falha quando ela for causada pelo conteúdo do diff; falhas pré-existentes ou sem relação ficam fora do relatório. Se não houver como rodar (sem Docker, sem env), declarar "testes não executados — motivo" em vez de silenciar.
 
 ## 15. Comentários só se necessário, curtos e simples
 **O que buscar:** comentário em cima de função/método ou dentro do código que não é necessário — função já se explica pelo nome e corpo, comentário repete o óbvio, ocupa muitas linhas ou usa jargão.

@@ -15,13 +15,13 @@ Modos definidos em `regras.md`. Este arquivo descreve o fluxo comum; `git.md` e 
 
 Em todos os modos, falhar se diff vazio antes de lançar agents. Agents são lançados por `git.md` ou `branch.md`.
 
-## 2. Ler arquivos completos
+## 2. Ler arquivos completos sem ampliar o escopo
 
-Não revise só o diff — abra os arquivos inteiros que o diff toca. O diff esconde o método irmão que já valida, o outro lugar que calcula o mesmo dado e o padrão dos vizinhos.
+Não revise só o diff — abra os arquivos inteiros que o diff toca para entender o contexto. O diff esconde o método irmão que já valida, o outro lugar que calcula o mesmo dado e o padrão dos vizinhos. Esses arquivos e buscas adicionais são apenas contexto: nenhum problema fora do diff pode virar achado.
 
 ## 3. Passar o checklist obrigatório (genérico do code-review + 7 eixos + 15 validações pontuais)
 
-Para cada eixo, marque ok ou gere achado. Não deixe eixo silencioso:
+Analise todos os eixos internamente, mas mostre no relatório somente os achados:
 
 1. Autorização e escopo do dono do dado
 2. Mesma informação derivada de formas divergentes
@@ -35,25 +35,24 @@ Primeiro, se o passo 0 retornou achados genéricos do code-review, mantenha-os c
 
 ## 3.5 Rodar todos os testes (sempre)
 
-Identifique como rodar os testes no repo em que está — procure nesta ordem: `Makefile` (`make test`/`make tests`/`make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Leia o arquivo e extraia o comando exato. Rode a suíte completa e veja se todos passam. Se quebrar, cada falha é um achado adicional — reporte quais testes falharam e por quê. Se não houver como rodar (sem Docker/env), declare "testes não executados — motivo" em vez de silenciar.
+Identifique como rodar os testes no repo em que está — procure nesta ordem: `Makefile` (`make test`/`make tests`/`make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Leia o arquivo e extraia o comando exato. Rode a suíte completa para validar o diff. Só reporte falhas causadas pelo conteúdo revisado; falhas pré-existentes ou sem relação ficam fora do relatório. Se não houver como rodar (sem Docker/env), declare "testes não executados — motivo" em vez de silenciar.
 
 ## 4. Validar antes de reportar
 
 Para cada achado, antes de escrever:
-- Abra o arquivo e confirme no código atual; guarde `arquivo:linha`
+- Abra o arquivo e confirme internamente no código atual; guarde `arquivo:linha` apenas para validação, nunca no relatório
 - Construa cenário concreto de falha ("usuário B abre /pedido/17 → vê pedido do A"); se não conseguir, descarte
-- Se já existia antes do diff e o diff não tocou, marque como `pré-existente / fora do escopo` — não conta para "Eixos verificados sem achado" e vai na seção separada do final
+- Confirme que o problema foi introduzido pelo diff ou está diretamente no conteúdo revisado; se já existia antes, não foi tocado ou não tem relação direta, descarte
 - Não inflar severidade
 
 ## 5. Agregar
 
 Una os dois eixos em um único relatório direto, seguindo obrigatoriamente `references/formato-saida.md`:
 
-1. Cabeçalho conforme o modo: `Revisão das alterações não commitadas (N arquivos). X achados, <resumo>.` — `X` conta só achados **dentro do escopo do diff**; fora do escopo não entra no cabeçalho
-2. Lista numerada **sempre do mais crítico ao menor, todo achado dentro do escopo numerado inclusive menor**: `1. Título — severidade` + parágrafo simples + `Onde: arquivo:linha` + `Sugestão: ...` (máx 5; se houver mais, manter os 5 mais relevantes)
-3. `Eixos verificados sem achado: ...` (um parágrafo — só para eixos que realmente não tiveram nenhum achado; se um eixo tem achado fora do escopo, ele não entra aqui)
-4. `Veredicto: ...` (uma linha — só sobre o diff)
-5. `Pontos fora do escopo (pré-existentes):` — seção separada no final com lista numerada também (`1. Título — menor (pré-existente)` + `Onde` + `Sugestão`), se houver; senão omita
-6. Pergunta final `Quer que eu aplique...`
+1. Cabeçalho conforme o modo: `Revisão das alterações não commitadas (N arquivos). X achados, <resumo>.` — `X` conta os achados introduzidos pelo diff
+2. Lista numerada **sempre do mais crítico ao menor, todo achado dentro do escopo numerado inclusive menor**: `1. Título — severidade` + explicação simples + `Como corrigir: ...`, sem nomes ou caminhos técnicos (máx 5; se houver mais, manter os 5 mais relevantes)
+3. `Veredicto: ...` (uma linha — só sobre o diff)
+4. `Resumo final: ...` conforme o modelo de `references/formato-saida.md` (sempre, mencionando escopo, quantidade de achados e conclusão)
+5. Pergunta final `Quer que eu aplique...`
 
 Não crie seções `## Padrões` / `## Especificação` separadas e não duplique `Linguagem simples / técnica` — mostre direto o achado em linguagem simples. Se corrigir relatório anterior, acrescente antes do veredicto: `Correção de relatório anterior: ...`

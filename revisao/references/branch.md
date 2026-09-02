@@ -23,8 +23,8 @@ Cada agent recebe `validacoes.md` colada — não precisa ler de novo. São 2–
 
 ## 3. Validar antes de agregar
 
-Mesmo que modo branch: confirmar arquivo:linha no código atual, cenário concreto, marcar pré-existente, não inflar severidade.
+Mesmo que modo branch: confirmar internamente o arquivo e a linha no código atual, além do cenário concreto e da relação direta com o diff; não mostrar esses detalhes no relatório. Descartar problemas pré-existentes ou fora do escopo, sem inflar severidade.
 
 ## 4. Agregar
 
-Seguir `formato-saida.md` + `processo.md#5`. Mostrar o relatório ao usuário. Nunca commitar, corrigir ou postar durante a revisão.
+Seguir `formato-saida.md` + `processo.md#5`. Mostrar o relatório ao usuário, sempre incluindo o `Resumo final` antes da pergunta final. Nunca commitar, corrigir ou postar durante a revisão.

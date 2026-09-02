@@ -19,6 +19,10 @@ Modos definidos em `references/regras.md`. Cada modo chama agents com contexto l
 
 A skill `revisao` sempre controla o retorno: filtra, reescreve em linguagem simples, ordena do mais crítico ao menor e formata via `formato-saida.md`. Não leia referências que o modo não pede. Em todos os modos, `references/regras.md` (permissão de uso único) vale.
 
+## Regra obrigatória de escopo
+
+A revisão deve ficar restrita ao conteúdo do escopo selecionado pelo argumento e pelo diff correspondente. Arquivos completos, busca global, histórico, código vizinho, documentação e testes podem ser consultados apenas como contexto; não ampliam o escopo. Só reporte problemas introduzidos pelo diff ou diretamente no conteúdo revisado. Descarte problemas pré-existentes, não relacionados ou fora do diff.
+
 ## Arquivos de referência
 
 - `references/regras.md` — **fonte da verdade** para modos e permissão de uso único — leia primeiro
