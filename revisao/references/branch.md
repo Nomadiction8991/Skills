@@ -1,10 +1,10 @@
-# Modo MR — /revisao mr [base] e /revisao mr <numero>
+# Modo Branch — /revisao branch [base]
 
-Revisa a branch inteira. Sempre chama agents com contexto limpo. Nunca posta sem permissão explícita de uso único (`regras.md`). Captura do diff conforme `processo.md#1`.
+Revisa a branch atual (`HEAD`) inteira contra a base/pai explícita ou detectada conforme `regras.md`. Sempre chama agents com contexto limpo. Nunca posta sem permissão explícita de uso único (`regras.md`). Captura do diff conforme `processo.md#1`.
 
-## 1. Ler arquivos completos + diff da MR
+## 1. Ler arquivos completos + diff da branch
 
-Abrir arquivos inteiros tocados + diff completo da MR (discussions/diffs via MCP). O diff isolado esconde validação do irmão e padrão dos vizinhos.
+Abrir arquivos inteiros tocados + diff completo da branch (`git diff <base>...HEAD`). O diff isolado esconde validação do irmão e padrão dos vizinhos.
 
 ## 2. Lançar agents (contexto limpo)
 
@@ -23,8 +23,8 @@ Cada agent recebe `validacoes.md` colada — não precisa ler de novo. São 2–
 
 ## 3. Validar antes de agregar
 
-Mesmo que modo commit: confirmar arquivo:linha no código atual, cenário concreto, marcar pré-existente, não inflar severidade. Para `mr <numero>`, verificar se achado já foi comentado na MR antes.
+Mesmo que modo branch: confirmar arquivo:linha no código atual, cenário concreto, marcar pré-existente, não inflar severidade.
 
-## 4. Agregar e postar
+## 4. Agregar
 
-Seguir `formato-saida.md` + `processo.md#5`. Mostrar texto exato no terminal e perguntar `Posso postar no MR <numero>? [S/N]` — só após `S` explícito naquela vez, postar via MCP `gitlab` (permissão expira). Nunca commitar/corrigir durante a revisão.
+Seguir `formato-saida.md` + `processo.md#5`. Mostrar o relatório ao usuário. Nunca commitar, corrigir ou postar durante a revisão.

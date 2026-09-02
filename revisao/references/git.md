@@ -1,4 +1,4 @@
-# Modo Commit / Local — /revisao e /revisao commit
+# Modo Git / Local — /revisao e /revisao git
 
 Revisa alterações não commitadas. Sempre chama agents com contexto limpo. Captura do diff conforme `processo.md#1`.
 

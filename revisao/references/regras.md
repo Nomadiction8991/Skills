@@ -2,12 +2,11 @@
 
 ## Modos (resolva pelo `args`)
 
-- vazio/`commit`/`local` → modo commit/local: `git diff` + `git diff --cached`
-- `mr`/`branch`/`merge` sem número → modo mr/branch: `git diff <base>...HEAD` (base = 2º token ou `origin/main` → `main` → `master` → `develop`)
-- `mr <numero>` → modo MR GitLab: diff via API (`get_merge_request`/`get_merge_request_diffs`)
-- outro (`HEAD~N`, SHA, tag, branch) → modo ponto fixo: `git diff <ponto>...HEAD`
+- vazio/`git` → modo git/local: `git diff` + `git diff --cached`
+- `branch` ou `branch <base>` → modo branch: `git diff <base>...HEAD`, sempre com a branch atual em `HEAD`. A base é, nesta ordem: 2º token; `branch.<nome-atual>.base`; upstream configurado quando ele aponta para uma branch diferente da atual; ou a branch registrada no reflog como origem da criação. Não assumir `main`, `master` ou outra base por convenção; se a base não puder ser determinada com segurança, interromper e informar que é necessário usar `/revisao branch <base>`.
+- SHA de commit ou tag passado diretamente (`HEAD~N`, SHA, `v1.2.0`, etc.) → modo ponto fixo: `git diff <ponto>...HEAD`
 
-Detalhes de captura em `references/processo.md#1` e agents em `references/commit.md` / `references/mr.md`.
+Detalhes de captura em `references/processo.md#1` e agents em `references/git.md` e `references/branch.md`.
 
 ## Antes de analisar
 

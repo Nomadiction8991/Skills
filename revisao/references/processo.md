@@ -1,6 +1,6 @@
 # Processo de Code Review — fluxo base
 
-Modos definidos em `regras.md`. Este arquivo descreve o fluxo comum; `commit.md` e `mr.md` descrevem os agents específicos de cada modo.
+Modos definidos em `regras.md`. Este arquivo descreve o fluxo comum; `git.md` e `branch.md` descrevem os agents específicos de cada modo.
 
 ## 0. Garantir Context7 e reaproveitar code-review genérico
 
@@ -9,11 +9,11 @@ Modos definidos em `regras.md`. Este arquivo descreve o fluxo comum; `commit.md`
 
 ## 1. Fixar o ponto de referência
 
-- **commit/local:** `git status`; `git diff` + `git diff --cached`; `git log --oneline -5` (contexto). Falha se ambos vazios.
-- **mr/branch:** detectar base (`origin/main` → `main` → `master` → `develop` ou 2º token); `git diff <base>...HEAD`; `git log <base>..HEAD --oneline`; `git rev-parse <base>` para validar.
-- **ponto fixo / mr <numero>:** `git diff <ponto>...HEAD` + `git log <ponto>..HEAD`; para `mr <numero>` via API GitLab (`get_merge_request_diffs`). Validar `git rev-parse <ponto>` ou API.
+- **git/local:** `git status`; `git diff` + `git diff --cached`; `git log --oneline -5` (contexto). Falha se ambos vazios.
+- **branch:** revisar a branch atual (`git branch --show-current`) contra a base/pai. Usar, nesta ordem, o 2º token, `git config --get "branch.<atual>.base"`, o upstream (`git rev-parse --abbrev-ref --symbolic-full-name @{u}`) somente se ele apontar para uma branch diferente da atual, ou o registro `branch: Created from <base>` no reflog (`git reflog show --format=%gs <atual>`). Validar com `git rev-parse <base>` e então executar `git diff <base>...HEAD` e `git log <base>..HEAD --oneline`. Se não houver uma base confiável, parar com a orientação `/revisao branch <base>`; não presumir `main`, `master` ou `develop`.
+- **SHA/tag direto:** `git diff <ponto>...HEAD` + `git log <ponto>..HEAD`; validar `git rev-parse <ponto>`.
 
-Em todos os modos, falhar se diff vazio antes de lançar agents. Agents são lançados por `commit.md` / `mr.md`.
+Em todos os modos, falhar se diff vazio antes de lançar agents. Agents são lançados por `git.md` ou `branch.md`.
 
 ## 2. Ler arquivos completos
 

@@ -6,8 +6,8 @@ Objetivo: relatório curto e direto, sem jargão. Baseado no exemplo aprovado pe
 
 Primeira linha conforme o modo (ver `processo.md:1`):
 
-- modo commit/local: `Revisão das alterações não commitadas (N arquivos). X achados, <resumo>.`
-- modo mr/branch/ponto fixo: `Revisão da branch <atual> vs <base> (N arquivos, M commits). X achados, <resumo>.` ou `Revisão desde <ponto> (N arquivos, M commits). X achados, <resumo>.`
+- modo git/local: `Revisão das alterações não commitadas (N arquivos). X achados, <resumo>.`
+- modo branch/ponto fixo: `Revisão da branch <atual> vs <base> (N arquivos, M commits). X achados, <resumo>.` ou `Revisão desde <ponto> (N arquivos, M commits). X achados, <resumo>.`
 
 Exemplos:
 - `Revisão das alterações não commitadas (3 arquivos). Três achados, nenhum bloqueia o que foi corrigido.`
