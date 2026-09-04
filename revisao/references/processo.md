@@ -4,15 +4,10 @@ Modos definidos em `regras.md`. Este arquivo descreve o fluxo comum; `git.md` e 
 
 ## 0. Garantir Context7 e reaproveitar técnica code-review oficial (adaptada, sem modo PR)
 
-Fonte: `anthropics/claude-code/plugins/code-review` — README + `code.claude.com/docs/en/code-review`. Extração já consolidada em `regras.md` (técnica oficial adaptada, steps 1-8). Aqui só o essencial para orquestração:
+Ver `regras.md` Técnica oficial `code-review` adaptada (steps 1-8) — fonte única. Aqui só orquestração mínima:
 
-- **Context7 (opcional):** identifique tecnologias no diff e use MCP `context7` (`context7.md`) se disponível. Se não estiver, siga sem ele — não instale automaticamente. Preserve configurações existentes.
-- **CLAUDE.md → AGENTS.md + REVIEW.md:** mapeie `CLAUDE.md` do oficial para `AGENTS.md` por diretório. Se houver `REVIEW.md` na raiz, use como instrução só-de-revisão (severidade, caps, skip rules, checks específicos) — ela complementa `AGENTS.md` e é lida como texto puro (sem `@import`).
-- **Resumo do diff (novo, extraído do oficial step 3):** antes de lançar agents, gere 1-2 frases: quantos arquivos, intenção aparente do diff. Envie o resumo a todos os agents para reduzir alucinação.
-- **Checar se revisão é necessária (oficial step 1):** se `git diff` vazio ou só `*.lock`/`*.gen/**`/gerado, declare `Nenhum achado — diff trivial` e encerre sem lançar agents.
-- **4 agents paralelos (ver `regras.md` step 4 e detalhes em `git.md`/`branch.md`):** A1+A2 compliance, B1 bugs diff-only, B2 histórico/blame. Scoring 0-100 corte 80, validação paralela 1:1, filtros, deduplicação e ranking — tudo controlado pela `revisao` via `formato-saida.md`. Se oficial não estiver instalada, pule para `validacoes.md` + 7 eixos.
-
-Compatibilidade: o genérico pega bugs rasos + AGENTS compliance; `validacoes.md` (15) + 7 eixos pegam o que reprova na prática (autorização, divergência, código morto etc.). `processo.md#3` une ambos; `processo.md#3.5` continua rodando testes sempre. Limiar 80 configurável via `regras.md`.
+- **Context7 (opcional):** ver `context7.md` — use se disponível, senão siga sem; nunca instale automaticamente.
+- **Orquestração:** gere resumo do diff (1-2 frases) e colete `AGENTS.md` por diretório + `REVIEW.md` se existir; envie a todos os agents. Se `git diff` trivial, retorne `Nenhum achado — diff trivial` sem agents. Detalhe dos 4 agents, scoring, filtros e dedup em `regras.md` e `git.md`/`branch.md`.
 
 ## 1. Fixar o ponto de referência
 
@@ -41,8 +36,6 @@ Analise todos os eixos internamente, mas mostre no relatório somente os achados
 7. Testes
 
 Primeiro, se o passo 0 retornou achados genéricos do code-review, mantenha-os como base. Depois, passar as 15 validações pontuais de `references/validacoes.md` (autorização, divergência, código morto, indireção, duplicação, responsabilidade, API simples, separação de MR, padrões do stack, infra, pipeline/config, migração, idioma consistente, rodar testes, comentários só quando necessário) — são o diferencial que o genérico não pega. Inclua `code-smells.md` dentro dos eixos 3/5. A skill `revisao` controla e reescreve tudo: filtra <80, deduplica, remove pré-existente fora do diff e reordena.
-
-> Correção: `validacoes.md` contém 15 validações (o cabeçalho antigo dizia 14 por engano).
 
 ## 3.5 Rodar todos os testes (sempre)
 

@@ -1,0 +1,74 @@
+{
+  "skill_name": "revisao",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "revisa isso — tenho alterações não commitadas no meu projeto Node, quero saber se pode mergear",
+      "expected_output": "Relatório em formato formato-saida.md com cabeçalho 'Revisão das alterações não commitadas (N arquivos). X achados...', lista numerada até 5 com severidade bloqueia/importante/menor e Como corrigir só textual, sem nomes de arquivo/código, sem link SHA, mais Veredicto e Resumo final fiel (nunca 'já corrigido')",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Usa modo git (git diff + cached) e não lê branch/processo",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Filtra <80 e pré-existente, reescreve em linguagem simples sem caminhos",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Cabeçalho e formato seguem formato-saida.md",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "revisa a branch feature/pagamento vs main — tem 4 commits e mistura renomeação com nova regra de cálculo",
+      "expected_output": "Revisão da branch feature/pagamento vs main (N arquivos, M commits) com achado validacoes#8 (separação refatoração vs feature) se misturar, mais checagem de AGENTS.md por diretório e validacoes 1-15",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Detecta base via branch.<atual>.base/upstream/reflog e usa git diff base...HEAD",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "A1/A2 citam regra literal de AGENTS.md/REVIEW.md e B1 só diff-only",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Deduplica e ordena bloqueia>importante>menor, máx 5",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "revisa desde HEAD~2 — quero ver o que mudou nos últimos 2 commits antes de abrir MR",
+      "expected_output": "Revisão desde HEAD~2 (N arquivos, M commits) via processo.md, com checklist 7 eixos + 15 validações, testes rodados e resumo final fiel",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Usa git diff HEAD~2...HEAD e git log HEAD~2..HEAD",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Validação paralela 1:1 confirma arquivo:linha + cenário concreto",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Nunca altera arquivos nem commita, só diagnostica",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    }
+  ]
+}
