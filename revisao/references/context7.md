@@ -1,33 +1,23 @@
-# Context7 MCP Global
+# Context7 MCP — uso opcional
 
-A skill depende do MCP `context7` para consultar documentação atualizada antes da revisão.
+Este apêndice é opcional. A revisão funciona sem `context7`; use-o só se já estiver disponível no ambiente.
 
-## Regra de uso
+## Quando usar
 
-Antes de revisar, identifique as tecnologias presentes no diff e use `context7` para buscar documentação atualizada das bibliotecas, frameworks, SDKs ou CLIs relevantes.
+Antes de revisar, identifique as tecnologias presentes no diff (framework, libs, SDKs, CLIs). Se o MCP `context7` estiver disponível nesta sessão, use-o para buscar documentação atualizada dessas tecnologias e validar padrões/bordas. Se não estiver, siga sem ele — não bloqueie a revisão.
 
-Se o MCP `context7` não estiver disponível, instale e configure automaticamente em escopo global antes de continuar. Preserve configurações existentes e não sobrescreva arquivos sem ler/mesclar.
-
-## Claude Code
-
-Verifique se o servidor existe:
+## Como verificar (se quiser usar)
 
 ```bash
-claude mcp list
+# lista MCPs disponíveis na sessão
+# se `context7` aparecer, use-o; senão, ignore
 ```
 
-Se `context7` não existir, instale globalmente para o usuário:
+Não instale automaticamente nem sobrescreva configurações sem ler/mesclar. Instalação global só se o usuário pedir explicitamente:
 
 ```bash
-claude mcp add --transport http --scope user context7 https://mcp.context7.com/mcp
+# exemplo opcional, só com permissão explícita do usuário
+# claude mcp add --transport http --scope user context7 https://mcp.context7.com/mcp
 ```
 
-Não use `--scope project` nem escreva `.mcp.json` no projeto, salvo se o usuário pedir explicitamente escopo por projeto.
-
-Se o usuário tiver `CONTEXT7_API_KEY`, prefira configurar globalmente com header via JSON:
-
-```bash
-claude mcp add-json --scope user context7 '{"type":"http","url":"https://mcp.context7.com/mcp","headers":{"CONTEXT7_API_KEY":"${CONTEXT7_API_KEY}"}}'
-```
-
-Depois, peça para reiniciar/recarregar a sessão se as ferramentas MCP ainda não aparecerem.
+Se o usuário tiver `CONTEXT7_API_KEY`, prefira header via JSON, mas sempre com `S` explícito antes de qualquer escrita de config.

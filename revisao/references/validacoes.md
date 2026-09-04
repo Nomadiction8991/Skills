@@ -1,14 +1,14 @@
 # Validações — o que realmente buscar (genérico, qualquer stack) — pontuais que complementam o code-review genérico
 
-Use como checklist **além** do code-review genérico do Claude (reaproveitado em `processo.md#0`) e dos 7 eixos. O genérico pega bugs rasos e CLAUDE.md compliance; estas 14 validações pegam o que reprova MR na prática e é específico do seu fluxo. Para cada item: o que buscar, como verificar, quando reprovar.
+Use como checklist **além** do code-review genérico do Claude (reaproveitado em `processo.md#0` e `regras.md`) e dos 7 eixos. O genérico pega bugs rasos e `AGENTS.md`/`REVIEW.md` compliance; estas 15 validações pegam o que reprova MR na prática e é específico do fluxo de revisão. Para cada item: o que buscar, como verificar, quando reprovar.
 
 ## Escopo da revisão
 
-Todas as validações abaixo devem ser aplicadas ao diff do modo selecionado. Busca global, histórico, arquivos vizinhos e testes ajudam a confirmar o contexto, mas não ampliam o escopo. Só gere achado quando o problema for introduzido pelo diff ou estiver diretamente no conteúdo revisado.
+Todas as validações abaixo devem ser aplicadas ao diff do modo selecionado. Busca global, histórico, arquivos vizinhos e testes ajudam a confirmar o contexto, mas não ampliam o escopo. Só gere achado quando o problema for introduzido pelo diff ou estiver diretamente no conteúdo revisado. Se não se aplicar ao stack/projeto, marque "verificado sem achado" em vez de silenciar.
 
 ## 1. Autorização e escopo do dono do dado
 **O que buscar:** qualquer endpoint/ação que recebe identificador de recurso (id, slug, token) e retorna ou altera o recurso.
-**Como verificar:** o recurso é filtrado pelo usuário autenticado E pelo escopo do tenant/organização/workspace do contexto? Autenticação não é autorização. Compare com código irmão no mesmo módulo que já valida — se ele valida e este não, é bug.
+**Como verificar:** o recurso é filtrado pelo usuário autenticado E pelo escopo do tenant/organização/workspace do contexto? Autenticação não é autorização. Compare com código irmão no mesmo módulo que já valida — se ele valida e este não, é bug. Respeite `REVIEW.md` se ele define "queries devem ser scoping por tenant".
 **Reprova quando:** trocar o identificador na URL/request expõe dado de outro usuário/tenant.
 
 ## 2. Mesma informação derivada de formas divergentes
@@ -41,28 +41,28 @@ Todas as validações abaixo devem ser aplicadas ao diff do modo selecionado. Bu
 **Como verificar:** refatoração e feature devem ser commits/MRs separados. Misturar esconde o que deve ser revisado e dificulta revert.
 
 ## 9. Padrões do framework/stack vencem preferência
-**O que buscar:** código que reinventa o que a linguagem/framework/biblioteca já oferece (ex.: ordenar manualmente quando existe ordenação declarativa, montar query na mão quando existe query builder/scope, criar mini parser de SQL para remontar SELECT quando existe propriedade declarativa como `OrderBySQL`).
-**Como verificar:** usar o recurso nativo do stack. Se introduzir padrão novo, deixar guarda (`Assert`/teste) para não regredir — como em `ello!1018` onde a ordem passou a ser via `OrderBySQL` com `Assert` contra `ORDER BY` no DFM.
+**O que buscar:** código que reinventa o que a linguagem/framework/biblioteca já oferece (ex.: ordenar manualmente quando existe ordenação declarativa, montar query na mão quando existe query builder/scope, criar parser para remontar SQL quando existe propriedade declarativa).
+**Como verificar:** usar o recurso nativo do stack. Se introduzir padrão novo, deixar guarda (`Assert`/teste) para não regredir — ex.: projeto com ordenação declarativa `OrderBySQL` com `Assert` contra `ORDER BY` no arquivo de form (padrão antes reinventado com parser). Adapte o exemplo ao stack do diff; não amarre a um framework específico.
 
 ## 10. Infra: produção enxuta
 **O que buscar:** dependência de teste/dev na imagem/artefato de produção, lógica de teste espalhada em comandos ad-hoc.
 **Como verificar:** artefato de produção sem peso de dev; criar imagem/config separada para dev e script centralizado (ex.: `test.sh`) para testes. Teste não infla produção.
 
 ## 11. Pipeline e configuração de ambiente
-**O que buscar:** pipeline que amarra app ao container de banco, env vars duplicadas/erradas (`DB_PASSWORD` vs `DB_ROOT_PASSWORD`), runner/host hard-coded, falta de flexibilidade para trocar serviço externo (ex.: RDS).
-**Como verificar:** pipeline foca só no app; banco é considerado externo e já em execução; `DB_HOST` vem de env, não hard-coded; não duplicar env que já é requisito do serviço externo; manter flexibilidade para trocar provedor sem mudar pipeline. Extraído de MRs fechados pelo Clayton (ex.: `ello-delivery!65`).
+**O que buscar:** pipeline que amarra app ao container de banco, env vars duplicadas/erradas, runner/host hard-coded, falta de flexibilidade para trocar serviço externo.
+**Como verificar:** pipeline foca só no app; banco é considerado externo e já em execução; `DB_HOST` vem de env, não hard-coded; não duplicar env que já é requisito do serviço externo (`ex.: DB_PASSWORD` vs `DB_ROOT_PASSWORD` quando o serviço externo já exige um); manter flexibilidade para trocar provedor (ex.: RDS) sem mudar pipeline. Ex.: extraído de MR onde pipeline fixou host/DB — genérico, adapte ao provedor do repo.
 
 ## 12. Migração e procedimento
 **O que buscar:** mudança de schema/banco, adição de coluna/tabela, alteração de tipo, sem descrever como migrar dados existentes, ordem de deploy ou rollback.
-**Como verificar:** todo diff que toca schema deve vir com "Qual o procedimento para migração?" respondido: script, ordem, compatibilidade com dado legado, downtime, rollback. Extraído de MR fechado `ello-backup!18`.
+**Como verificar:** todo diff que toca schema deve vir com "Qual o procedimento para migração?" respondido: script, ordem, compatibilidade com dado legado, downtime, rollback. Ex.: MR que adicionou coluna sem script — genérico, aplique ao banco do repo.
 
-## 13. Idioma consistente nos nomes — preferência por português total
-**O que buscar:** nomes de funções, métodos, variáveis, classes, arquivos que misturam português e inglês no mesmo identificador ou no mesmo módulo (ex.: `repeatOrder`, `getBairro`, `calcularTotalPrice`). Preferência do projeto é manter nomes **totalmente em português**.
-**Como verificar:** ver como o sistema foi se desenvolvendo — a maioria dos projetos aqui usa português; portanto, **prefira sempre português total** (`repetirPedido`, `buscarBairro`, `calcularTotal`). Só use inglês se o arquivo/módulo já for 100% em inglês e o padrão do repo exigir. Nunca misturar os dois no mesmo nome (`getBairro`, `calcularTotalPrice` reprova). Se o projeto já é misto por legado, apontar como `menor` e sugerir padronizar para português total no arquivo tocado.
+## 13. Idioma consistente nos nomes
+**O que buscar:** nomes de funções, métodos, variáveis, classes, arquivos que misturam português e inglês no mesmo identificador ou no mesmo módulo (ex.: `repeatOrder`, `getBairro`, `calcularTotalPrice`).
+**Como verificar:** siga a convenção do repo alvo. Ex.: muitos projetos legado neste ecossistema preferem português total (`repetirPedido`, `buscarBairro`, `calcularTotal`) — nesse caso, prefira português total e só use inglês se o arquivo/módulo já for 100% em inglês. Em repo 100% inglês, faça o inverso: prefira inglês total. Nunca misturar os dois no mesmo nome (`getBairro`, `calcularTotalPrice` reprova). Se o repo for misto por legado, aponte como `menor` e sugira padronizar no arquivo tocado. Verifique `AGENTS.md`/`REVIEW.md` se definem idioma.
 
 ## 14. Sempre rodar todos os testes
 **O que buscar:** diff que não foi validado com a suíte completa; testes que passam só no modo isolado mas quebram no conjunto.
-**Como verificar:** identificar como rodar os testes no repo em que está — procurar em ordem: `Makefile` (`make test`, `make tests`, `make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`Makefile`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Ler o arquivo e extrair o comando exato. Rodar a suíte completa (`make test` ou equivalente) e verificar se todos passam. Se falhar, só reporte a falha quando ela for causada pelo conteúdo do diff; falhas pré-existentes ou sem relação ficam fora do relatório. Se não houver como rodar (sem Docker, sem env), declarar "testes não executados — motivo" em vez de silenciar.
+**Como verificar:** identificar como rodar os testes no repo em que está — procurar em ordem: `Makefile` (`make test`, `make tests`, `make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Leia o arquivo e extraia o comando exato. Rodar a suíte completa (`make test` ou equivalente) e verificar se todos passam. Se falhar, só reporte a falha quando ela for causada pelo conteúdo do diff; falhas pré-existentes ou sem relação ficam fora do relatório. Se não houver como rodar (sem Docker, sem env), declarar "testes não executados — motivo" em vez de silenciar.
 
 ## 15. Comentários só se necessário, curtos e simples
 **O que buscar:** comentário em cima de função/método ou dentro do código que não é necessário — função já se explica pelo nome e corpo, comentário repete o óbvio, ocupa muitas linhas ou usa jargão.
@@ -70,4 +70,4 @@ Todas as validações abaixo devem ser aplicadas ao diff do modo selecionado. Bu
 **Reprova quando:** comentário desnecessário, longo, que repete o código, ou que ocupa muitas linhas sem ajudar quem vai manter. Sugerir remover ou resumir em 1 linha simples.
 
 ## Como usar
-Passe por 1–15 em todo diff, em qualquer projeto. Se não se aplica, declare "verificado sem achado" — silêncio não é verificação. Ordene achados por severidade: `bloqueia` (dado exposto/perda/quebra) > `importante` (bug visível) > `menor` (limpeza).
+Passe por 1–15 em todo diff, em qualquer projeto. Se não se aplica, declare "verificado sem achado" — silêncio não é verificação. Ordene achados por severidade: `bloqueia` (dado exposto/perda/quebra) > `importante` (bug visível) > `menor` (limpeza). Use `REVIEW.md` para calibrar severidade se o repo definir o que é `bloqueia` nele.
