@@ -2,7 +2,7 @@
 name: revisao
 model: opus
 effort: medium
-description: "Revisa código como revisor sênior antes do merge em modo somente leitura. This skill should be used when the user says 'revisa isso', 'olha o que vai pro MR', 'está pronto pra mergear?', 'revisa a branch', 'revisa esse diff/commit' — mesmo sem /revisao. Be sure to use this skill whenever a diff, branch or commit needs senior review before merge, even if the user doesn't type /revisao."
+description: "Revisa código como revisor sênior antes do merge em modo somente leitura. This skill should be used when the user says 'revisa isso', 'olha o que vai pro MR', 'está pronto pra mergear?', 'revisa a branch', 'revisa esse diff/commit', 'pode revisar', 'review' — mesmo sem /revisao. Be sure to use this skill whenever a diff, branch or commit needs senior review before merge, even if the user doesn't type /revisao or says it in natural language."
 argument-hint: "[git | branch [base] | <sha|tag>]"
 allowed-tools: Read Bash Grep Glob mcp__gitlab__*
 ---
