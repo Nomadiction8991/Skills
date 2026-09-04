@@ -18,19 +18,19 @@ Todas as validações abaixo devem ser aplicadas ao diff do modo selecionado. Bu
 
 ## 3. Código morto
 **O que buscar:** função/método/classe/rota/import/parâmetro/coluna adicionado e não referenciado em nenhum lugar (incluindo templates e frontend), `console.log`/`print`/`debug` esquecido, parâmetro recebido e ignorado, flag inalcançável.
-**Como verificar:** busca global no projeto, não só leitura do diff. Sem chamada = morto — remover.
+**Como verificar:** busca global no projeto, não só leitura do diff. Sem chamada = morto — apontar como achado para o usuário decidir sobre remoção.
 
 ## 4. Indireção desnecessária
 **O que buscar:** wrapper que só repassa chamada (`function x(){ return y() }`), função de 1 linha que já existe nativa no projeto.
-**Como verificar:** se o corpo é trivial e já existe utilitário/property nativa, chamar direto. Evitar abstração sem necessidade real.
+**Como verificar:** se o corpo é trivial e já existe utilitário/property nativa, apontar para simplificação/uso direto em vez de criar abstração sem necessidade real.
 
 ## 5. Duplicação e fonte única
 **O que buscar:** constante, query, regra de negócio, texto ou validação copiada que já existe em outro arquivo.
-**Como verificar:** procurar onde já existe (constante central, helper compartilhado, evento único). Se já existe, reutilizar. Duplicação hoje vira divergência amanhã.
+**Como verificar:** procurar onde já existe (constante central, helper compartilhado, evento único). Se já existe, apontar a duplicação e sugerir reutilização. Duplicação hoje vira divergência amanhã.
 
 ## 6. Responsabilidade no lugar certo
 **O que buscar:** lógica no arquivo/módulo/camada errada.
-**Como verificar:** perguntar "essa classe/módulo deveria saber disso?" Se já existe dono (entidade, utilitário de strings, serviço central, camada de domínio), mover para lá. Não espalhar regra que deveria estar concentrada.
+**Como verificar:** perguntar "essa classe/módulo deveria saber disso?" Se já existe dono (entidade, utilitário de strings, serviço central, camada de domínio), apontar o desvio e sugerir mover para lá. Não espalhar regra que deveria estar concentrada.
 
 ## 7. Simplicidade de API e fluxo
 **O que buscar:** múltiplas requests parciais onde 1 completa resolve; operação não idempotente que poderia ser; múltiplas flags quando 1 resolve; fluxo com direção fixa usando 2 controles.

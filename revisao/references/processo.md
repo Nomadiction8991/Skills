@@ -44,15 +44,16 @@ Para cada achado, antes de escrever:
 - Construa cenário concreto de falha ("usuário B abre /pedido/17 → vê pedido do A"); se não conseguir, descarte
 - Confirme que o problema foi introduzido pelo diff ou está diretamente no conteúdo revisado; se já existia antes, não foi tocado ou não tem relação direta, descarte
 - Não inflar severidade
+- Não altere nem edite arquivos de código. As validações são puramente analíticas.
 
 ## 5. Agregar
 
 Una os dois eixos em um único relatório direto, seguindo obrigatoriamente `references/formato-saida.md`:
 
 1. Cabeçalho conforme o modo: `Revisão das alterações não commitadas (N arquivos). X achados, <resumo>.` — `X` conta os achados introduzidos pelo diff
-2. Lista numerada **sempre do mais crítico ao menor, todo achado dentro do escopo numerado inclusive menor**: `1. Título — severidade` + explicação simples + `Como corrigir: ...`, sem nomes ou caminhos técnicos (máx 5; se houver mais, manter os 5 mais relevantes)
-3. `Veredicto: ...` (uma linha — só sobre o diff)
-4. `Resumo final: ...` conforme o modelo de `references/formato-saida.md` (sempre, mencionando escopo, quantidade de achados e conclusão)
-5. Pergunta final `Quer que eu aplique...`
+2. Lista numerada **sempre do mais crítico ao menor, todo achado dentro do escopo numerado inclusive menor**: `1. Título — severidade` + explicação simples + `Como corrigir: ...`, sem nomes ou caminhos técnicos (máx 5; se houver mais, manter os 5 mais relevantes). `Como corrigir` é apenas uma orientação conceitual em texto, **nunca** uma alteração a ser aplicada agora.
+3. `Veredicto: ...` (uma linha — só sobre o diff atual como está)
+4. `Resumo final: ...` conforme o modelo de `references/formato-saida.md` (sempre retratando o estado real encontrado com seus achados pendentes de decisão do usuário, **nunca** resumindo como "já corrigido")
+5. Pergunta final para decisão do usuário (sem nunca aplicar alterações antes).
 
 Não crie seções `## Padrões` / `## Especificação` separadas e não duplique `Linguagem simples / técnica` — mostre direto o achado em linguagem simples. Se corrigir relatório anterior, acrescente antes do veredicto: `Correção de relatório anterior: ...`

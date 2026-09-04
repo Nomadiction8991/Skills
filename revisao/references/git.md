@@ -8,13 +8,13 @@ Abrir cada arquivo tocado pelo diff por inteiro. O diff esconde método irmão q
 
 ## 2. Lançar agents (contexto limpo)
 
-Disparar em paralelo com `general-purpose`, cada um com o diff + lista de commits + arquivos completos relevantes:
+Disparar em paralelo com `general-purpose` (agentes estritamente de leitura/análise; proibido editar arquivos ou tentar aplicar correções), cada um com o diff + lista de commits + arquivos completos relevantes:
 
 **Agent A — Autorização, divergência e borda:**
-Briefing: "Verifique 1) autorização/escopo do dono (autorização e tenant), 2) mesma informação derivada de formas divergentes, 3) borda dos dados. Use `references/validacoes.md#1,2,6`. Explique cada achado em linguagem de negócio, sem nomes de código ou caminhos técnicos. Até 300 palavras, linguagem simples."
+Briefing: "Verifique 1) autorização/escopo do dono (autorização e tenant), 2) mesma informação derivada de formas divergentes, 3) borda dos dados. Use `references/validacoes.md#1,2,6`. Explique cada achado em linguagem de negócio, sem nomes de código ou caminhos técnicos. Apenas aponte os problemas, nunca altere arquivos. Até 300 palavras, linguagem simples."
 
 **Agent B — Código morto, padrões, infra e testes:**
-Briefing: "Verifique 1) código morto/indireção/duplicação, 2) responsabilidade no lugar certo, 3) consistência com vizinhos, 4) padrões do stack, 5) infra prod enxuta, 6) pipeline/config, 7) migração, 8) idioma consistente, 9) rodar todos os testes (identifique via Makefile/README/package.json e rode). Use `references/validacoes.md#3,4,5,6,8,9,10,11,12,13,14` + `code-smells.md`. Até 350 palavras, linguagem simples."
+Briefing: "Verifique 1) código morto/indireção/duplicação, 2) responsabilidade no lugar certo, 3) consistência com vizinhos, 4) padrões do stack, 5) infra prod enxuta, 6) pipeline/config, 7) migração, 8) idioma consistente, 9) rodar todos os testes (identifique via Makefile/README/package.json e rode). Use `references/validacoes.md#3,4,5,6,8,9,10,11,12,13,14` + `code-smells.md`. Apenas aponte os problemas, nunca altere arquivos. Até 350 palavras, linguagem simples."
 
 Cada agent já recebe `validacoes.md` colada no prompt — não precisa ler de novo.
 
@@ -24,4 +24,4 @@ Para cada achado dos agents: confirmar internamente no código atual, construir 
 
 ## 4. Agregar
 
-Seguir `formato-saida.md` e `processo.md#5`. Cabeçalho: `Revisão das alterações não commitadas (N arquivos)`. Sempre incluir o `Resumo final` antes da pergunta final.
+Seguir `formato-saida.md` e `processo.md#5`. Cabeçalho: `Revisão das alterações não commitadas (N arquivos)`. Sempre incluir o `Resumo final` antes da pergunta final. Nunca alterar arquivos, commitar ou aplicar correções durante a revisão.

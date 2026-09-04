@@ -13,14 +13,17 @@ Detalhes de captura em `references/processo.md#1` e agents em `references/git.md
 - Defina o escopo pelo modo escolhido: alterações locais (`git diff`/`git diff --cached`), branch atual contra a base (`git diff <base>...HEAD`) ou ponto SHA/tag (`git diff <ponto>...HEAD`). O escopo não pode ser ampliado durante a revisão.
 - Leia `validacoes.md` (15 validações pontuais, incluindo pipeline, migração, idioma, rodar testes e comentários só quando necessário) além do checklist de 7 eixos e do code-review genérico reaproveitado (`processo.md#0`) — todo diff passa pelos três
 - Identifique tecnologias no diff e use MCP `context7` (`context7.md`) se disponível; roda reinventada já está em `validacoes.md#4` e `#9`
-- Entregue no formato de `formato-saida.md`. Não há hook automático — revisão é sempre manual e nunca commita/corrige sozinha. A skill `revisao` controla o retorno do code-review genérico
+- Entregue no formato de `formato-saida.md`. A revisão é estritamente diagnóstica e de somente leitura: nunca altera arquivos, nunca aplica correções no código e nunca commita. A skill `revisao` apenas reporta os problemas encontrados e controla o retorno do code-review genérico
 - Use arquivos completos, busca global, histórico, código vizinho, documentação e testes somente para entender o escopo. Reporte apenas problemas introduzidos pelo diff ou diretamente no conteúdo revisado; descarte achados pré-existentes, não relacionados ou fora do diff.
 
-## Regras rígidas — permissão explícita (nunca automático)
+## Regras rígidas — somente leitura e permissão explícita (nunca automático)
 
-Esta skill só revisa. Criação e edição ou qualquer coisa que vai para nuvem **exige confirmação explícita do usuário naquela vez**:
+Esta skill é 100% de leitura e diagnóstico. Ela NUNCA altera, edita, commita ou corrige código diretamente:
 
-- Vale para: `git commit`, `git branch`, `git push`, criar/atualizar MR, postar comentário em MR, qualquer escrita via MCP GitLab. Embora criar branch/MR/commit não seja serviço desta skill, a regra vale se um dia for pedido.
+- **Proibido editar arquivos ou aplicar correções:** Nenhuma ferramenta de escrita ou edição (`Write`, `Edit`, scripts de alteração via `Bash`, etc.) pode ser executada durante a revisão.
+- **Sempre mostrar os problemas antes:** A revisão deve sempre listar todos os problemas encontrados (achados). O usuário é o único que decide se vai resolvê-los ou não posteriormente.
+- **Resumo fiel ao estado atual:** O relatório e o `Resumo final` devem retratar os problemas encontrados no diff, jamais apresentar o código como "já corrigido".
+- **Ações externas/nuvem exigem confirmação explícita do usuário:** Vale para: `git commit`, `git branch`, `git push`, criar/atualizar MR, postar comentário em MR, qualquer escrita via MCP GitLab. Embora criar branch/MR/commit não seja serviço desta skill, a regra vale se um dia for pedido.
 - **Sem "S" explícito naquela pergunta = não executa.** Não usar "já autorizou antes" ou "está no mesmo contexto" como permissão.
 - **Permissão é de uso único:** mesmo que o usuário disse `S` para postar no MR 12, para o MR 13 ou para commitar é preciso perguntar de novo.
 - **Fluxo para nuvem:** 1) mostrar texto exato do que será enviado, 2) perguntar `Posso ...? [S/N]` e aguardar `S`, 3) só então executar. A permissão expira após o uso.

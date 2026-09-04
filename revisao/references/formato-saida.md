@@ -14,7 +14,7 @@ Primeira linha conforme o modo (ver `processo.md:1`):
 - modo branch/ponto fixo: `Revisão da branch <atual> vs <base> (N arquivos, M commits). X achados, <resumo>.` ou `Revisão desde <ponto> (N arquivos, M commits). X achados, <resumo>.`
 
 Exemplos:
-- `Revisão das alterações não commitadas (3 arquivos). Três achados, nenhum bloqueia o que foi corrigido.`
+- `Revisão das alterações não commitadas (3 arquivos). Três achados, nenhum bloqueia o merge.`
 - `Revisão da branch feature/repeat-order vs main (5 arquivos, 3 commits). 1 achado importante — precisa ajustar antes de mergear.`
 - `Revisão das alterações não commitadas (2 arquivos). Nenhum achado — pronto para mergear.`
 
@@ -27,7 +27,7 @@ Lista numerada **sempre** do mais crítico ao menor. **Todo achado dentro do esc
 
 <2-4 frases em linguagem simples explicando o que acontece, em que situação, por que isso é um problema e qual deve ser o resultado correto>
 
-Como corrigir: <ação concreta descrita em linguagem de negócio, sem nomes ou caminhos do código>
+Como corrigir: <ação concreta descrita em linguagem de negócio, sem nomes ou caminhos do código — apenas orientação conceitual para o usuário, não aplicar>
 ```
 
 Severidade em texto simples (sem emoji, sem Crítico/Alto):
@@ -59,16 +59,19 @@ Sempre mostre um resumo ao final da revisão, depois do veredicto e antes da per
 
 `Resumo final: escopo <git/local, branch <atual> vs <base> ou ponto <ponto>>; <X> achados; <conclusão em uma frase>.`
 
+> **Importante:** O resumo final NUNCA deve trazer o código como "já corrigido" ou omitir os problemas encontrados. Ele deve sempre retratar fielmente os achados reais levantados para que o usuário decida posteriormente se vai corrigi-los.
+
 ## Pergunta final
 
 Se houve achados, termine com:
 
-`Quer que eu aplique os N? E não há MR aberto para essas linhas ainda — se quiser que eu poste esta revisão como comentário, me diga o número.`
+`Deseja que eu ajude a corrigir algum desses pontos ou prefere manter como está? Se houver MR aberto e quiser que eu poste esta revisão como comentário, me diga o número.`
 
 Se 0 achados, omita a pergunta.
 
 ## Regras
 
+- **Apenas diagnóstico:** NUNCA aplique correções, NUNCA altere arquivos e NUNCA apresente o resumo final como se os problemas já estivessem resolvidos. Sempre mostre os problemas encontrados e pare para aguardar a decisão do usuário.
 - Não use seções separadas `## Padrões` / `## Especificação` / `## Roda Reinventada` — unifique em uma lista numerada do mais crítico ao menor para achados dentro do escopo.
 - **Todo achado dentro do escopo entra numerado em Achados**, mesmo `menor` — nunca em parágrafo solto. Problemas fora do escopo não entram no relatório.
 - Não use blocos `Linguagem simples / Linguagem técnica / Recomendação` — use o formato curto acima (explicação + Como corrigir).
