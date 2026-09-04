@@ -2,7 +2,8 @@
 name: revisao
 model: opus
 effort: medium
-description: Revisa código na ótica de revisor sênior de branch, antes do merge. Modo estritamente diagnóstico (somente leitura: nunca altera arquivos nem aplica correções). Use via /revisao ou quando pedir "revisa isso", "olha o que vai pro MR", "está pronto pra mergear?". Foca no que reprova na vida real — autorização/escopo faltando, mesma informação derivada de formas divergentes, código morto, timers/estado assíncrono, desvio dos padrões vizinhos. /revisao ou /revisao git = alterações não commitadas, /revisao branch [base] = branch atual vs base/pai, /revisao <sha|tag> = diff desde um commit ou tag. Todo achado em linguagem simples.
+description: >-
+  Revisa código na ótica de revisor sênior de branch, antes do merge. Modo estritamente diagnóstico (somente leitura: nunca altera arquivos nem aplica correções). Use via /revisao ou quando pedir "revisa isso", "olha o que vai pro MR", "está pronto pra mergear?". Foca no que reprova na vida real — autorização/escopo faltando, mesma informação derivada de formas divergentes, código morto, timers/estado assíncrono, desvio dos padrões vizinhos. /revisao ou /revisao git = alterações não commitadas, /revisao branch [base] = branch atual vs base/pai, /revisao <sha|tag> = diff desde um commit ou tag. Todo achado em linguagem simples.
 argument-hint: "[git | branch [base] | <sha|tag>]"
 allowed-tools: Read Bash Grep Glob mcp__gitlab__*
 ---
