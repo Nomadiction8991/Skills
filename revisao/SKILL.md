@@ -14,15 +14,15 @@ allowed-tools: Read Bash Grep Glob mcp__gitlab__*
 
 Esta skill é **estritamente diagnóstica e de somente leitura**. É terminantemente proibido alterar, editar ou criar arquivos para corrigir o código durante a revisão. O papel da skill é **sempre e exclusivamente mostrar os problemas encontrados primeiro**. O usuário é quem decidirá posteriormente se, quando e como vai resolvê-los. O relatório e o resumo final nunca devem apresentar os problemas como "já corrigidos".
 
-## Roteamento — leia só o que o argumento pede (validacoes pontuais + code-review genérico reaproveitado)
+## Roteamento — leia só o que o argumento pede (técnica code-review oficial adaptada)
 
-Modos definidos em `references/regras.md`. Cada modo chama agents com contexto limpo e **reaproveita** a skill `code-review` oficial do Claude (se instalada) como base genérica:
+Modos em `references/regras.md`. Cada modo lança 4 agents paralelos com contexto limpo reaproveitando a técnica da skill oficial `code-review` (mapeando `CLAUDE.md→AGENTS.md` por diretório: 2× compliance + 1× bugs rasos diff-only + 1× histórico/blame, scoring 0-100 corte 80 interno, validação paralela, filtros de falsos positivos, sugestão só textual):
 
-- `args` vazio ou `git` → modo git/local: `references/git.md` → reaproveita code-review + `validacoes.md`
-- `args` começa com `branch` → modo branch: `references/branch.md` → branch atual vs base/pai explícita ou detectada, reaproveita code-review + `validacoes.md`
-- `args` é um SHA de commit ou tag (`HEAD~N`, `v1.2.0`, etc.) → modo ponto fixo: `references/processo.md` → reaproveita code-review + `validacoes.md`
+- `args` vazio ou `git` → git/local: `references/git.md` → técnica adaptada + `validacoes.md`
+- `args` começa com `branch` → branch: `references/branch.md` → branch atual vs base/pai detectada, técnica adaptada + `validacoes.md`
+- `args` é SHA/tag (`HEAD~N`, `v1.2.0` etc.) → ponto fixo: `references/processo.md` → técnica adaptada + `validacoes.md`
 
-A skill `revisao` sempre controla o retorno: filtra, reescreve em linguagem simples, ordena do mais crítico ao menor e formata via `formato-saida.md`. Não leia referências que o modo não pede. Em todos os modos, `references/regras.md` (permissão de uso único) vale.
+A `revisao` sempre controla o retorno: filtra <80/não validado/pré-existente, reescreve em linguagem simples, ordena do mais crítico ao menor e formata via `formato-saida.md` (severidade só textual `bloqueia`/`importante`/`menor`, sem bloco de sugestão, sem link SHA). Não leia referências que o modo não pede. `references/regras.md` (uso único) vale em todos os modos.
 
 ## Regra obrigatória de escopo
 

@@ -8,6 +8,12 @@
 
 Detalhes de captura em `references/processo.md#1` e agents em `references/git.md` e `references/branch.md`.
 
+## Scoring e validação — adaptação code-review
+
+- Cada achado interno recebe confiança 0-100: 0-25 falso positivo/pré-existente, 26-50 detalhe menor não citado em AGENTS.md, 51-75 válido baixo impacto, 76-90 importante, 91-100 crítico. Só segue para validação se ≥80; relatório final nunca expõe número, só severidade textual `bloqueia` (91-100 ou quebra), `importante` (80-90 com impacto real) ou `menor` (80-90 baixo risco).
+- Todo achado ≥80 passa por validação paralela: sub-agent confirma `arquivo:linha` no código atual + cenário concreto de falha. Sem confirmação, descarta. `arquivo:linha` é só para validação interna, nunca no relatório.
+- Falsos positivos a descartar (traduzidos do oficial): pré-existente fora do diff; parece bug mas está correto; pedante que sênior não barraria; linter já pegaria; qualidade geral sem regra explícita em AGENTS.md; silenciado por `lint-ignore`. Nunca use bloco de sugestão aplicável nem link com SHA; `Como corrigir:` é só orientação textual.
+
 ## Antes de analisar
 
 - Defina o escopo pelo modo escolhido: alterações locais (`git diff`/`git diff --cached`), branch atual contra a base (`git diff <base>...HEAD`) ou ponto SHA/tag (`git diff <ponto>...HEAD`). O escopo não pode ser ampliado durante a revisão.

@@ -2,10 +2,28 @@
 
 Modos definidos em `regras.md`. Este arquivo descreve o fluxo comum; `git.md` e `branch.md` descrevem os agents específicos de cada modo.
 
-## 0. Garantir Context7 e reaproveitar code-review genérico
+## 0. Garantir Context7 e reaproveitar técnica code-review oficial (adaptada, sem modo PR)
 
-- **Context7:** identifique tecnologias no diff e use MCP `context7` (`context7.md`) se disponível. Se não estiver, instale em escopo user.
-- **Reaproveitamento (sempre que o Claude Code estiver instalado, existe a skill code-review oficial):** se `~/.claude/plugins/marketplaces/claude-plugins-official/plugins/code-review/commands/code-review.md` existir, considere-a a **base genérica**. Lance um agent `general-purpose` que siga os 5 agents paralelos dela (2× CLAUDE.md compliance, 1× bugs rasos, 1× histórico/blame, 1× comentários) e o scoring 0–100 com corte 80, e devolva os achados ≥80. A skill `revisao` então **trata o retorno**: filtra falsos positivos pré-existentes, reescreve em linguagem simples, ordena do mais crítico ao menor e **controla** a saída via `formato-saida.md` — nunca posta direto pelo code-review. Se a skill oficial não estiver instalada, pule este passo e use só `validacoes.md` + checklist.
+- **Context7:** identifique tecnologias no diff e use MCP `context7` (`context7.md`) se disponível. Se não estiver, instale em escopo user. Preserve como antes.
+
+- **Técnica code-review oficial reaproveitada (sempre que existir `~/.claude/plugins/.../code-review`):** a `revisao` mantém seus 3 modos (`git`/`branch`/`SHA`, sem modo PR) mas incorpora a técnica dos steps 1-9 do `code-review.md`, mapeando `CLAUDE.md → AGENTS.md`:
+
+  1. **Descobrir AGENTS.md por diretório (como oficial faz com CLAUDE.md):** liste `AGENTS.md` da raiz + `AGENTS.md` em cada pasta que contém arquivo tocado pelo diff (ex: diff toca `src/pedidos/svc.go` → verifique `/AGENTS.md`, `/src/AGENTS.md`, `/src/pedidos/AGENTS.md`). Use `Glob` + `Read`. Cada agent só avalia regra de `AGENTS.md` que compartilha caminho com o arquivo (pai ou ele mesmo). Se não houver `AGENTS.md`, pule compliance e mantenha só bugs/histórico.
+
+  2. **4 agents paralelos adaptados (general-purpose, só leitura):**
+     - **A1 e A2 — AGENTS compliance (redundância):** auditam aderência a regras explícitas dos `AGENTS.md` encontrados. Só apontam violação quando conseguem citar a regra exata. Dois agents para reduzir falso negativo.
+     - **B1 — Bugs rasos diff-only:** olha só o diff, sem ler contexto extra. Aponta só bug significativo que quebra build ou dá resultado errado sempre (erro de sintaxe, tipo, import faltando, referência não resolvida, lógica claramente errada). Ignora nitpick.
+     - **B2 — Histórico/blame + lógica introduzida:** usa `git blame`/`git log`/`git show` como contexto para o código introduzido. Busca segurança, lógica incorreta e divergência que só aparece com histórico. Também checa consistência/timers se houver frontend no diff.
+
+  3. **Scoring interno 0-100, corte 80 (não aparece no relatório):** cada achado interno recebe nota: 0-25 falso positivo/pré-existente, 26-50 detalhe menor não citado em AGENTS.md, 51-75 válido mas baixo impacto, 76-90 importante, 91-100 crítico/bloqueia. Só mantém ≥80 para validação. Relatório final mostra só severidade textual `bloqueia`/`importante`/`menor` (91-100→bloqueia, 80-90→importante ou menor conforme impacto real, sem expor número).
+
+  4. **Validação paralela (obrigatória):** para cada achado ≥80, lance 1 sub-agent validador em paralelo que confirma `arquivo:linha` no código atual + cenário concreto de falha ("usuário B abre /pedido/17 → vê do A"). Validador revisa AGENTS escopado (para A1/A2) ou reproduz bug/lógica (para B1/B2). Se não confirmar com alta confiança, descarte. Só o validador guarda `arquivo:linha`; relatório nunca expõe.
+
+  5. **Filtros de falsos positivos (traduzidos do oficial, aplicar antes e depois da validação):** descarte: pré-existente fora do diff; parece bug mas está correto no contexto; detalhe pedante que sênior não barraria; problema que linter já pegaria (não rodar linter); qualidade geral sem regra explícita em AGENTS.md; silenciado por comentário `lint-ignore`/`eslint-disable`.
+
+  6. **Tratar retorno (revisao controla tudo):** filtre <80, remova pré-existente, descarte não validado, reescreva em linguagem simples sem nomes/caminhos, ordene do mais crítico ao menor e formate via `formato-saida.md`. Sugestão só textual em `Como corrigir:` — nunca bloco de sugestão aplicável, nunca link com SHA. Se oficial não estiver instalada, pule para `validacoes.md` + 7 eixos.
+
+  Compatibilidade: o genérico pega bugs rasos + AGENTS compliance; `validacoes.md` (15) + 7 eixos pegam o que reprova na prática (autorização, divergência, código morto etc.). `processo.md#3` une ambos; `processo.md#3.5` continua rodando testes sempre.
 
 ## 1. Fixar o ponto de referência
 
