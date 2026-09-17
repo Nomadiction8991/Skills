@@ -8,10 +8,9 @@ Ver `regras-gerais.md` — vale integralmente para a mensagem montada neste flux
 
 ## Passo 0 — Detectar projeto Ello
 
-Antes de qualquer coisa, verifique se o projeto atual é do **Ello ERP**:
+O **nome/caminho do repositório manda**: `git rev-parse --show-toplevel` → se contiver "ello" (case-insensitive), **é projeto Ello, sem contestação**. Qualificativos em `AGENTS.md`/`README.md` ("satélite", "backup", etc.) não desqualificam — continuam sendo Ello.
 
-1. `git rev-parse --show-toplevel` → se o **caminho** ou o **nome** do repositório contiver "ello" (case-insensitive), é projeto Ello.
-2. Caso contrário, leia `AGENTS.md` e `README.md` da raiz do projeto → se citarem "Ello" (ex.: "Ello ERP"), é projeto Ello.
+Só quando o nome/caminho não disser nada, leia `AGENTS.md` e `README.md` da raiz do projeto → se citarem "Ello" (ex.: "Ello ERP"), é projeto Ello.
 
 **Se for Ello:** monte a mensagem com `ello.md` e `../templates/ello-commit.md` — a variante substitui o subject, o corpo e o rodapé TomTicket. No Passo 4, pule a parte Conventional Commits e use a variante Ello. As demais regras gerais (limites de tamanho, rodapé de IA, pre-commit) continuam valendo.
 
@@ -59,6 +58,8 @@ Analisar se há **múltiplas alterações lógicas distintas** no diff (ex.: uma
 
 Todo commit desta skill **vai para MR**. O ideal é **1 branch = 1 MR = 1 commit**. Antes de montar qualquer mensagem, avaliar o que faz sentido manter junto no mesmo MR e o que dá para separar.
 
+**Diff grande** (medir com `git diff --numstat`: mais de ~500 linhas ou ~10 arquivos): recomendar a divisão com ênfase e avisar a carga do revisor — MR grande mistura riscos e o rollback vira tudo-ou-nada.
+
 Fonte principal: **alterações pendentes** (`git status --porcelain`, `git diff` + `git diff --cached`) — na maioria das vezes é aqui que está o trabalho a separar. Histórico da branch (`git log <base>..HEAD`, com `<base>` = `main`/`master`/`develop`, descoberta via `git branch -a`) entra só como contexto secundário.
 
 > **Regra:** lance um sub-agente (`Agent`, tipo `general-purpose`) em contexto isolado só para esta avaliação — o prompt inclui os pendentes reais, `regras-gerais.md` (regras #8 e #10), `../templates/mr-plan.md` (padrão de nome e grafo) e este Passo 2.5, com a instrução de nunca usar o histórico da conversa, só o git real. O sub-agente **nunca** executa `git checkout`, `git branch` ou `git commit`; ele só devolve o plano de separação para o agente principal.
@@ -69,7 +70,9 @@ O sub-agente agrupa os pendentes em **unidades lógicas** (por área/módulo, po
 2. O que **separa** — plano empilhado: ordem da base ao topo, o que vai em cada branch, qual é a base de cada uma, com dependência sempre **unidirecional** (base → branch1 → branch2).
 3. O que **não separa bem** e por quê (dependência circular, mudança atômica como rename + todos os usos, ou unidade que sozinha quebra o build/testes).
 
-O agente principal primeiro confere se todo pendente entrou em exatamente uma unidade (nada de fora, nada em duas) e apresenta o plano no formato de `../templates/mr-plan.md` — grafo só com os nomes (topologia real: ramos lado a lado ou aninhados) e uma seção por branch com subject, body e justificativa, sem listar arquivos (o padrão vive no template) — e pergunta se o usuário quer separar agora ou manter tudo junto. Com mais de 3 branches na pilha, alertar que a revisão fica pesada e sugerir fundir as menores unidades. **Nunca** criar branches sem confirmação explícita. Se não separar bem, diz o porquê em 1–2 frases e segue.
+Arquivos compartilhados entre frentes **não vetam** a separação: propor o split em camadas (schema/migrations → coleta/ingestão → backend → UI/painel; `chore`/`refactor` sempre à parte), listando os arquivos que exigem partição cirúrgica e o custo desse trabalho manual. **Refactor com mudança de comportamento nunca vai de carona na feature** — MR própria, com recomendação forte.
+
+O agente principal primeiro confere se todo pendente entrou em exatamente uma unidade (nada de fora, nada em duas) e apresenta o plano no formato de `../templates/mr-plan.md` — grafo só com os nomes (topologia real: ramos lado a lado ou aninhados) e uma seção por branch com subject, body e justificativa, sem listar arquivos (o padrão vive no template) — e pergunta se o usuário quer separar agora ou manter tudo junto. Com mais de 3 branches na pilha, alertar que a revisão fica pesada e sugerir fundir as menores unidades. **Nunca** criar branches sem confirmação explícita. Se nem em camadas separar bem, diz o porquê em 1–2 frases e segue.
 
 Com `[S]` para separar, o agente principal executa o plano antes de montar qualquer mensagem: cria as branches na ordem da base ao topo (`git checkout -b <nova> <base>` a partir da base certa de cada uma), leva para cada branch só os arquivos da sua unidade e roda os Passos 1–5 em cada branch (1 commit por branch), sem reabrir o 2.5 — a separação já foi decidida. Antes de criar cada branch, conferir `git branch --list <nome>` — se já existir, parar e informar o que já foi criado e como retomar.
 

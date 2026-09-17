@@ -24,7 +24,7 @@ Nunca incluir `Assistant-model:`, `Co-authored-by:` de assistente/IA, ou qualque
 
 ## 4. Nunca pular verificações de pre-commit
 
-Se as verificações de pre-commit falharem, investigar e corrigir a causa raiz — nunca usar `--no-verify` ou qualquer outra forma de pular a verificação.
+Se as verificações de pre-commit falharem, investigar e corrigir a causa raiz — nunca usar `--no-verify` ou qualquer outra forma de pular a verificação. Se a toolchain local nem existir (comando não encontrado), não silenciar: listar os comandos a rodar antes do push.
 
 ## 5. Vincular chamado do TomTicket (somente em projetos Ello) — buscar antes de perguntar
 
@@ -34,7 +34,7 @@ Em projeto Ello, se a skill `chamado` estiver disponível para o usuário (lista
 
 1. **Buscar candidatos antes de perguntar:** usar a skill `chamado` para listar chamados prováveis — `mcp__tomticket__listar_chamados` (começar pelo status aberto; se o diff apontar um departamento específico, testar `departamento`). Filtrar/ranquear pelo contexto do diff (módulo, cliente, palavras-chave) e selecionar os 2–4 **títulos mais prováveis**.
 2. **Apresentar os candidatos** ao usuário com os números, perguntando se o commit está relacionado a algum deles, e incluir a opção **"preencher manualmente"** para quando o chamado não estiver entre os listados.
-3. Se o usuário escolher um candidato ou digitar o número: obter o **título** com a skill `chamado` (fluxo ler, `mcp__tomticket__ver_chamado`). A API não retorna o link do chamado (não pode ser inferido/gerado) — pedir o **link** diretamente ao usuário.
+3. Se o usuário escolher um candidato ou digitar o número: obter o **título** com a skill `chamado` (fluxo ler, `mcp__tomticket__ver_chamado`). Se o número não existir na API: avisar e **nunca adivinhar** outro número parecido — pedir o correto. A API não retorna o link do chamado (não pode ser inferido/gerado) — pedir o **link** diretamente ao usuário.
 4. Se o usuário disser que não há chamado, seguir sem esta seção.
 
 Quando houver chamado vinculado, o rodapé segue este formato (abaixo de outros rodapés, se houver):
