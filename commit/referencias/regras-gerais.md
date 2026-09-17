@@ -58,10 +58,10 @@ O corpo não deve virar textão: **no máximo ~400 caracteres** (cerca de 6 linh
 
 Esta skill tenta manter **um único commit por branch**. Quando o usuário fizer novas alterações depois de um commit:
 
-1. Verificar se as alterações atuais ainda são **válidas para o mesmo commit** — mesmo contexto/lógica do commit existente. Se forem outro trabalho, criar commit novo.
+1. Verificar se as alterações atuais ainda são **válidas para o mesmo commit** — mesmo contexto/lógica do commit existente. Se forem outro trabalho → ir ao Passo 2.5 de `fluxo.md` (pode virar branch empilhada em vez de segundo commit na mesma branch).
 2. Verificar se o commit atual **já foi enviado ao remoto**: `git log origin/<branch>..HEAD` vazio (ou branch sem remota) → ainda não enviado.
 3. **Não enviado** e mesmo contexto → fazer `git add` dos arquivos e `git commit --amend` (sem alterar a mensagem se ela ainda descreve bem as mudanças; editar a mensagem se o conteúdo mudou).
-4. **Já enviado** → **nunca** usar amend (evita reescrever histórico remoto): criar commit novo e avisar o usuário.
+4. **Já enviado** (e mesmo trabalho) → **nunca** usar amend (evita reescrever histórico remoto): criar commit novo e avisar o usuário. Se for outro trabalho, vale o Passo 2.5 de `fluxo.md`.
 
 ## 9. Nunca executar `git commit` sem confirmação explícita do usuário
 
@@ -70,3 +70,9 @@ Esta skill tenta manter **um único commit por branch**. Quando o usuário fizer
 **Confirmar não é perguntar detalhe.** Perguntar antes sobre chamado, ticket ou changelog **não substitui** mostrar a mensagem final e pedir aprovação. A confirmação exigida aqui é sempre: exibir o conteúdo literal (subject + body + arquivos) e esperar aprovação explícita **desse conteúdo** — mesmo que outras perguntas já tenham sido respondidas.
 
 Quando a regra #8 indicar `--amend`, mostrar também que será um **amend do commit anterior** (branch/mensagem atual) e para qual commit os arquivos vão. Se a mensagem for editada no amend, mostrar a mensagem nova completa na prévia.
+
+---
+
+## 10. Mentalidade MR — avaliar quebra em branches antes da mensagem
+
+Todo commit vai para MR (ideal **1 branch = 1 MR = 1 commit**). Antes de montar qualquer mensagem, avaliar os pendentes no Passo 2.5 de `fluxo.md` — os critérios de separação (o que mantém junto, plano empilhado unidirecional, quando não separa bem) vivem lá, não aqui. Nunca criar branches sem confirmação explícita.

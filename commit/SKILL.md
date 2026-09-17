@@ -1,18 +1,18 @@
 ---
 name: commit
-description: "Cria commits bem formatados seguindo o padrão conventional commit. Use sempre que o usuário falar sobre commit/comitar/dar commit em linguagem natural, mesmo sem chamar a skill diretamente com /commit."
+description: "Avalia pendentes, separa em branches/MRs empilhadas e cria commits conventional commits. Use via /commit ou sempre que o usuário falar sobre commit/comitar, separar mudanças em branches, dividir MR, empilhar branches ou 1 branch 1 MR."
 model: haiku
 ---
 
-# Commit Git Inteligente
+# Commit + Separação em MRs
 
-Cria commit bem formatado: $ARGUMENTS
+Avalia os pendentes, propõe a divisão em branches/MRs empilhadas (ideal 1 branch = 1 MR = 1 commit) e cria o commit bem formatado: $ARGUMENTS
 
 ## Regra de ouro: contexto isolado
 
 A mensagem do commit é montada **somente** a partir do estado real do repositório — `git status`, `git diff`, `git log` e a leitura dos arquivos alterados. **Nunca** usar histórico da conversa, resumos do chat ou descrições do usuário como fonte da mensagem: se o diff não confirma, não entra no commit.
 
-> **Regra:** lance um sub-agente (`Agent`, tipo `general-purpose`) para montar a mensagem em contexto isolado — o prompt do sub-agente inclui o diff real, `regras-gerais.md` e `referencias/fluxo.md` (Passos 0 a 4), e a instrução explícita de nunca usar o histórico da conversa, só o git real. O sub-agente **nunca** executa `git commit`; ele só devolve a mensagem montada (e o aviso de amend, se aplicável) para esta skill. A confirmação `[S]/[N]` e o `git commit` em si sempre ficam aqui, no agente principal (Passo 5 de `referencias/fluxo.md`).
+> **Regra:** as etapas de avaliação (Passo 2.5) e montagem (Passo 4) lançam sub-agentes (`Agent`, tipo `general-purpose`) em contexto isolado a partir do git real — nunca do histórico da conversa. Detalhe de entradas e proibições em `referencias/fluxo.md` (Passo 2.5 e Passo 4). A confirmação `[S]/[N]` e o `git commit` em si sempre ficam aqui, no agente principal (Passo 5 de `referencias/fluxo.md`).
 
 ## Estado Atual do Repositório
 
@@ -29,4 +29,5 @@ A mensagem do commit é montada **somente** a partir do estado real do repositó
 - **Especificação Conventional Commits:** `referencias/conventional-commits.md`
 - **Variante Ello (projetos do Ello ERP):** `referencias/ello.md` + `templates/ello-commit.md`
 - **Template de mensagem:** `templates/commit.md`
+- **Template do plano de MRs (grafo de branches):** `templates/mr-plan.md`
 - **Ajuda:** `help.md`
