@@ -17,12 +17,17 @@ Antes de qualquer coisa, verifique se o projeto atual é do **Ello ERP**:
 
 ---
 
-## Passo 1 — Verificar Staging
+## Passo 1 — Verificar Staging e Branch
 
 Checar `git status` (já injetado no SKILL.md, seção "Estado Atual do Repositório").
 
 - Se **houver** arquivos em staging: commitar **apenas** esses arquivos — não adicionar mais nada.
 - Se **não houver** nenhum arquivo em staging: adicionar automaticamente todos os arquivos modificados e novos com `git add`.
+
+**Branch atual** (ver `git branch --show-current` no SKILL.md):
+
+- **Projeto Ello:** nunca commitar direto na base (`main`/`master`). Se estiver nela, criar a branch antes (`git checkout -b <nome>`) — vale o padrão de nome de `../templates/mr-plan.md`.
+- **Outros projetos:** seguir a convenção do projeto (`AGENTS.md`/`README.md`) ou o que o usuário pedir.
 
 ---
 
