@@ -19,6 +19,8 @@ Extrair o primeiro token numérico como número do chamado. O restante é a mens
 Se faltar número:
 > "Qual o número do chamado?"
 
+Antes de perguntar em aberto, vasculhar só o trabalho em curso em busca do número: a branch atual (`git branch --show-current`) e os subjects/bodies dos commits recentes do trabalho atual (`git log --oneline -10`). Só conta como candidato o número em formato explícito de chamado (`tt-N`, `#N`, "chamado N", "ticket N", "ttN") presente na branch atual ou nesses commits — número solto sem formato (porta, quantidade, trecho de versão) NÃO conta, e marcador vindo só de branch antiga/arquivada NÃO conta; nesses casos seguir como "não achou nada" (perguntar em aberto). Se achar um único candidato explícito, ler o chamado (`ver_chamado`) e só assumir o número sem perguntar se houver coincidência em termos específicos do assunto do chamado com o trabalho (não basta semelhança genérica tipo "erro ao salvar"); sem isso, propor ("O chamado é o #N? `[S]`/`[N]`"). Se houver mais de um candidato, ler cada um (`ver_chamado`), propor a lista ordenada com `[S]`/`[N]` e nunca assumir nenhum direto. Se houver dúvida ou divergência, propor em vez de perguntar em aberto; só perguntar em aberto se não achar nada. Se assumir o número pela detecção, sinalizar na prévia do Passo 5.
+
 Se faltar mensagem:
 > "Qual o conteúdo do comentário?"
 
@@ -42,6 +44,8 @@ Consultar o chamado atual (ver `ler.md`, Passo 2 — `mcp__tomticket__ver_chamad
 
 Com base no contexto do chamado (lido no Passo 3) e na mensagem bruta do usuário, reescrever o comentário de forma profissional e clara, seguindo as diretrizes de `ferramentas.md` **e os itens 3/4 de `regras-gerais.md` (regra #3)** — sem hash de commit, nome de branch, nome de arquivo ou jargão técnico, mesmo quando o usuário mandou a mensagem bruta cheia desses detalhes (ex.: colando a mensagem de commit direto). Traduzir causa/efeito pra linguagem que a equipe de suporte entende, mesmo em nota interna.
 
+**Um chamado, um comentário (padrão):** quando a mensagem bruta citar N commits, branches ou MRs do mesmo chamado, montar **um único comentário consolidado** descrevendo o conjunto do que foi feito — nunca um comentário por commit/branch/MR. A divisão da skill de commit (1 branch = 1 MR = 1 commit) não se transfere para cá. Só montar mais de um comentário se o usuário pedir explicitamente ("dois comentários", "separa em..."). **Tempo verbal pelo estado real:** o padrão é contar o que foi mexido como trabalho feito ainda fora de produção (branches pendentes de merge na main não estão valendo) — sem mencionar que o trabalho foi dividido. Só redigir como "já valendo" se o usuário disser explicitamente que foi para a main/deploy.
+
 ### Passo 5 — Exibir Prévia para Aprovação
 
 Mostrar ao usuário o comentário melhorado **em markdown/texto legível** (sem HTML), para que ele possa ler o conteúdo facilmente. O comentário real enviado no Passo 7 continuará sendo em HTML, seguindo as diretrizes de `ferramentas.md`.
@@ -52,8 +56,11 @@ Comentário no chamado #[número] ([Nota interna | Visível ao cliente], definid
 [Comentário renderizado em markdown/texto — sem tags HTML]
 
 ```
+Se o número foi assumido pela detecção automática do Passo 1 (não digitado pelo usuário), sinalizar na prévia — ex. linha extra "número detectado das branches/commits — confirme que é este chamado" — em vez de exibi-lo como se tivesse sido digitado. Só quando assumido, não quando digitado.
 
 > "Deseja enviar este comentário? `[S] Sim` | `[N] Cancelar` | `[E] Editar mensagem`"
+
+Quando o número foi autodetectado (não digitado), trocar a pergunta genérica pela reconfirmação explícita do número junto ao envio: "Confirme o chamado #N — é este? `[S] Sim, é este e enviar` | `[N] Cancelar` | `[E] Editar`". Quando digitado, manter a pergunta atual.
 
 **Regras de conversão HTML → markdown/texto para a prévia:**
 - `<h4>` → `### ` ou **negrito**
