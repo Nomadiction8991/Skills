@@ -39,7 +39,8 @@ Leia os arquivos relevantes antes de executar qualquer fluxo:
 - `args` começa com "ver" → seguir `referencias/ver.md`; primeiro token numérico é o IID
 - `args` começa com "comentar" → seguir `referencias/comentar.md`; primeiro token numérico é o IID, restante é a mensagem
 - `args` começa com "aprovar" ou "desaprovar"/"reprovar" → seguir `referencias/aprovar.md`
-- `args` começa com "criar" → seguir `referencias/criar.md` (título/descrição vêm dos commits da branch, não são escritos do zero) — mostrar prévia completa via `templates/mr.md` antes de confirmar
 - `args` começa com "atualizar" → seguir `referencias/atualizar.md`
 - `args` começa com "merge" ou "mergear" → seguir `referencias/merge.md` — ação mais crítica, prévia + confirmação explícita obrigatórias
+- `args` começa com "publicar"/"publica", ou menciona "escadinha"/"stack"/"pilha"/"uma MR por branch" → seguir `referencias/criar.md` (modo escadinha)
+- `args` começa com "criar" → seguir `referencias/criar.md` (título/descrição vêm dos commits da branch, não são escritos do zero) — mostrar prévia completa via `templates/mr.md` antes de confirmar
 - qualquer outro `args` (vazio, ambíguo ou sem número de MR quando necessário) → perguntar ao usuário o que falta (projeto? número da MR? qual conteúdo?) antes de chamar qualquer tool
