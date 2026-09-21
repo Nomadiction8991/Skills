@@ -24,17 +24,11 @@ Antes de perguntar em aberto, vasculhar só o trabalho em curso em busca do núm
 Se faltar mensagem:
 > "Qual o conteúdo do comentário?"
 
-### Passo 2 — Definir Visibilidade (`interno`)
+### Passo 2 — Visibilidade (`interno`)
 
-**Padrão recomendado desta skill: nota interna (`interno=true`)** — mesmo a tool tendo `interno=false` (visível ao cliente) como default técnico. Só usar `interno=false` quando o pedido deixar claro que é resposta direta ao cliente.
+**Sempre nota interna (`interno=true`), sem perguntar** — mesmo a tool tendo `interno=false` (visível ao cliente) como default técnico. Só usar `interno=false` quando o pedido disser explicitamente que é resposta direta ao cliente (ex.: "responde o cliente dizendo...").
 
-Se o pedido do usuário já deixar isso claro (ex.: "comenta como nota interna...", "responde o cliente dizendo..."), usar o valor já indicado, sem perguntar de novo.
-
-Caso contrário, perguntar **como escolha de múltipla escolha, nunca junto com a pergunta de envio do Passo 5**, com nota interna já marcada como recomendada:
-
-> "Esse comentário é: `[1] Nota interna (invisível ao cliente) — recomendado` `[2] Resposta visível ao cliente`"
-
-Essa pergunta resolve só o parâmetro `interno` — **não** é a confirmação de envio (regra #1 de `regras-gerais.md`). As duas perguntas são sempre feitas em momentos separados: esta aqui define visibilidade: `[1]`/`[2]`; a do Passo 5 confirma o conteúdo final: `[S]`/`[N]`/`[E]`.
+A confirmação de envio do Passo 5 (regra #1 de `regras-gerais.md`) continua existindo normalmente.
 
 ### Passo 3 — Consultar o Chamado
 
@@ -46,9 +40,35 @@ Com base no contexto do chamado (lido no Passo 3) e na mensagem bruta do usuári
 
 **Um chamado, um comentário (padrão):** quando a mensagem bruta citar N commits, branches ou MRs do mesmo chamado, montar **um único comentário consolidado** descrevendo o conjunto do que foi feito — nunca um comentário por commit/branch/MR. A divisão da skill de commit (1 branch = 1 MR = 1 commit) não se transfere para cá. Só montar mais de um comentário se o usuário pedir explicitamente ("dois comentários", "separa em..."). **Tempo verbal pelo estado real:** o padrão é contar o que foi mexido como trabalho feito ainda fora de produção (branches pendentes de merge na main não estão valendo) — sem mencionar que o trabalho foi dividido. Só redigir como "já valendo" se o usuário disser explicitamente que foi para a main/deploy.
 
+**Comentário sobre MRs:** quando o comentário for sobre MRs (links de revisão), buscar os dados no GitLab via MCP — via primária (`mcp__gitlab__list_merge_requests` para listar/buscar, `mcp__gitlab__get_merge_request` para detalhes — título, `web_url`, `source_branch`, `target_branch`, estado) — ou `glab` (CLI do GitLab via Bash) só quando o MCP estiver indisponível; antes de usar o `glab`, validar acesso (`glab auth status` + host/projeto) e parar se deslogado — nunca inventar título/link do histórico da conversa. Listar só MRs abertas (`state=opened`), escopadas ao projeto do trabalho atual (remote/repo atual), mais os ancestrais concluídos necessários à cadeia — base já merged aparece como nó concluído, nunca some para não orfanar a cadeia — e montar a ordem de dependência ligando os elos (`source_branch` de uma = `target_branch` da seguinte) a partir da main; títulos vêm como estão das MRs, sem reescrever. Antes de montar, vincular cada MR ao chamado pela marca do chamado nas branches/commits das MRs (`tt-N`), além do número (regra do Passo 1); se divergir, parar e perguntar. Formato: linha de apresentação ("Seguem os MRs referentes a este chamado, aguardando revisão:") + árvore em ordem de dependência a partir da main — manter as "perninhas" (`└──`) que mostram que uma depende da outra, nunca lista simples — com o título de cada MR como link clicável: na prévia `[Título](url)`, no envio `<a target="_blank" href="url">Título</a>` dentro de lista aninhada (`<ul>` dentro de `<li>`, recuo preservado). Exemplo (prévia):
+```
+Seguem os MRs referentes a este chamado, aguardando revisão:
+
+- main
+  - └── [feat(base): cria estrutura](https://gitlab.exemplo.com/grupo/repo/-/merge_requests/1)
+    - └── [feat(meio): usa a base](https://gitlab.exemplo.com/grupo/repo/-/merge_requests/2)
+      - └── [chore(topo): ajusta texto](https://gitlab.exemplo.com/grupo/repo/-/merge_requests/3)
+```
+(No envio, cada `[Título](url)` vira `<a target="_blank" href="url">Título</a>` em lista aninhada — exemplo de 2 níveis:)
+```html
+<ul>
+  <li>main
+    <ul>
+      <li><a target="_blank" href="https://gitlab.exemplo.com/grupo/repo/-/merge_requests/1">feat(base): cria estrutura</a>
+        <ul>
+          <li><a target="_blank" href="https://gitlab.exemplo.com/grupo/repo/-/merge_requests/2">feat(meio): usa a base</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+```
+
 ### Passo 5 — Exibir Prévia para Aprovação
 
 Mostrar ao usuário o comentário melhorado **em markdown/texto legível** (sem HTML), para que ele possa ler o conteúdo facilmente. O comentário real enviado no Passo 7 continuará sendo em HTML, seguindo as diretrizes de `ferramentas.md`.
+
+**Preview físico (obrigatório):** junto com a prévia em Markdown abaixo, gerar `/tmp/chamado-preview.html` e abrir automaticamente seguindo `preview-html.md` (agente principal, via Bash) — antes de pedir confirmação.
 
 ```
 Comentário no chamado #[número] ([Nota interna | Visível ao cliente], definido no Passo 2)
@@ -74,6 +94,8 @@ Quando o número foi autodetectado (não digitado), trocar a pergunta genérica 
 - `<hr>` → `---`
 - `<table>` de galeria de imagens (ver `../templates/galeria-imagens.md`) → lista numerada, uma linha por imagem, com breve descrição do que ela mostra (nunca colar a tabela/HTML na prévia)
 - `<br>` → quebra de linha
+- `<a target="_blank" href="url">Título</a>` → `[Título](url)`
+- lista aninhada de MRs (`<ul>` dentro de `<li>`) → recuo + `└──` na prévia
 
 ### Passo 6 — Validar Formatação HTML (obrigatório, antes de enviar)
 
@@ -93,6 +115,5 @@ Confirmar ao usuário: "Comentário adicionado ao chamado #[número] com sucesso
 
 ## Notas
 
-- Comentários são públicos (visíveis ao cliente) por padrão (`interno=false`) — ver Passo 2 para definir o contrário
-- A pergunta de visibilidade (Passo 2) e a confirmação de envio (Passo 5) são sempre perguntas separadas, nunca combinadas numa única mensagem — ver regra #1 de `regras-gerais.md`
+- Comentários saem sempre como nota interna (`interno=true`) — ver Passo 2; a confirmação de envio (Passo 5) continua obrigatória — ver regra #1 de `regras-gerais.md`
 - Seguir as diretrizes de formatação em `ferramentas.md`

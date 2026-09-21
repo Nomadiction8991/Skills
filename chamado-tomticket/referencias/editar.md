@@ -92,6 +92,8 @@ Exibir o chamado **completo e inteiro** duas vezes — a versão atual e a vers�
 
 Motivo de não usar cores reais (ANSI, ```diff```, etc.): já testado nesta skill — ANSI não renderiza neste chat (aparece como texto cru `[31m`), e blocos ` ```diff ` matam a formatação Markdown (negrito, listas) do conteúdo porque código não renderiza Markdown dentro. As linhas de emoji são a única forma que preserva Markdown rico E dá um marcador visual de início/meio/fim.
 
+**Preview físico (obrigatório):** junto com o antes/depois acima, gerar `/tmp/chamado-preview.html` e abrir automaticamente seguindo `preview-html.md` (agente principal, via Bash — empilhar versão atual + nova no mesmo arquivo).
+
 **A edição NÃO deve ser executada neste momento.**
 
 ---

@@ -3,7 +3,7 @@ name: chamado-tomticket
 description: "Abre, edita, lê, comenta, transfere ou pesquisa/resume chamados de suporte no TomTicket. Use via /chamado ou SEMPRE que a palavra chamado/ticket aparecer em qualquer frase do usuário envolvendo o TomTicket, mesmo que a frase não siga um padrão exato — inclusive pedidos indiretos como quero comentar no chamado o que fizemos pra resolver, referenciando um commit/branch/PR. Não é preciso a frase citar comentar_chamado/editar_chamado explicitamente; o gatilho é a menção ao chamado, não a sintaxe do pedido. Outros exemplos: abre um chamado sobre X, edita o chamado 3790, o que tem no chamado 3790, comenta no chamado 3790 que..., transfere o chamado 3790 pra..., resumo dos chamados do cliente X, quantos chamados abertos no Suporte, mesmo sem digitar a barra."
 model: haiku
 argument-hint: "abrir <descrição> | editar <número> <o que editar> | ler <número> | comentar <número> <mensagem> | transferir <número> <departamento/operador> | pesquisar <critério>"
-allowed-tools: Read Bash mcp__tomticket__buscar_cliente mcp__tomticket__listar_departamentos mcp__tomticket__listar_categorias mcp__tomticket__listar_operadores mcp__tomticket__listar_status mcp__tomticket__listar_chamados mcp__tomticket__criar_chamado mcp__tomticket__editar_chamado mcp__tomticket__ver_chamado mcp__tomticket__comentar_chamado mcp__tomticket__transferir_chamado mcp__tomticket__preparar_upload
+allowed-tools: Read Bash mcp__tomticket__buscar_cliente mcp__tomticket__listar_departamentos mcp__tomticket__listar_categorias mcp__tomticket__listar_operadores mcp__tomticket__listar_status mcp__tomticket__listar_chamados mcp__tomticket__criar_chamado mcp__tomticket__editar_chamado mcp__tomticket__ver_chamado mcp__tomticket__comentar_chamado mcp__tomticket__transferir_chamado mcp__tomticket__preparar_upload mcp__gitlab__list_merge_requests mcp__gitlab__get_merge_request
 ---
 
 # Skill — Chamado
@@ -26,6 +26,7 @@ Leia os arquivos relevantes antes de executar qualquer fluxo:
 - **Imagens (embutir no corpo/comentário via `<img>`):** `referencias/imagens.md`
 - **Anexos (arquivo não-imagem, só anexar sem embutir):** `referencias/anexos.md`
 - **Checklist HTML (compartilhada entre abrir/editar/comentar/transferir):** `referencias/checklist-html.md`
+- **Preview HTML físico (`/tmp/chamado-preview.html`, sempre sobrescrito e aberto):** `referencias/preview-html.md`
 - **ToolSearch / deferred tools:** `referencias/toolsearch.md`
 - **Template criação:** `templates/chamado.md`
 
@@ -52,7 +53,7 @@ Tabela de referência/fallback. Nos fluxos de abertura/edição, a lista real de
 3. **Leia o arquivo de referência adequado antes de iniciar qualquer fluxo.**
 4. **Leia `referencias/regras-gerais.md` antes de qualquer fluxo que crie/edite/comente/transfira** — contém as regras não negociáveis comuns a todas as operações.
 
-> **Regra:** lance um sub-agente (`Agent`, tipo `general-purpose`) para pesquisar os dados reais (cliente/departamento/categoria/operador/chamado existente) e montar a prévia + payload HTML em contexto isolado — o prompt do sub-agente inclui `referencias/regras-gerais.md`, o arquivo do fluxo correspondente (`abrir.md`/`editar.md`/`comentar.md`/`transferir.md`) e `templates/chamado.md`, e a instrução explícita de **nunca** chamar `criar_chamado`, `editar_chamado`, `comentar_chamado` ou `transferir_chamado` — só as tools de leitura (`buscar_cliente`, `listar_*`, `ver_chamado`, `preparar_upload`). O sub-agente só devolve a prévia + payload para esta skill. A confirmação `[S]/[N]` e a chamada da tool de escrita sempre ficam aqui, no agente principal.
+> **Regra:** lance um sub-agente (`Agent`, tipo `general-purpose`) para pesquisar os dados reais (cliente/departamento/categoria/operador/chamado existente) e montar a prévia + payload HTML em contexto isolado — o prompt do sub-agente inclui `referencias/regras-gerais.md`, o arquivo do fluxo correspondente (`abrir.md`/`editar.md`/`comentar.md`/`transferir.md`) e `templates/chamado.md`, e a instrução explícita de **nunca** chamar `criar_chamado`, `editar_chamado`, `comentar_chamado` ou `transferir_chamado` — só as tools de leitura (`buscar_cliente`, `listar_*`, `ver_chamado`, `preparar_upload`, `mcp__gitlab__list_merge_requests`, `mcp__gitlab__get_merge_request`). O sub-agente só devolve a prévia + payload para esta skill. Se o MCP do GitLab falhar, o fallback `glab` (só leitura) é executado pelo agente principal, nunca pelo sub-agente. A confirmação `[S]/[N]` e a chamada da tool de escrita sempre ficam aqui, no agente principal.
 
 ## Roteamento
 

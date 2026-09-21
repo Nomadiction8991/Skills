@@ -8,7 +8,7 @@ Passo a passo completo para abertura de chamados no TomTicket.
 
 Ver `regras-gerais.md` (regra #3) — vale integralmente para o título e o corpo construídos neste fluxo.
 
-Se o usuário anexou um arquivo nesta conversa (ou pedir para incluir um): imagem → ver `imagens.md`; outro tipo de arquivo → ver `anexos.md`. Em ambos os casos só é possível anexar/embutir depois que o chamado existir (via edição), nunca na criação em si.
+Se o usuário anexou um arquivo nesta conversa (ou pedir para incluir um): imagem → ver `imagens.md`; outro tipo de arquivo → ver `anexos.md`. Em ambos os casos só é possível anexar/embutir depois que o chamado existir (via comentário com imagem/anexo após a criação, nunca na criação em si — `criar_chamado` não aceita arquivo e `editar_chamado` não gera anexo real).
 
 ---
 
@@ -227,6 +227,7 @@ Ler `../templates/chamado.md`. O arquivo já traz as duas versões fixas e pront
 
 1. **Seção 1 (Preview em Markdown)** do template — preencher e exibir ao usuário exatamente assim, fora de bloco de código (não envolver com ```` ``` ````, senão perde a formatação).
 2. **Seção 2 (Payload em HTML)** do template — preencher em paralelo (mesmos dados), mas **não mostrar ao usuário**. É o que será reaproveitado no Passo 7/8, sem reescrever.
+3. **Preview físico (obrigatório):** gerar `/tmp/chamado-preview.html` e abrir automaticamente seguindo `preview-html.md` (agente principal, via Bash) — junto com a prévia em Markdown acima, antes de pedir confirmação.
 
 O preview (1) é só representação visual para aprovação — nunca é o que vai para a API. O que vai para `criar_chamado` é sempre o HTML (2).
 

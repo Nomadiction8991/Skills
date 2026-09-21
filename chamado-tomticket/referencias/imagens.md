@@ -8,6 +8,7 @@ Como decidir quando inserir uma imagem enviada pelo usuário num chamado (abertu
 
 - Usuário anexa uma imagem na conversa **e** pede explicitamente para colocá-la no chamado → sempre seguir este fluxo (após confirmação padrão).
 - Usuário anexa uma imagem sem pedir explicitamente, mas a imagem é pertinente ao chamado em questão (print do erro, evidência do defeito, comparação antes/depois, tela com o problema visível) → **sugerir** a inclusão, nunca inserir sem perguntar.
+- Ninguém anexou imagem, mas dá para capturar a tela via Playwright/browser (ver "Captura autônoma" no Passo 1) → **sugerir** a captura, nunca capturar e anexar sem perguntar — e só quando tiver certeza da tela/lugar.
 - Imagem irrelevante ao chamado (assunto não relacionado, imagem pessoal, print de outro contexto) → não sugerir, não inserir.
 
 A avaliação de pertinência é sua (do assistente) — mas a decisão de inserir é sempre do usuário.
@@ -31,9 +32,9 @@ Vale a regra geral #1 (`regras-gerais.md`) sem exceção: nunca subir/embutir im
 
 ## Onde posicionar a imagem na estrutura
 
-- **Abertura/edição** (corpo estruturado, ver `../templates/chamado.md`): logo após a seção **Comportamento Observado** quando a imagem evidencia o defeito, ou após **Descrição** quando ilustra o cenário geral. Nunca dentro de **Impacto** ou **Passos para Reproduzir**.
-- **Múltiplas imagens (galeria, ver Passo 4b)**: usar uma seção própria `<h4>Imagens</h4>` (mesmo padrão de cabeçalho azul das demais seções, ver `templates/chamado.md`), logo após **Descrição** — em vez de tentar encaixar a galeria inline dentro de outra seção.
+- **Abertura/edição: nunca no corpo.** Imagem nunca vai no corpo estruturado (`../templates/chamado.md`) via `editar_chamado`, porque essa via não gera anexo real. Imagem vai sempre em comentário (ver Passo 5).
 - **Comentário**: no ponto do texto em que faz sentido — normalmente ao final da explicação textual relacionada à imagem.
+- **Múltiplas imagens em comentário (galeria, ver Passo 4b)**: usar uma seção própria `<h4>Imagens</h4>` (mesmo padrão de cabeçalho azul das demais seções, ver `templates/chamado.md`) dentro do comentário — em vez de tentar encaixar a galeria inline dentro de outro trecho.
 
 ---
 
@@ -130,7 +131,16 @@ Se houver **só uma** candidata, ainda assim descrever brevemente antes de pedir
 
 ### Se não houver imagem em nenhum clipboard/histórico
 
-Não assumir que "o usuário anexou uma imagem" implica ter um caminho local disponível — **perguntar explicitamente o caminho do arquivo**. Sem caminho ou clipboard, o fluxo não pode continuar.
+Não assumir que "o usuário anexou uma imagem" implica ter um caminho local disponível — antes de perguntar o caminho, avaliar a "Captura autônoma via Playwright" abaixo; só se ela não se aplicar é que se pergunta explicitamente o caminho do arquivo.
+
+### Captura autônoma via Playwright/browser (só com certeza da tela)
+
+Quando **ninguém anexou imagem** mas o chamado/comentário fala de uma tela específica, avaliar capturar o print por conta própria via ferramentas de browser/Playwright disponíveis na sessão:
+
+- **Só quando tiver certeza da tela e do lugar** — URL exata informada pelo usuário, ou sistema + módulo + caminho navegável sem ambiguidade, em ambiente acessível. Qualquer dúvida sobre qual tela, qual URL, qual ambiente, quais dados/estado prévio → **não capturar sozinho**: pedir o print ou o caminho, seguindo o fluxo normal.
+- Se a sessão não tiver ferramenta de browser/screenshot disponível → pular silenciosamente e seguir o fluxo normal (pedir a imagem).
+- Mesmo com certeza, vale a "Regra de confirmação" sem exceção: descrever o que vai capturar ("print da tela X em <URL/caminho>") e perguntar antes (`[S] Sim` `[N] Não`). Depois de capturar, descrever brevemente o que o print mostra antes de pedir a confirmação final de envio.
+- O arquivo capturado (salvo localmente) segue o mesmo fluxo dos Passos 2–5: `preparar_upload` + `comentar_chamado` com `<img>` embutido + `upload_id`/`uploads` anexados (sempre os dois juntos, nunca no corpo).
 
 ---
 
@@ -139,7 +149,7 @@ Não assumir que "o usuário anexou uma imagem" implica ter um caminho local dis
 | Situação | Forma |
 |---|---|
 | Só anexar em comentário, sem precisar embutir no texto, arquivo pequeno | `arquivos` do `comentar_chamado` (base64) — ver `anexos.md` |
-| Embutir `<img>` no corpo (comentário, abertura ou edição), qualquer tamanho | `preparar_upload` + `curl` (Passo 3) — é a única forma que dá uma URL para colocar em `<img src="...">` |
+| Embutir `<img>` no comentário (nunca no corpo de abertura/edição), qualquer tamanho | `preparar_upload` + `curl` (Passo 3) — é a única forma que dá uma URL para colocar em `<img src="...">` |
 
 ---
 
@@ -181,20 +191,21 @@ Quando houver **mais de uma** imagem a inserir (ex.: várias candidatas aprovada
 2. Montar a mensagem em HTML com o `<img>` embutido no ponto certo do texto
 3. `comentar_chamado(numero, mensagem, upload_id=..., uploads=[file])` — enviar também `upload_id`/`uploads` garante que a imagem fique como anexo real, além de embutida
 
-### Abertura (`criar_chamado`)
+### Abertura (`criar_chamado` + comentário com imagem)
 
-`criar_chamado` não tem parâmetro de arquivo, e `preparar_upload` exige `numero` — logo é impossível subir a imagem antes do chamado existir. Fluxo:
+`criar_chamado` não tem parâmetro de arquivo, e `preparar_upload` exige `numero` — logo é impossível subir a imagem antes do chamado existir. E `editar_chamado` também não aceita anexo (só `numero`/`titulo`/`mensagem`) — imagem só embutida via `<img>` por essa via corre risco de expirar (ver aviso no Passo 3). Por isso, abertura com imagem segue sempre este fluxo:
 
 1. `criar_chamado(...)` sem imagem, seguindo `abrir.md` normalmente
 2. Anotar o `numero` retornado
 3. `preparar_upload(numero)` → curl → capturar `file`/URL
-4. `editar_chamado(numero, mensagem="<corpo completo já com <img> no lugar certo>")` — corpo completo, reescrito do zero, seguindo `editar.md` (nunca só o trecho novo)
+4. `comentar_chamado(numero, mensagem="<HTML com <img> embutido no ponto certo>", upload_id=..., uploads=[file])` — sempre os dois juntos: imagem **embutida (`<img>`) E anexada (`upload_id`/`uploads`)**, mesmo padrão do fluxo Comentário acima, para prevenir link quebrado se a URL temporária expirar
+5. Avisar o usuário que a imagem vai como comentário (embutida + anexada), não dentro do corpo/mensagem principal do chamado
 
-> ⚠️ **`editar_chamado` não tem parâmetro de upload/anexo (só `numero`/`titulo`/`mensagem`, ver schema real da tool)** — a imagem fica embutida no HTML via `<img>`, mas **não** vira anexo real do chamado por essa via. Se também precisar do anexo real (arquivo baixável, não só a tag `<img>`), é preciso um comentário adicional (`comentar_chamado(numero, mensagem, upload_id=..., uploads=[file])`) — só `comentar_chamado` aceita `arquivos`/`upload_id`/`uploads`.
+> **Regra absoluta:** imagem nunca vai no corpo via `editar_chamado` — essa tool não tem parâmetro de upload/anexo, então a imagem ficaria só embutida sem virar anexo real. Por decisão do usuário, a hipótese de "imagem no corpo" não existe: é sempre comentário com embutida + anexada.
 
-### Edição (`editar_chamado`)
+### Edição (`editar_chamado` + comentário com imagem)
 
-Igual aos passos 3-4 da abertura, mas o chamado já existe: `preparar_upload(numero)` → curl → `editar_chamado` com o corpo completo incluindo o `<img>`. Vale a mesma ressalva acima — sem anexo real via `editar_chamado`.
+Mesma limitação da abertura: `editar_chamado` não tem parâmetro de upload/anexo. Então imagem nunca vai no corpo via `editar_chamado` — seguir sempre o mesmo fluxo da abertura: `preparar_upload(numero)` → curl → `comentar_chamado` com `<img>` embutido + `upload_id`/`uploads` (sempre os dois juntos: embutida E anexada).
 
 ---
 

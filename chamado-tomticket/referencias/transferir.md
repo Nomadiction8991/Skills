@@ -68,6 +68,8 @@ Perguntar se o usuário quer registrar um motivo para a transferência:
 
 Se sim, montar o HTML seguindo as diretrizes de `ferramentas.md` (parágrafo simples, sem necessidade da estrutura de seções do template de criação/edição).
 
+**Preview físico (obrigatório quando houver mensagem):** junto com o resumo do Passo 5, gerar `/tmp/chamado-preview.html` e abrir automaticamente seguindo `preview-html.md` (agente principal, via Bash) — antes de pedir confirmação. Sem mensagem, não há preview.
+
 ---
 
 ## Passo 5 — Confirmar
