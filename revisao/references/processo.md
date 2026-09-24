@@ -17,6 +17,10 @@ Ver `regras.md` Técnica oficial `code-review` adaptada (steps 1-8) — fonte ú
 
 Em todos os modos: falhar se diff vazio antes de lançar agents; se diff trivial (só `*.lock`, `src/gen/**`, vendored), retorne `Nenhum achado — diff trivial` sem agents. Agents são lançados por `git.md` ou `branch.md`.
 
+### Continuidade após a revisão: identidade do worktree e confirmação
+
+A revisão continua sendo somente leitura. Se o usuário pedir depois uma ação Git em um worktree, encerre o escopo da revisão e confirme o destino antes de orientar ou executar essa ação: consulte `pwd`, `git rev-parse --show-toplevel` e `git status --short` no worktree alvo. Não reutilize como atual o caminho, branch ou status de outro worktree; se houver mais de um candidato ou o destino não estiver claro, pergunte qual é o correto. Antes de qualquer alteração, confira que os caminhos pedidos pertencem ao worktree confirmado. Depois, repita `git status --short` nesse mesmo worktree e só diga que a ação foi concluída se a saída comprovar o resultado; se não comprovar, informe claramente que falhou ou segue pendente. Nunca declare restauração, edição ou outro efeito com base apenas na intenção ou no comando tentado.
+
 ## 2. Ler arquivos completos sem ampliar o escopo
 
 Não revise só o diff — abra os arquivos inteiros que o diff toca para entender o contexto. O diff esconde o método irmão que já valida, o outro lugar que calcula o mesmo dado e o padrão dos vizinhos. Esses arquivos e buscas adicionais são apenas contexto: nenhum problema fora do diff pode virar achado.
