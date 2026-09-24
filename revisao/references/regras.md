@@ -35,6 +35,11 @@ Compatibilidade: o genérico pega bugs rasos + `AGENTS.md` compliance; `validaco
 - Entregue no formato de `formato-saida.md`. A revisão é estritamente diagnóstica e de somente leitura: nunca altera arquivos, nunca aplica correções no código e nunca commita. A skill `revisao` apenas reporta os problemas encontrados e controla o retorno do code-review genérico.
 - Use arquivos completos, busca global, histórico, código vizinho, documentação e testes somente para entender o escopo. Reporte apenas problemas introduzidos pelo diff ou diretamente no conteúdo revisado; descarte achados pré-existentes, não relacionados ou fora do diff.
 
+## Comunicação durante a revisão
+
+- Manter achados provisórios internos até a validação: não comunicar suspeita antes de confirmar com validador e cenário concreto de falha.
+- Restringir updates ao usuário a progresso relevante ou bloqueios; evitar atualizações repetidas só de espera.
+
 ## Regras rígidas — somente leitura e permissão explícita (nunca automático)
 
 Esta skill é 100% de leitura e diagnóstico. Ela NUNCA altera, edita, commita ou corrige código diretamente:
