@@ -43,7 +43,9 @@ Primeiro, se o passo 0 retornou achados genéricos do code-review, mantenha-os c
 
 ## 3.5 Rodar todos os testes (sempre)
 
-Identifique como rodar os testes no repo em que está — procure nesta ordem: `Makefile` (`make test`/`make tests`/`make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Leia o arquivo e extraia o comando exato. Rode a suíte completa para validar o diff. Só reporte falhas causadas pelo conteúdo revisado; falhas pré-existentes ou sem relação ficam fora do relatório. Se não houver como rodar (sem Docker/env), declare "testes não executados — motivo" em vez de silenciar.
+Identifique cedo como rodar os testes no repo em que está — procure nesta ordem: `Makefile` (`make test`/`make tests`/`make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Leia o arquivo e extraia o comando exato; rode a suíte completa assim que o diff e o comando estiverem definidos, sem deixar essa validação para depois de toda a análise. Só reporte falhas causadas pelo conteúdo revisado; falhas pré-existentes ou sem relação ficam fora do relatório. Se não houver como rodar (sem Docker/env), declare "testes não executados — motivo" em vez de silenciar.
+
+Se agents ou validadores falharem por limite/indisponibilidade do provedor, siga o fallback descrito em `regras.md`: não repita chamadas equivalentes; complete a análise no agente principal com ferramentas de leitura e valide achados no código. Mantenha os updates ao usuário apenas para mudanças relevantes de estado ou bloqueios, sem anunciar espera por cada tarefa paralela.
 
 ## 4. Validar antes de reportar
 
