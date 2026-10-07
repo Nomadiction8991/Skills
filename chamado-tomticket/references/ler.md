@@ -43,9 +43,9 @@ Criado em    : <data_criação>
 Após exibir, perguntar se o usuário deseja fazer algo com o chamado:
 > "Deseja fazer algo neste chamado? `[E] Editar` | `[C] Comentar` | `[T] Transferir` | `[N] Não, apenas isso`"
 
-- **E:** inicia fluxo de edição (ler `referencias/editar.md`)
-- **C:** inicia fluxo de comentário (ler `referencias/comentar.md`)
-- **T:** inicia fluxo de transferência (ler `referencias/transferir.md`)
+- **E:** inicia fluxo de edição (ler `references/editar.md`)
+- **C:** inicia fluxo de comentário (ler `references/comentar.md`)
+- **T:** inicia fluxo de transferência (ler `references/transferir.md`)
 - **N:** encerra
 
 ---

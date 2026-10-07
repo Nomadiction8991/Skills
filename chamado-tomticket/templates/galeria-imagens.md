@@ -1,4 +1,4 @@
-Template para inserir uma **galeria de múltiplas imagens** no corpo de um chamado (abertura/edição) ou comentário. Ver `../referencias/imagens.md` (Passo 4b) para quando usar e como conseguir as URLs (upload via `preparar_upload`+curl).
+Template para inserir uma **galeria de múltiplas imagens** no corpo de um chamado (abertura/edição) ou comentário. Ver `../references/imagens.md` (Passo 4b) para quando usar e como conseguir as URLs (upload via `preparar_upload`+curl).
 
 Não reconstruir a formatação do zero — só duplicar o bloco de uma célula por imagem e trocar o `src`.
 

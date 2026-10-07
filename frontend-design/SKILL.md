@@ -1,8 +1,10 @@
 ---
 name: frontend-design
-description: Ative automaticamente antes de qualquer alteração que toque na interface — seja o usuário pedindo ou você mesmo identificando que vai modificar CSS, layout, componentes, cores, tipografia ou qualquer elemento visual. Também ao criar páginas ou componentes novos. Ajuda a criar interfaces com identidade visual própria, evitando aspecto genérico. Seja direto e evite perguntas desnecessárias.
+description: "Ative automaticamente antes de qualquer alteração que toque na interface — seja o usuário pedindo ou você mesmo identificando que vai modificar CSS, layout, componentes, cores, tipografia ou qualquer elemento visual. Também ao criar páginas ou componentes novos. Ajuda a criar interfaces com identidade visual própria, evitando aspecto genérico. Seja direto e evite perguntas desnecessárias. Do NOT use for backend or logic with no visual change."
 model: sonnet
 effort: medium
+argument-hint: "[página|componente]"
+allowed-tools: Read Edit Glob Grep
 
 ---
 
@@ -57,3 +59,12 @@ Use voz ativa como padrão. Um controle deve dizer exatamente o que acontece qua
 Trate falhas e vazios como momentos de direção, não de humor. Explique o que deu errado e como corrigir, na voz da interface e não de uma pessoa. Erros não pedem desculpas e nunca são vagos sobre o que aconteceu. Uma tela vazia é um convite para agir.
 
 Mantenha o registro conversacional e calibrado: verbos simples, sentence case, sem enchimento, com tom adequado à marca e ao público. Deixe cada elemento fazer exatamente um trabalho. Um rótulo rotula, um exemplo demonstra, e nada faz dupla função silenciosamente.
+
+## Exemplo
+- Pedido: "Crie uma tela de perfil."
+- Entrega: layout responsivo.
+- Escopo: sem mudar a lógica.
+
+## Troubleshooting
+- Pedido sem requisito visual claro → pergunte só o essencial.
+- Conflito com copy → ajuste a copy sem mexer no visual.

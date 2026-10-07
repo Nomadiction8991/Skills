@@ -1,11 +1,11 @@
 Este template tem duas partes fixas e prontas — não é para reconstruir a formatação a cada chamado, só preencher os `[colchetes]`:
 
-1. **Preview (Markdown)** — o que se exibe ao usuário no terminal para aprovação (Passo 5 de `referencias/abrir.md`).
+1. **Preview (Markdown)** — o que se exibe ao usuário no terminal para aprovação (Passo 5 de `references/abrir.md`).
 2. **Payload (HTML)** — o que de fato vai no campo `mensagem` de `criar_chamado`/`editar_chamado`. Sempre usar exatamente esta estrutura, só trocando o conteúdo entre `[colchetes]`.
 
 Metadados (Título/Cliente/Departamento/Categoria/Prioridade/Responsável/Ambiente) **não entram no HTML** — são campos separados da API, só aparecem no preview.
 
-Se houver imagem(ns) a inserir, ver `../referencias/imagens.md`. Para **mais de uma** imagem (galeria), usar o template pronto em `galeria-imagens.md` (mesma pasta) em vez de empilhar `<img>` avulsos.
+Se houver imagem(ns) a inserir, ver `../references/imagens.md`. Para **mais de uma** imagem (galeria), usar o template pronto em `galeria-imagens.md` (mesma pasta) em vez de empilhar `<img>` avulsos.
 
 ---
 
@@ -32,7 +32,7 @@ Ambiente     : [Produção | Homologação | Desenvolvimento | Não informado]
 1. [Primeiro passo]
 2. [Segundo passo]
 3. [Terceiro passo]
-[seção omitida quando não aplicável — ver referencias/abrir.md item f]
+[seção omitida quando não aplicável — ver references/abrir.md item f]
 
 **Comportamento Esperado**
 [O que deveria acontecer normalmente]
@@ -64,7 +64,7 @@ Ambiente     : [Produção | Homologação | Desenvolvimento | Não informado]
   <li>[Segundo passo]</li>
   <li>[Terceiro passo]</li>
 </ol>
-<!-- seção inteira (h4 + ol) omitida quando não aplicável — ver referencias/abrir.md item f -->
+<!-- seção inteira (h4 + ol) omitida quando não aplicável — ver references/abrir.md item f -->
 
 <h4><span style="color: rgb(52, 152, 219); font-size: 14px;"><strong>Comportamento Esperado</strong></span></h4>
 <p>[O que deveria acontecer normalmente.]</p>
@@ -86,7 +86,7 @@ Ambiente     : [Produção | Homologação | Desenvolvimento | Não informado]
 ```
 
 **Regras fixas deste HTML (não alterar a estrutura, só o conteúdo):**
-- Todo cabeçalho é `<h4><span style="color: rgb(52, 152, 219); font-size: 14px;"><strong>...</strong></span></h4>` — nunca `style` direto no `<h4>` (é descartado silenciosamente pelo Froala, ver `referencias/ferramentas.md`).
+- Todo cabeçalho é `<h4><span style="color: rgb(52, 152, 219); font-size: 14px;"><strong>...</strong></span></h4>` — nunca `style` direto no `<h4>` (é descartado silenciosamente pelo Froala, ver `references/ferramentas.md`).
 - "Comportamento Observado" só usa `<blockquote>` quando houver uma mensagem de erro literal exibida ao usuário; caso contrário, só `<p>`.
 - Listas são sempre `<ol>`/`<ul>` reais, nunca `1. texto`/`- texto` soltos.
 - Se alguma seção não se aplicar (Passos para Reproduzir sem aplicação, sem rótulo ad-hoc), **omitir a seção inteira** (`<h4>` + conteúdo), não deixar `<h4>` vazio nem escrever "Não aplicável" dentro do HTML — no preview em Markdown, sim, pode aparecer "Não aplicável" como texto do item.

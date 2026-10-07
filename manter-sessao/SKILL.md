@@ -1,6 +1,10 @@
 ---
 name: manter-sessao
-description: "Instala no crontab do usuário um agendamento que envia uma mensagem mínima (\"oi\") ao Claude Code em horários fixos, para ancorar o reset da janela de uso de 5h perto do meio dos turnos de trabalho do usuário. Use quando o usuário pedir para manter/alinhar a sessão do Claude, resetar o limite de uso num horário específico, ou mencionar 'janela de 5h' / 'sessão de 5h' junto com turnos de trabalho."
+description: "Instala no crontab do usuário um agendamento que envia uma mensagem mínima (\"oi\") ao Claude Code em horários fixos, para ancorar o reset da janela de uso de 5h perto do meio dos turnos de trabalho do usuário. Use quando o usuário pedir para manter/alinhar a sessão do Claude, resetar o limite de uso num horário específico, ou mencionar 'janela de 5h' / 'sessão de 5h' junto com turnos de trabalho. Do NOT use for general scheduling or one-off reminders."
+model: haiku
+effort: low
+argument-hint: "[turnos]"
+allowed-tools: Read Bash
 ---
 
 # Manter Sessão (alinhar reset da janela de uso de 5h)
@@ -36,3 +40,8 @@ Pergunte os turnos de trabalho do usuário, se ainda não souber (horário de in
 - Nunca sobrescreva o crontab inteiro; sempre acrescente preservando entradas existentes de outros programas.
 - Para desinstalar, remova só as linhas marcadas com `# manter-sessao-claude`: `crontab -l | grep -v manter-sessao-claude | crontab -`.
 - Isso é independente do cron interno do Claude Code (`CronCreate`), que expira em 7 dias e só dispara com o REPL ocioso — o crontab do sistema roda sempre, sem expiração.
+
+## Troubleshooting
+
+- Se o `crontab` estiver indisponível ou faltar algum comando necessário, informe o usuário e não simule o agendamento.
+- Se o usuário quiser mudar os turnos, refaça o agendamento existente, atualizando as entradas desta skill sem duplicá-las.
