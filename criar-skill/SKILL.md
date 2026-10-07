@@ -2,14 +2,14 @@
 name: criar-skill
 model: sonnet
 effort: medium
-description: Cria ou refatora skills seguindo os padrões deste marketplace (fluxo-trabalho). Use via /criar-skill ou sempre que o usuário disser "crie uma skill", "nova skill", "refatore a skill", "padronize a skill" — mesmo sem barra, em linguagem natural. Garante SKILL.md enxuto com roteamento, referências modulares, contexto isolado via sub-agente, permissão de uso único e linguagem simples.
+description: 'Cria ou refatora skills seguindo os padrões deste marketplace (fluxo-trabalho). Use via /criar-skill ou sempre que o usuário disser "crie uma skill", "nova skill", "refatore a skill", "padronize a skill" — mesmo sem barra, em linguagem natural. Garante SKILL.md enxuto com roteamento, referências modulares, contexto isolado via sub-agente, permissão de uso único e linguagem simples. Do NOT use for ordinary coding tasks — skill scaffolding only.'
 argument-hint: "[nome | refatorar <nome> | descreva a skill desejada]"
 allowed-tools: Read Bash Grep Glob Write Edit
 ---
 
 # Criar Skill nos Padrões do Marketplace
 
-Cria ou refatora skills dentro de `plugins/fluxo-trabalho/skills/<nome>/` seguindo exatamente os padrões que este marketplace usa — para que a IA só leia o que precisa, trabalhe com contexto limpo e nunca aja sem permissão explícita.
+Cria ou refatora skills dentro de `skills/<nome>/` (na raiz deste repositório) seguindo exatamente os padrões que este marketplace usa — para que a IA só leia o que precisa, trabalhe com contexto limpo e nunca aja sem permissão explícita.
 
 ## Regra de ouro: por que seguimos estes padrões
 
@@ -39,3 +39,9 @@ Leia só o que o modo pedir:
 - `args` vazio ou dúvida → ler `help.md` e perguntar qual skill criar/refatorar e o que ela deve fazer
 
 Em todos os modos, `references/regras-gerais.md` vale primeiro.
+
+## Exemplo
+Usuário: "refatore a skill revisao" → modo refatorar: lê SKILL.md + references/* + checklist, diagnostica em sub-agente, propõe SKILL.md enxuto, valida, mostra prévia e pede [S/N].
+## Troubleshooting
+- `args` vago sem alvo → ler help.md e perguntar nome/gatilhos/escopo antes de montar.
+- Sem `S` explícito → não escreve nada, permissão é de uso único.

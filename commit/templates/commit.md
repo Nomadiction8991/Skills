@@ -1,6 +1,6 @@
-Template para montar a mensagem de commit (Conventional Commits) — só preencher os `[colchetes]`, sem alterar a estrutura. Ver `../referencias/conventional-commits.md` para a especificação completa e mais exemplos, e `../referencias/regras-gerais.md` (não negociáveis, valem para todo preenchimento abaixo).
+Template para montar a mensagem de commit (Conventional Commits) — só preencher os `[colchetes]`, sem alterar a estrutura. Ver `../references/conventional-commits.md` para a especificação completa e mais exemplos, e `../references/regras-gerais.md` (não negociáveis, valem para todo preenchimento abaixo).
 
-> **Projeto Ello?** Em projetos do Ello ERP (detecção no Passo 0 de `../referencias/fluxo.md`) use `../referencias/ello.md` e `../templates/ello-commit.md` — o subject não usa tipo e o corpo é opcional.
+> **Projeto Ello?** Em projetos do Ello ERP (detecção no Passo 0 de `../references/fluxo.md`) use `../references/ello.md` e `../templates/ello-commit.md` — o subject não usa tipo e o corpo é opcional.
 
 ```
 [tipo]([escopo opcional]): [descrição curta, no imperativo, até 80 caracteres]
@@ -13,13 +13,13 @@ Template para montar a mensagem de commit (Conventional Commits) — só preench
 **Tipos comuns:** `feat`, `fix`, `build`, `chore`, `ci`, `docs`, `style`, `refactor`, `perf`, `test`.
 
 **Regras rápidas ao preencher:**
-- `[tipo]` reflete a natureza real da mudança (ver regra #2 e #3 de `../referencias/conventional-commits.md`) — se o diff tiver mudanças de natureza distinta, considerar dividir em vários commits em vez de escolher um tipo genérico.
+- `[tipo]` reflete a natureza real da mudança (ver regra #2 e #3 de `../references/conventional-commits.md`) — se o diff tiver mudanças de natureza distinta, considerar dividir em vários commits em vez de escolher um tipo genérico.
 - `[escopo opcional]` é um substantivo entre parênteses descrevendo a área do código (ex.: `feat(parser): ...`) — omitir se não agregar clareza.
 - `[descrição curta]` é imperativa ("adiciona", "corrige", "remove"), sem ponto final, resume o commit inteiro; máximo 80 caracteres (regra geral #6).
-- `[corpo]`: ver `../referencias/regras-gerais.md` (regras #1, #2 e #7) — sempre obrigatório, resumindo o quê mudou e por quê em linguagem simples, sem jargão técnico, conciso (até ~400 caracteres).
+- `[corpo]`: ver `../references/regras-gerais.md` (regras #1, #2 e #7) — sempre obrigatório, resumindo o quê mudou e por quê em linguagem simples, sem jargão técnico, conciso (até ~400 caracteres).
 - Breaking change: usar `!` logo antes dos dois-pontos do tipo/escopo (`feat(api)!: ...`) e/ou rodapé `BREAKING CHANGE: <descrição>`.
-- Rodapé de atribuição de IA: ver `../referencias/regras-gerais.md` (regra #3) — nunca incluir.
-- Chamado vinculado do TomTicket: ver `../referencias/regras-gerais.md` (regra #5) — quando houver, acrescentar `Refs: #<número>` e, na linha de baixo, `<Título do chamado> (<link>)`.
+- Rodapé de atribuição de IA: ver `../references/regras-gerais.md` (regra #3) — nunca incluir.
+- Chamado vinculado do TomTicket: ver `../references/regras-gerais.md` (regra #5) — quando houver, acrescentar `Refs: #<número>` e, na linha de baixo, `<Título do chamado> (<link>)`.
 
 **Exemplo preenchido (sem chamado vinculado):**
 ```

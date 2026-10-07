@@ -1,4 +1,4 @@
-Template da mensagem de commit da **variante Ello** (projetos do Ello ERP) — usada no lugar do template conventional. Ver `../referencias/ello.md` para as regras detalhadas e `../referencias/fluxo.md` (Passo 0) para a detecção.
+Template da mensagem de commit da **variante Ello** (projetos do Ello ERP) — usada no lugar do template conventional. Ver `../references/ello.md` para as regras detalhadas e `../references/fluxo.md` (Passo 0) para a detecção.
 
 ```
 [Subject: verbo no presente, ≤80 caracteres, contexto da tela/módulo] [(tt-XXXX) | *]

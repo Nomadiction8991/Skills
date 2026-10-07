@@ -1,6 +1,6 @@
 # Criar Skill — Ajuda
 
-Cria ou refatora skills em `plugins/fluxo-trabalho/skills/<nome>/` nos padrões do marketplace.
+Cria ou refatora skills em `skills/<nome>/` (na raiz deste repositório) nos padrões do marketplace.
 
 ## Uso
 
@@ -21,4 +21,4 @@ Cria ou refatora skills em `plugins/fluxo-trabalho/skills/<nome>/` nos padrões 
 
 ## Padrões que a skill garante
 
-SKILL.md enxuto, referências modulares por args, contexto isolado via `general-purpose`, permissão explícita, linguagem genérica, bump de versão nos 4 manifests.
+SKILL.md enxuto, referências modulares por args, contexto isolado via `general-purpose`, permissão explícita, linguagem genérica; neste repo não há manifests — pule o bump.

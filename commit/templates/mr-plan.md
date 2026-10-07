@@ -1,4 +1,4 @@
-Template da apresentação final do plano de separação (Passo 2.5 de `../referencias/fluxo.md`) — só preencher os `[colchetes]`, sem alterar a estrutura.
+Template da apresentação final do plano de separação (Passo 2.5 de `../references/fluxo.md`) — só preencher os `[colchetes]`, sem alterar a estrutura.
 
 Regras do grafo:
 - Desenhar a **topologia real**: branches independentes saem lado a lado da base; branch dependente sai aninhada da branch pai, nunca da base.

@@ -115,7 +115,7 @@ Regras da pergunta:
 
 > **Regra:** lance um sub-agente (`Agent`, tipo `general-purpose`) em contexto isolado para montar a mensagem — o prompt inclui o diff real, `regras-gerais.md` e os Passos 0 a 4 deste fluxo, **exceto o Passo 2.5** (a separação em MRs já foi decidida antes e **não** se reavalia aqui). O sub-agente **nunca** executa `git commit`; ele só devolve a mensagem montada (e o aviso de amend, se aplicável) para o agente principal.
 
-**Se for projeto Ello (Passo 0):** usar `../templates/ello-commit.md` com as regras de `../referencias/ello.md`.
+**Se for projeto Ello (Passo 0):** usar `../templates/ello-commit.md` com as regras de `../references/ello.md`.
 
 **Senão:** usar o template de `../templates/commit.md`, preenchendo com base no diff real (Passo 2) — nunca a partir do pedido do usuário isoladamente, nem só dos nomes dos arquivos alterados. Seguir a especificação Conventional Commits (`conventional-commits.md`) para tipo, escopo e formato, e `regras-gerais.md` para corpo/linguagem/atribuição/chamado vinculado.
 

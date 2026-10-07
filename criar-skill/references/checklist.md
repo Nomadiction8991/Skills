@@ -3,7 +3,7 @@
 Passe por todos antes de pedir permissão para escrever. Marque ok ou reprove com arquivo:linha.
 
 ## 1. Nome e pasta
-- Pasta `plugins/fluxo-trabalho/skills/<nome>/` existe e `name` no frontmatter == pasta (lowercase-hyphen, ≤64 chars)?
+- Pasta `skills/<nome>/` existe na raiz deste repositório e `name` no frontmatter == pasta (lowercase-hyphen, ≤64 chars)?
 
 ## 2. Frontmatter
 - `name`, `description` (com "Use via /<nome> ou sempre que..." + gatilhos em linguagem natural), `argument-hint`, `allowed-tools` mínimo, `model`/`effort` adequados?
@@ -30,6 +30,6 @@ Passe por todos antes de pedir permissão para escrever. Marque ok ou reprove co
 - `templates/*.md` com placeholders claros e sem lógica duplicada das referências?
 
 ## 9. Versionamento
-- Bump previsto nos 4 manifests após `S`?
+- Neste repo não há manifests — pule o bump.
 
 Se algum reprovar, corrigir no rascunho antes da prévia. Todos ok → pronto para pedir permissão.

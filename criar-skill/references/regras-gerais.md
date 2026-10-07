@@ -4,7 +4,7 @@ Estas regras são não negociáveis. Valem para criar do zero ou refatorar skill
 
 ## 1. Nome e pasta
 
-- Pasta: `plugins/fluxo-trabalho/skills/<nome>/` onde `<nome>` é `lowercase-hyphen`, até 64 chars, igual ao `name` do frontmatter.
+- Pasta: `skills/<nome>/` na raiz deste repositório, onde `<nome>` é `lowercase-hyphen`, até 64 chars, igual ao `name` do frontmatter.
 - Um skill = uma pasta + `SKILL.md` dentro dela. Referências em `references/*.md`, templates em `templates/*.md` se houver.
 
 ## 2. Frontmatter de SKILL.md
@@ -52,7 +52,7 @@ Cada referência é auto-contida: diz o que fazer, como verificar e quando repro
 ## 6. Permissão de uso único (nunca automático)
 
 - Tudo que cria/edita (`Write`/`Edit`) ou vai para nuvem exige confirmação explícita **naquela vez**. Mesmo que o usuário disse `S` antes, perguntar de novo no mesmo contexto.
-- Fluxo: 1) mostrar prévia exata (árvore + SKILL.md), 2) perguntar `Posso criar/atualizar a skill <nome> em plugins/fluxo-trabalho/skills/<nome>? [S/N]`, 3) só após `S` escrever. Permissão expira após uso.
+- Fluxo: 1) mostrar prévia exata (árvore + SKILL.md), 2) perguntar `Posso criar/atualizar a skill <nome> em skills/<nome>? [S/N]`, 3) só após `S` escrever. Permissão expira após uso.
 - Sem `S` = não escreve.
 
 ## 7. Linguagem e genericidade
@@ -63,4 +63,4 @@ Cada referência é auto-contida: diz o que fazer, como verificar e quando repro
 
 ## 8. Versionamento
 
-- Skill vive dentro do plugin `fluxo-trabalho`. Ao criar/refatorar skill, bump `version` em `plugins/fluxo-trabalho/.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` + `plugins/fluxo-trabalho/package.json` + `index.json` — é o sinal de atualização para o Claude.
+- Neste repo não há manifests — pule o bump.

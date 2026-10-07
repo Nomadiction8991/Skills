@@ -14,7 +14,7 @@ claude mcp list
 
 ## 2. Autoinstalação (quando o MCP `gitlab` não existe em nenhum escopo)
 
-**Nunca hardcodar ou escrever um token de GitLab dentro de arquivos desta skill** (SKILL.md, referencias/*, templates/*). Esses arquivos podem ser versionados/compartilhados — gravar um Personal Access Token aqui seria vazar uma credencial. O token só pode existir dentro do comando `claude mcp add` executado via Bash (que grava em `~/.claude.json`, fora do controle desta skill) ou nas variáveis de ambiente do processo.
+**Nunca hardcodar ou escrever um token de GitLab dentro de arquivos desta skill** (SKILL.md, references/*, templates/*). Esses arquivos podem ser versionados/compartilhados — gravar um Personal Access Token aqui seria vazar uma credencial. O token só pode existir dentro do comando `claude mcp add` executado via Bash (que grava em `~/.claude.json`, fora do controle desta skill) ou nas variáveis de ambiente do processo.
 
 1. **URL da API do GitLab** — usar sempre `https://gitlab.com/api/v4` direto, sem perguntar. Só perguntar a URL correta se o usuário mencionar espontaneamente instância self-hosted/própria.
 2. **Personal Access Token** — perguntar sempre ao usuário (escopo mínimo necessário: `api` para ler/comentar/aprovar MRs). Nunca reaproveitar token de outro projeto automaticamente.
