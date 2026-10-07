@@ -30,6 +30,7 @@ A revisão deve ficar restrita ao conteúdo do escopo selecionado pelo argumento
 - `references/branch.md` — modo branch: diff da branch atual contra a base/pai + agents
 - `references/processo.md` — fluxo base (fixar ponto, ler arquivos, checklist, validar, agregar)
 - `references/validacoes.md` — 15 validações genéricas para qualquer stack (inclui pipeline/config, migração, idioma, rodar testes e comentários só quando necessário)
+- `references/revisao-exigente.md` — padrão exigente padrão: gates de tamanho, dor primeiro, baby steps, checklist pré-MR
 - `references/formato-saida.md` — formato obrigatório do relatório
 - `references/code-smells.md` — baseline complementar (usada dentro de validacoes #3 e #5)
 - `references/context7.md` — quando e como usar o MCP context7
