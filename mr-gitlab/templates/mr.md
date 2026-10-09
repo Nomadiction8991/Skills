@@ -1,20 +1,37 @@
-Template fixo — só preencher os `[colchetes]` com os dados coletados em `../references/criar.md`, sem alterar a estrutura. É a prévia exibida ao usuário no terminal antes de qualquer push/criação.
+Template fixo — preencher os `[colchetes]` com os dados coletados em `../references/criar.md`. É a prévia exibida ao usuário no terminal antes de qualquer push ou criação.
 
 ---
 
 ## Preview modo único (exibir ao usuário)
 
 ```
-Projeto      : [namespace/repo]
-Origem       : [branch de origem]
-Destino      : [branch de destino]
-Responsável  : [nome | Sem responsável]
+Projeto | Origem → Destino | Assignee | Reviewer
+[namespace/repo] | [branch de origem] → [branch de destino] | [nome | Sem responsável] | [nome | Sem reviewer]
 
-Título
-[Título — 1 commit: subject do commit; 2+ commits: síntese do Passo 3 do modo único de `../references/criar.md`]
+Título: [tipo/contexto-curto-tt-XXXX]
 
-Descrição
-[Descrição — 1 commit: body do commit, ou vazia se o commit não tem body; 2+ commits: síntese do Passo 4 do modo único de `../references/criar.md`]
+Descrição:
+[body literal do(s) commit(s), sem reescrever; se não houver body, omitir este trecho]
+
+**Dor:** [detalhado, pode ter várias linhas]
+
+**Repro:** [passo 1 + passo 2 + erro, pode ter várias linhas]
+
+**Por que assim:** [por que essa solução e não outra, pode ter várias linhas]
+
+**O que:** [detalhado, pode ter várias linhas]
+
+**Como testar:** [comando + clique, pode ter várias linhas]
+
+**Prova:** [suíte + resultado, por exemplo, make teste verde; se não souber, (preencher)]
+
+**Impacto:** [telas/API/migração ou só teste, pode ter várias linhas]
+
+**Rollback:** [como voltar, pode ter várias linhas]
+
+**Fora de escopo:** [o que vai em MR própria ou (nada)]
+
+**Refs:** [tt-XXXX + link]
 ```
 
 ## Preview modo escadinha (exibir ao usuário, um bloco por MR, ordem 1→N)
@@ -22,18 +39,68 @@ Descrição
 ```
 Push (ordem 1→N): git push -u origin [branch-1], [branch-2], ...
 
-MR 1/N | Projeto: [namespace/repo] | [origem-1] → [destino-1] | Responsável: [nome | Sem responsável]
-Título: [1 commit exclusivo: subject; 2+ commits exclusivos: síntese do Passo 3 do modo único de `../references/criar.md`]
-Descrição: [1 commit exclusivo: body, ou (vazia — o commit não tem body); 2+ commits exclusivos: síntese do Passo 4 do modo único de `../references/criar.md`]
+MR 1/N
+Projeto | Origem → Destino | Assignee | Reviewer
+[namespace/repo] | [origem-1] → [destino-1] | [nome | Sem responsável] | [nome | Sem reviewer]
+Título: [tipo/contexto-curto-tt-XXXX]
+Descrição:
+[body literal do(s) commit(s) desta MR, sem reescrever; se não houver body, omitir este trecho]
 
-MR 2/N | Projeto: [namespace/repo] | [origem-2] → [destino-2] | Responsável: [nome | Sem responsável]
-Título: [1 commit exclusivo: subject; 2+ commits exclusivos: síntese do Passo 3 do modo único de `../references/criar.md`]
-Descrição: [1 commit exclusivo: body, ou (vazia — o commit não tem body); 2+ commits exclusivos: síntese do Passo 4 do modo único de `../references/criar.md`]
+**Dor:** [detalhado, pode ter várias linhas]
+
+**Repro:** [passo 1 + passo 2 + erro, pode ter várias linhas]
+
+**Por que assim:** [por que essa solução e não outra, pode ter várias linhas]
+
+**O que:** [detalhado, pode ter várias linhas]
+
+**Como testar:** [comando + clique, pode ter várias linhas]
+
+**Prova:** [suíte + resultado, por exemplo, make teste verde; se não souber, (preencher)]
+
+**Impacto:** [telas/API/migração ou só teste, pode ter várias linhas]
+
+**Rollback:** [como voltar, pode ter várias linhas]
+
+**Fora de escopo:** [o que vai em MR própria ou (nada)]
+
+**Refs:** [tt-XXXX + link]
+
+MR 2/N
+Projeto | Origem → Destino | Assignee | Reviewer
+[namespace/repo] | [origem-2] → [destino-2] | [nome | Sem responsável] | [nome | Sem reviewer]
+Título: [tipo/contexto-curto-tt-XXXX]
+Descrição:
+[body literal do(s) commit(s) desta MR, sem reescrever; se não houver body, omitir este trecho]
+
+**Dor:** [detalhado, pode ter várias linhas]
+
+**Repro:** [passo 1 + passo 2 + erro, pode ter várias linhas]
+
+**Por que assim:** [por que essa solução e não outra, pode ter várias linhas]
+
+**O que:** [detalhado, pode ter várias linhas]
+
+**Como testar:** [comando + clique, pode ter várias linhas]
+
+**Prova:** [suíte + resultado, por exemplo, make teste verde; se não souber, (preencher)]
+
+**Impacto:** [telas/API/migração ou só teste, pode ter várias linhas]
+
+**Rollback:** [como voltar, pode ter várias linhas]
+
+**Fora de escopo:** [o que vai em MR própria ou (nada)]
+
+**Refs:** [tt-XXXX + link]
 ...
 ```
 
 ---
 
 **Regras:**
-- O princípio central, incluindo os casos de 1 e 2+ commits exclusivos, está em `../references/criar.md`; este template apenas define o formato da prévia.
-- Se o usuário pedir edição (opção `[E]` na confirmação), atualizar só o campo pedido e reexibir o template inteiro de novo antes de confirmar outra vez.
+- O body do(s) commit(s) vem primeiro na descrição e deve ser copiado literalmente, sem reescrita; se não houver body, omitir esse trecho.
+- Nunca repetir o título na descrição.
+- Nunca inventar `Prova` ou `Como testar`; se faltarem dados, usar `(preencher)`.
+- Escrever em PT-BR simples, usando Markdown do GitLab e sem emoji.
+- Pular uma linha em branco entre cada tópico (Dor, Repro, Por que assim, etc.) para ficar detalhado mas legível, bem separadinho.
+- Se o usuário pedir edição (opção `[E]` na confirmação), atualizar só o campo pedido e reexibir o template inteiro antes de confirmar outra vez.

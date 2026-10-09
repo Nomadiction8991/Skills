@@ -158,17 +158,24 @@ Esses commits são a fonte da verdade do título e da descrição — não reesc
 
 ### Passo 4 — Montar descrição
 
-Título não se repete na descrição. Regra:
+Aplicar esta montagem no modo único e em cada MR do modo escadinha. Nunca repetir o título na descrição.
 
-- **Um único commit:** descrição = body do commit (`%b`). Se não tem body, descrição vazia.
-- **Múltiplos commits:** listar os commits em ordem cronológica, um por linha, reaproveitando a subject line de cada um (não resumir/reescrever o conteúdo técnico — os commits já estão organizados):
+#### Passo 4.1 — Preservar o conteúdo dos commits
 
-```
-- feat(x): ...
-- fix(y): ...
-```
+- **Um único commit:** copiar o body (`%b`) literalmente. Se estiver vazio, não incluir esse trecho da descrição.
+- **Dois ou mais commits:** listar as subjects em ordem cronológica, sem reescrever, e incluir o body literal de cada commit como sub-item. Se não houver body, não criar sub-item.
 
-Se algum commit tiver corpo (`%b`) relevante além da subject line, incluir como sub-item.
+#### Passo 4.2 — Enriquecer a descrição
+
+Depois do conteúdo preservado, acrescentar estes campos em PT-BR simples e legível, pulando uma linha em branco entre cada tópico. Cada campo pode ter várias linhas, lista ou bloco de código se precisar detalhar — sem limite de 1-2 linhas:
+
+- **Dor**, **Repro**, **Por que assim** e **O que:** obter de `git log <dest>..<orig> --pretty=format:"%s%n%b"` e `git diff --stat <dest>...<orig>`. Usar o que os commits e o diff mostram, sem reescrever o body preservado.
+- **Como testar** e **Prova:** nunca inventar. Se faltar informação, mostrar `(preencher)` na prévia e pedir que o usuário complete pelo `[E]` antes de confirmar.
+- **Impacto** e **Rollback:** descrever com base no diff, incluindo se afeta telas ou API, se há quebra de API e como reverter. Indicar se há migração; se não houver, escrever `sem migração`.
+- **Fora de escopo:** indicar o que não faz parte desta MR ou vai em outra MR, conforme os commits; se nada estiver indicado, usar `(nada)`.
+- **Refs:** procurar `tt-XXXX` no nome da branch e nos commits; incluir o link encontrado, se houver, sem inventá-lo.
+
+Para cada MR da escadinha, usar o destino e a origem daquela MR como `<dest>` e `<orig>` e aplicar as mesmas regras, sem misturar informações de branches diferentes.
 
 ---
 
