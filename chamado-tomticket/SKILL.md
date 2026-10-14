@@ -27,7 +27,6 @@ Leia os arquivos relevantes antes de executar qualquer fluxo:
 - **Imagens (embutir no corpo/comentário via `<img>`):** `references/imagens.md`
 - **Anexos (arquivo não-imagem, só anexar sem embutir):** `references/anexos.md`
 - **Checklist HTML (compartilhada entre abrir/editar/comentar/transferir):** `references/checklist-html.md`
-- **Preview HTML físico (`/tmp/chamado-preview.html`, sempre sobrescrito e aberto):** `references/preview-html.md`
 - **ToolSearch / deferred tools:** `references/toolsearch.md`
 - **Template criação:** `templates/chamado.md`
 - **Template galeria de imagens:** `templates/galeria-imagens.md`
@@ -63,6 +62,7 @@ Tabela de referência/fallback. Nos fluxos de abertura/edição, a lista real de
 - `args` começa com "abrir" → **fluxo abrir**, usando o restante do texto como descrição (ler `references/abrir.md`)
 - `args` começa com "ler" → **fluxo ler** (ler `references/ler.md`); extrair o primeiro token numérico após "ler" como número do chamado
 - `args` começa com "comentar" → **fluxo comentar** (ler `references/comentar.md`); extrair o primeiro token numérico como número, o restante é a mensagem
+- pedido em linguagem natural para comentar/enviar a MR do trabalho atual no chamado, sem número ou mensagem explícitos (ex.: "comentar MR no chamado", "manda a MR pro chamado") → **fluxo comentar** (ler `references/comentar.md`); resolver chamado e MR pelo contexto do trabalho atual
 - `args` começa com "transferir" → **fluxo transferir** (ler `references/transferir.md`); extrair o primeiro token numérico como número, o restante é o departamento/operador de destino
 - `args` começa com "pesquisar", "resumo", "resumir" ou "buscar" → **fluxo pesquisar** (ler `references/pesquisar.md`); o restante do texto é o critério (cliente, departamento, status, período etc.)
 - `args` sem número de chamado e sem prefixo reconhecido, mas que descreve um pedido de pesquisa/resumo em linguagem natural (ex.: "resumo dos chamados do cliente X", "quantos chamados abertos no Suporte") → **fluxo pesquisar** (ler `references/pesquisar.md`), usando o texto inteiro como critério

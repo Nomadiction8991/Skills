@@ -64,11 +64,20 @@ Seguem os MRs referentes a este chamado, aguardando revisão:
 </ul>
 ```
 
+### Caso simples — uma MR do trabalho atual
+
+Quando o usuário pedir para comentar/enviar "a MR" no chamado sem informar número nem mensagem (ex.: "comentar MR no chamado", "manda a MR pro chamado"), interpretar como **fluxo comentar** com a mensagem no formato padrão do "Comentário sobre MRs" acima (linha de apresentação + árvore a partir da main, mesmo com 1 MR só). Não perguntar em aberto o número ou o conteúdo antes de tentar resolver pelo contexto.
+
+1. **Resolver o chamado** pelo Passo 1: buscar marcador explícito (`tt-N`, `#N`, "chamado N", "ticket N" ou `ttN`) na branch atual e nos commits recentes do trabalho atual. Valem as regras de coincidência, múltiplos candidatos e confirmação; sem candidato, perguntar o número.
+2. **Resolver a MR** no GitLab, no projeto e na branch atuais: listar as MRs abertas da branch atual e confirmar que são do trabalho/chamado identificado. Via MCP; se indisponível, seguir o fallback `glab` do "Comentário sobre MRs". Sem uma única MR aberta identificável, perguntar o link da MR.
+3. Montar o comentário no formato do "Comentário sobre MRs": linha "Seguem os MRs referentes a este chamado, aguardando revisão:" + árvore com a MR (título como está na MR, sem reescrever). Na prévia `[Título](url)`; no envio `<a target="_blank" href="url">Título</a>` em lista aninhada. Com 1 MR só, a árvore tem um nível.
+4. Manter o Passo 5: exibir a prévia, sinalizar número autodetectado quando for o caso e pedir confirmação explícita antes de enviar. Enviar como nota interna (`interno=true`), conforme o Passo 2.
+
 ### Passo 5 — Exibir Prévia para Aprovação
 
 Mostrar ao usuário o comentário melhorado **em markdown/texto legível** (sem HTML), para que ele possa ler o conteúdo facilmente. O comentário real enviado no Passo 7 continuará sendo em HTML, seguindo as diretrizes de `ferramentas.md`.
 
-**Preview físico (obrigatório):** junto com a prévia em Markdown abaixo, gerar `/tmp/chamado-preview.html` e abrir automaticamente seguindo `preview-html.md` (agente principal, via Bash) — antes de pedir confirmação.
+Exiba a prévia convertendo o HTML para Markdown conforme as regras abaixo, como texto normal do chat (nunca dentro de `question` ou bloco de ferramenta — não fica legível), bem separada do pedido de confirmação.
 
 ```
 Comentário no chamado #[número] ([Nota interna | Visível ao cliente], definido no Passo 2)

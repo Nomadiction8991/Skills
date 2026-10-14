@@ -227,7 +227,7 @@ Ler `../templates/chamado.md`. O arquivo já traz as duas versões fixas e pront
 
 1. **Seção 1 (Preview em Markdown)** do template — preencher e exibir ao usuário exatamente assim, fora de bloco de código (não envolver com ```` ``` ````, senão perde a formatação).
 2. **Seção 2 (Payload em HTML)** do template — preencher em paralelo (mesmos dados), mas **não mostrar ao usuário**. É o que será reaproveitado no Passo 7/8, sem reescrever.
-3. **Preview físico (obrigatório):** gerar `/tmp/chamado-preview.html` e abrir automaticamente seguindo `preview-html.md` (agente principal, via Bash) — junto com a prévia em Markdown acima, antes de pedir confirmação.
+3. Exiba a prévia em Markdown como texto normal do chat (nunca dentro de `question` ou bloco de ferramenta — não fica legível), bem separada do pedido de confirmação. O HTML da Seção 2 continua sendo o payload enviado à API.
 
 O preview (1) é só representação visual para aprovação — nunca é o que vai para a API. O que vai para `criar_chamado` é sempre o HTML (2).
 
