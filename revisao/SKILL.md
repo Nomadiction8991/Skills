@@ -29,7 +29,7 @@ Fluxo comum a todos: `processo.md` Parte A. Não leia referências que o modo n�
 - `references/validacoes.md` — 24 validações genéricas + tabela de donos (cada agent lê só seu subconjunto)
 - `references/revisao-exigente.md` — gates de tamanho/mistura, dor primeiro, checklist pré-MR
 - `references/formato-saida.md` — formato obrigatório do relatório (explicação simples + `Como corrigir` + `Onde:`)
-- `references/code-smells.md` — baseline complementar de B2 (dentro de #4 e #5)
+- `references/code-smells.md` — baseline complementar do Detetive (dentro de #4 e #5)
 - `references/context7.md` — quando e como usar o MCP context7 (opcional)
 - evals/evals.json — evals (prompt → saída esperada + assertions); `evals/run.md` — como rodar
 

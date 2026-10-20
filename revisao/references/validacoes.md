@@ -8,9 +8,9 @@ Todas as validações abaixo devem ser aplicadas ao diff do modo selecionado. Bu
 
 ## Donos (quem verifica o quê — cada agent lê só o seu subconjunto)
 
-- **A** (2 instâncias) — compliance `AGENTS.md`/`REVIEW.md` + #13, #15
-- **B1** — #1, #2, #3, #6, #16, #17, #18 (diff-only; #17 compara linhas removidas vs adicionadas no próprio diff)
-- **B2** — #4, #5, #7, #8, #9, #10, #11, #12, #19, #20, #21, #22, #23, #24 + `code-smells.md`
+- **Fiscal** (2 instâncias) — compliance `AGENTS.md`/`REVIEW.md` + #13, #15
+- **Batedor** — #1, #2, #3, #6, #16, #17, #18 (diff-only; #17 compara linhas removidas vs adicionadas no próprio diff)
+- **Detetive** — #4, #5, #7, #8, #9, #10, #11, #12, #19, #20, #21, #22, #23, #24 + `code-smells.md`
 - **Orquestrador** (sem agent) — gate de tamanho/mistura (`revisao-exigente.md` #0) + #14 (rodar a suíte completa)
 
 Briefings e pós-agents em `references/agents.md`. Cobertura total 1–24, sem sobreposição: se um ponto passar, sabe-se quem deixou passar.

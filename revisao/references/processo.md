@@ -24,7 +24,7 @@ Abra por inteiro os arquivos que o diff toca (o diff esconde o método irmão qu
 
 ### A3. Checklist (genérico + 7 eixos + 24 validações)
 
-Primeiro os achados genéricos do code-review (se houve). Depois as 24 validações de `validacoes.md` — cada agent cobre só seu subconjunto (`agents.md`, Donos). Para cada validação 16–24, o orquestrador exige evidência explícita no relatório interno (trecho antes/depois ou "verificado sem achado"); pular em silêncio reprova a revisão. `code-smells.md` apoia B2 dentro de #4/#5.
+Primeiro os achados genéricos do code-review (se houve). Depois as 24 validações de `validacoes.md` — cada agent cobre só seu subconjunto (`agents.md`, Donos). Para cada validação 16–24, o orquestrador exige evidência explícita no relatório interno (trecho antes/depois ou "verificado sem achado"); pular em silêncio reprova a revisão. `code-smells.md` apoia o Detetive dentro de #4/#5.
 
 ### A3.5. Rodar todos os testes (orquestrador, sempre)
 
