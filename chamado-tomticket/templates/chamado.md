@@ -5,7 +5,7 @@ Este template tem duas partes fixas e prontas — não é para reconstruir a for
 
 Metadados (Título/Cliente/Departamento/Categoria/Prioridade/Responsável/Ambiente) **não entram no HTML** — são campos separados da API, só aparecem no preview.
 
-Se houver imagem(ns) a inserir, ver `../references/imagens.md`. Para **mais de uma** imagem (galeria), usar o template pronto em `galeria-imagens.md` (mesma pasta) em vez de empilhar `<img>` avulsos.
+Se houver imagem(ns) a inserir, ver `../references/imagens.md` — imagem vai sempre em comentário (embutida + anexada), nunca no corpo; não há seção de imagens neste template.
 
 ---
 
@@ -22,11 +22,6 @@ Ambiente     : [Produção | Homologação | Desenvolvimento | Não informado]
 
 **Descrição**
 [Contexto do problema, módulo afetado, frequência e quando começou.]
-
-**Imagens** (só quando houver galeria — ver templates/galeria-imagens.md; nunca colar HTML na prévia)
-1. [Breve descrição do que a imagem mostra]
-2. [Breve descrição do que a imagem mostra]
-[seção omitida quando não há imagem/galeria]
 
 **Passos para Reproduzir**
 1. [Primeiro passo]

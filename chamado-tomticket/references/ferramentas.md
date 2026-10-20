@@ -210,14 +210,14 @@ Guia de formatação HTML para o corpo dos chamados no TomTicket.
     <tr>
       <td>Total</td>
       <td>R$ 150,00</td>
-      <td style="background-color: rgb(26, 188, 156);">R$ 0,00</td>
+      <td><span style="color: rgb(220, 53, 69);"><strong>R$ 0,00</strong></span></td>
       <td>Alto</td>
     </tr>
   </tbody>
 </table>
 ```
 
-> Células suportam `background-color` para destacar valores incorretos.
+> Destaque em célula sempre com `color` no texto (visível nos dois temas) — nunca `background-color`, que some no tema escuro. Ver seção "Compatibilidade com tema escuro e claro" abaixo.
 
 ### Emoji
 
@@ -310,7 +310,7 @@ Para o `<tr>` de cabeçalho, use fundo cinza médio (visível em ambos os temas)
 
 | Elemento | Recomendado | Evitar |
 |----------|-------------|--------|
-| Seções do chamado | `<h4 style="font-size: 14px;">` | `<h1>`, `<h2>`, `<h3>`, `<h4>` padrão (todos grandes demais) |
+| Seções do chamado | `<h4><span style="font-size: 14px;">` (nunca `style` direto no heading — descartado pelo Froala) | `<h1>`, `<h2>`, `<h3>`, `<h4>` padrão (todos grandes demais) |
 | Listagem de impacto | `<ul>` com `<strong>` | `<table>` (desnecessário) |
 | Comparação de valores | `<table>` | texto corrido |
 | Mensagens de erro | `<blockquote>` + `<pre>` | texto simples |

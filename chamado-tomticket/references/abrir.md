@@ -18,24 +18,17 @@ A descrição do problema deve ter pelo menos 30 caracteres. Se não tiver, inte
 
 ---
 
-## Passo 1 — Coletar Informações
+## Passo 1 — Coletar tudo sem perguntar (só trava se bloqueado)
 
-Faça no máximo uma pergunta por vez. Tente inferir antes de perguntar.
+Regra deste passo: **não perguntar nada do que der para definir ou inferir**. Buscar na API, aplicar defaults e sugestões, montar a prévia completa — o usuário corrige na prévia (`[E]`) se algo vier errado. Só parar com pergunta quando bloqueado de verdade (ver "Quando parar" abaixo). Itens independentes saem na mesma leva de chamadas.
 
-### a) Cliente *(sempre perguntar)*
+### a) Cliente *(nunca perguntar — padrão Ello Tecnologia)*
 
-> "Qual é o cliente? `[1] Ello Tecnologia (padrão)` `[2] Outro cliente`"
+Sempre **Ello Tecnologia**, sem perguntar. Só sai do padrão se `args`/contexto citar outro cliente explicitamente: aí chamar `buscar_cliente(q="<nome>")` e usar o melhor resultado direto na prévia (o usuário corrige se vier errado). Se a busca não retornar nada, seguir com Ello Tecnologia e sinalizar na prévia.
 
-- **1:** usar **Ello Tecnologia**.
-- **2:** perguntar o nome do cliente.
+### b) Departamento *(sem perguntar — sugerido pela API)*
 
-Com o nome definido, chamar `buscar_cliente(q="<nome>")` para obter o `cliente_id`. Se a busca não retornar resultado, informar ao usuário e pedir o nome correto.
-
-### b) Departamento *(sempre perguntar)*
-
-Chamar `listar_departamentos()` para obter os departamentos que o operador logado realmente tem acesso (pode ser um subconjunto da tabela de referência em `SKILL.md`).
-
-Escolher o sugerido com base no contexto:
+Chamar `listar_departamentos()` (o que o operador logado tem acesso) e escolher pelo contexto:
 
 | Contexto | Departamento sugerido |
 |---|---|
@@ -46,25 +39,15 @@ Escolher o sugerido com base no contexto:
 | Representante ou parceiro comercial | UAR |
 | Dúvida geral ou contexto pouco claro | Triagem |
 
-Apresentar a lista retornada pela API, **sempre com o sugerido como `[1]`** e os demais em seguida na ordem retornada (`[2]`, `[3]`, ...) — a numeração não é fixa por departamento, é sempre "sugerido primeiro":
+Usar o sugerido direto na prévia (o usuário troca se quiser).
 
-> "Qual é o departamento? `[1] <sugerido>` (recomendado) `[2] <próximo>` `[3] <próximo>` ..."
+### c) Categoria *(sem perguntar — depende só do departamento)*
 
-Aceitar tanto o número quanto o nome digitado pelo usuário.
+Chamar `listar_categorias(departamento="<escolhido>")` e usar a mais adequada ao contexto direto na prévia.
 
-### c) Categoria *(sempre perguntar)*
+### d) Prioridade *(sem perguntar — inferida)*
 
-Chamar `listar_categorias(departamento="<escolhido>")` para obter as categorias que o departamento escolhido realmente tem disponíveis.
-
-Apresentar a lista retornada pela API, **sempre com a mais adequada ao contexto como `[1]`** e as demais em seguida (`[2]`, `[3]`, ...):
-
-> "Qual é a categoria? `[1] <sugerida>` (recomendada) `[2] <próxima>` `[3] <próxima>` ..."
-
-Aceitar tanto o número quanto o nome digitado pelo usuário.
-
-### d) Prioridade *(sempre perguntar)*
-
-Prioridade é um enum fixo da API (`baixa | normal | alta | urgente`) — não há tool de listagem para consultar antes.
+Enum fixo da API (`baixa | normal | alta | urgente`) — não há tool de listagem. Estimar pelo contexto e usar direto:
 
 | Critério | Prioridade |
 |---|---|
@@ -73,15 +56,9 @@ Prioridade é um enum fixo da API (`baixa | normal | alta | urgente`) — não h
 | Funcionalidade parcialmente afetada, workaround existe | `normal` |
 | Cosmético, dúvida, melhoria, impacto mínimo | `baixa` |
 
-Estimar a sugestão pelo contexto e apresentar como `[1]`, com as demais em seguida na ordem de proximidade com a sugestão:
-
-> "Qual é a prioridade? `[1] <sugerida>` (recomendada) `[2] <próxima>` `[3] <próxima>` `[4] <última>`"
-
-Aceitar tanto o número quanto o nome digitado pelo usuário.
-
 ### e) Descrição detalhada
 
-Usar o texto de `args` como base. Expandir com contexto coletado. Se vago ou menor que 50 caracteres, pedir mais detalhes.
+Usar o texto de `args` como base, expandido com o contexto coletado. Se vago ou menor que 50 caracteres, tentar completar pelo contexto; se continuar inutilizável, ver "Quando parar" no fim do Passo 1.
 
 ### f) Passos para reproduzir *(opcional)*
 
@@ -93,31 +70,26 @@ Se não for nenhum dos dois casos, **não perguntar** e não inventar passos gen
 
 ### g) Comportamento esperado vs. observado
 
-Derivar do contexto. Perguntar apenas se não for possível inferir os dois.
+Derivar do contexto. Se não der para inferir os dois, deixar genérico e sinalizar na prévia (o usuário completa com `[E]`).
 
 ### h) Impacto
 
-Estimar pelo contexto. Se não for possível, perguntar: "Quantos usuários ou processos são afetados?"
+Estimar pelo contexto (usuários, ambiente, processos críticos). **Justificativa:** gerar a partir de prioridade + impacto + comportamento observado e incluir direto na prévia — sem rodada de aprovação separada.
 
-**Justificativa:** gerar uma sugestão a partir do contexto coletado (prioridade, impacto, comportamento observado) e apresentar para o usuário aprovar, complementar ou reescrever — nunca inserir a justificativa sem mostrar antes:
+### i) Responsável *(padrão: não atribuir)*
 
-> "Justificativa sugerida: '<texto gerado>'. `[1] Usar como está` `[2] Adicionar mais detalhes` `[3] Reescrever`"
+Não atribuir por padrão (`operador` vazio). Só atribuir se o contexto citar uma pessoa: aí chamar `listar_operadores(departamento=<escolhido>)`, localizar pelo nome e usar; se não encontrar, manter vazio e sinalizar na prévia.
 
-### i) Responsável *(sempre perguntar)*
+### j) Ambiente *(padrão: Produção)*
 
-> "Deseja atribuir um responsável? `[1] Eu mesmo` `[2] Outra pessoa` `[3] Não atribuir`"
+**Produção**, salvo contexto indicando outro (homologação/teste/desenvolvimento). Sem pergunta.
 
-- **1:** usar o operador logado como responsável.
-- **2:** perguntar o nome da pessoa.
-- **3:** não preencher `operador`.
+### Quando parar (únicos casos que travam com pergunta)
 
-Para **1** ou **2**, chamar `listar_operadores(departamento=<escolhido>)` e localizar o operador pelo nome (o logado, em **1**; o informado, em **2**). Se não encontrar, informar ao usuário e deixar em branco.
+- Descrição com menos de 30 caracteres e nada inferível (Pré-requisito acima) — pedir uma descrição melhor, uma vez só.
+- Cliente citado no contexto mas não encontrado na busca — seguir com Ello Tecnologia e sinalizar na prévia (não travar por isso).
 
-### j) Ambiente *(sempre perguntar)*
-
-Sugerir **Produção** por padrão, salvo se o contexto indicar claramente outro ambiente (ex.: usuário menciona homologação/teste/desenvolvimento):
-
-> "Qual é o ambiente afetado? `[1] <sugerido>` (recomendado) `[2] <próximo>` `[3] <próximo>` `[4] Não informar`"
+Fora disso, nunca parar para perguntar: campo incerto vai com o melhor palpite sinalizado na prévia e o usuário corrige com `[E]`.
 
 ---
 
@@ -205,11 +177,10 @@ Se não encontrar nome de sistema (nenhum `.md` útil, sem codebase disponível)
 Verificar internamente antes de gerar o template:
 
 - [ ] Título entre 20 e 120 caracteres
-- [ ] Cliente definido
-- [ ] Departamento definido pelo usuário
-- [ ] Prioridade definida pelo usuário
+- [ ] Cliente definido (padrão Ello Tecnologia, ou o citado no contexto)
+- [ ] Departamento definido (API + contexto)
+- [ ] Prioridade inferida com justificativa presente na prévia
 - [ ] Descrição com no mínimo 50 caracteres
-- [ ] Prioridade `urgente` ou `alta` tem justificativa sugerida e aprovada pelo usuário
 - [ ] Comportamento esperado e observado são distintos
 - [ ] Corpo descreve só o problema — nenhuma solução/correção
 - [ ] Nenhum termo técnico de dev (arquivo, rota, tabela, coluna, método, status HTTP, stack trace)
@@ -257,11 +228,11 @@ Aplicar a checklist de `checklist-html.md` sobre o HTML montado no Passo 5 (Seç
 Executar nesta ordem:
 
 ```
-1. mcp__tomticket__buscar_cliente(q="Ello Tecnologia")
+1. Cliente: usar o `cliente_id` já resolvido no Passo 1 (Ello Tecnologia por padrão, ou o citado no contexto) — só chamar `mcp__tomticket__buscar_cliente(q="<nome>")` se ainda não resolvido
    → anotar cliente_id
 
 2. mcp__tomticket__listar_operadores(departamento="<escolhido>")
-   → localizar operador pelo nome (somente se o usuário quis se atribuir)
+   → localizar operador pelo nome (somente se o Passo 1 atribuiu alguém pelo contexto; padrão é não atribuir — pule este item)
 
 3. mcp__tomticket__criar_chamado(
      departamento = "<escolhido>",
@@ -281,5 +252,5 @@ Após criação, exibir ao usuário o número do protocolo retornado.
 ## Notas
 
 - Cliente padrão: **Ello Tecnologia** quando não informado
-- Departamento e ambiente são sempre perguntados
+- Departamento e ambiente saem da API/contexto, sem perguntar
 - O corpo do chamado deve seguir as diretrizes de formatação em `ferramentas.md`

@@ -19,7 +19,14 @@ Extrair o primeiro token numérico como número do chamado. O restante é a mens
 Se faltar número:
 > "Qual o número do chamado?"
 
-Antes de perguntar em aberto, vasculhar só o trabalho em curso em busca do número: a branch atual (`git branch --show-current`) e os subjects/bodies dos commits recentes do trabalho atual (`git log --oneline -10`). Só conta como candidato o número em formato explícito de chamado (`tt-N`, `#N`, "chamado N", "ticket N", "ttN") presente na branch atual ou nesses commits — número solto sem formato (porta, quantidade, trecho de versão) NÃO conta, e marcador vindo só de branch antiga/arquivada NÃO conta; nesses casos seguir como "não achou nada" (perguntar em aberto). Se achar um único candidato explícito, ler o chamado (`ver_chamado`) e só assumir o número sem perguntar se houver coincidência em termos específicos do assunto do chamado com o trabalho (não basta semelhança genérica tipo "erro ao salvar"); sem isso, propor ("O chamado é o #N? `[S]`/`[N]`"). Se houver mais de um candidato, ler cada um (`ver_chamado`), propor a lista ordenada com `[S]`/`[N]` e nunca assumir nenhum direto. Se houver dúvida ou divergência, propor em vez de perguntar em aberto; só perguntar em aberto se não achar nada. Se assumir o número pela detecção, sinalizar na prévia do Passo 5.
+Antes de perguntar em aberto, vasculhar só o trabalho em curso em busca do número:
+
+1. **Candidatos:** a branch atual (`git branch --show-current`) e os subjects/bodies dos commits recentes (`git log --oneline -10`). Só conta como candidato o número em formato explícito de chamado (`tt-N`, `#N`, "chamado N", "ticket N", "ttN") — número solto sem formato (porta, quantidade, trecho de versão) NÃO conta, e marcador vindo só de branch antiga/arquivada NÃO conta.
+2. **Zero candidatos:** seguir como "não achou nada" (perguntar em aberto).
+3. **Um candidato:** ler o chamado (`ver_chamado`) e só assumir sem perguntar se houver coincidência em termos específicos do assunto com o trabalho (não basta semelhança genérica tipo "erro ao salvar"); sem isso, propor ("O chamado é o #N? `[S]`/`[N]`").
+4. **Vários candidatos:** ler cada um (`ver_chamado`), propor a lista ordenada com `[S]`/`[N]`, nunca assumir nenhum direto.
+5. **Dúvida ou divergência:** propor em vez de perguntar em aberto; só perguntar em aberto se não achar nada.
+6. **Número assumido:** sinalizar na prévia do Passo 5.
 
 Se faltar mensagem:
 > "Qual o conteúdo do comentário?"
@@ -64,6 +71,10 @@ Seguem os MRs referentes a este chamado, aguardando revisão:
 </ul>
 ```
 
+#### Status automático ao comentar MRs (rígido)
+
+MR aberta significa aguardando revisão — sem exceção. Prepare (sem executar) a troca do status do chamado para `Aguardando revisão` (`alterar_status_chamado`, aceita nome parcial ou ID) junto da prévia do Passo 5: a prévia exibe as duas ações juntas (troca de status + comentário) e o `[S]` único autoriza ambas; sem `[S]`, nenhuma das duas executa.
+
 ### Caso simples — uma MR do trabalho atual
 
 Quando o usuário pedir para comentar/enviar "a MR" no chamado sem informar número nem mensagem (ex.: "comentar MR no chamado", "manda a MR pro chamado"), interpretar como **fluxo comentar** com a mensagem no formato padrão do "Comentário sobre MRs" acima (linha de apresentação + árvore a partir da main, mesmo com 1 MR só). Não perguntar em aberto o número ou o conteúdo antes de tentar resolver pelo contexto.
@@ -80,6 +91,7 @@ Mostrar ao usuário o comentário melhorado **em markdown/texto legível** (sem 
 Exiba a prévia convertendo o HTML para Markdown conforme as regras abaixo, como texto normal do chat (nunca dentro de `question` ou bloco de ferramenta — não fica legível), bem separada do pedido de confirmação.
 
 ```
+Status: #[número] → Aguardando revisão (automático ao comentar MRs — sem [S], nada executa)
 Comentário no chamado #[número] ([Nota interna | Visível ao cliente], definido no Passo 2)
 
 [Comentário renderizado em markdown/texto — sem tags HTML]
@@ -90,6 +102,10 @@ Se o número foi assumido pela detecção automática do Passo 1 (não digitado 
 > "Deseja enviar este comentário? `[S] Sim` | `[N] Cancelar` | `[E] Editar mensagem`"
 
 Quando o número foi autodetectado (não digitado), trocar a pergunta genérica pela reconfirmação explícita do número junto ao envio: "Confirme o chamado #N — é este? `[S] Sim, é este e enviar` | `[N] Cancelar` | `[E] Editar`". Quando digitado, manter a pergunta atual.
+
+- **S:** avançar para o Passo 6 (validar HTML) e depois Passo 7
+- **N:** cancelar sem enviar nada
+- **E:** perguntar o que ajustar (mensagem e/ou número), coletar o novo valor e voltar ao Passo 4 (mensagem) ou ao Passo 1 (número), reexibindo a prévia em seguida
 
 **Regras de conversão HTML → markdown/texto para a prévia:**
 - `<h4>` → `### ` ou **negrito**

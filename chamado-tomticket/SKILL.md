@@ -4,7 +4,7 @@ description: "Abre, edita, lê, comenta, transfere ou pesquisa/resume chamados d
 effort: low
 model: haiku
 argument-hint: "abrir <descrição> | editar <número> <o que editar> | ler <número> | comentar <número> <mensagem> | transferir <número> <departamento/operador> | pesquisar <critério>"
-allowed-tools: Read Bash mcp__tomticket__buscar_cliente mcp__tomticket__listar_departamentos mcp__tomticket__listar_categorias mcp__tomticket__listar_operadores mcp__tomticket__listar_status mcp__tomticket__listar_chamados mcp__tomticket__criar_chamado mcp__tomticket__editar_chamado mcp__tomticket__ver_chamado mcp__tomticket__comentar_chamado mcp__tomticket__transferir_chamado mcp__tomticket__preparar_upload mcp__gitlab__list_merge_requests mcp__gitlab__get_merge_request
+allowed-tools: Read Bash mcp__tomticket__buscar_cliente mcp__tomticket__listar_departamentos mcp__tomticket__listar_categorias mcp__tomticket__listar_operadores mcp__tomticket__listar_status mcp__tomticket__listar_chamados mcp__tomticket__criar_chamado mcp__tomticket__editar_chamado mcp__tomticket__ver_chamado mcp__tomticket__comentar_chamado mcp__tomticket__transferir_chamado mcp__tomticket__alterar_status_chamado mcp__tomticket__preparar_upload mcp__gitlab__list_merge_requests mcp__gitlab__get_merge_request
 ---
 
 # Skill — Chamado
@@ -30,31 +30,19 @@ Leia os arquivos relevantes antes de executar qualquer fluxo:
 - **ToolSearch / deferred tools:** `references/toolsearch.md`
 - **Template criação:** `templates/chamado.md`
 - **Template galeria de imagens:** `templates/galeria-imagens.md`
+- evals/evals.json — evals (prompt → saída esperada + assertions, sem escrita real); `evals/run.md` — como rodar
 
 ## Departamentos e Categorias
 
-Tabela de referência/fallback. Nos fluxos de abertura/edição, a lista real de departamentos e categorias deve vir de `listar_departamentos()` e `listar_categorias(departamento=...)` — reflete o que o operador logado realmente tem acesso, que pode ser um subconjunto do que está aqui.
+Sempre lidos ao vivo via `listar_departamentos()` e `listar_categorias()` — sem tabela fixa nesta skill (a API reflete o acesso real do operador).
 
-| # | Departamento | Categorias disponíveis |
-|---|---|---|
-| 1 | **Suporte** | Atualização, Configuração, Defeito, Divergência Relatórios, Duvidas, ENTRAR EM CONTATO COM CLIENTE, Emissão de Documento Fiscal, Implantação, Incidente, Instalação versão Teste Contador, Melhoria, Outros, POS Venda, Plantão, Treinamento, Visita |
-| 2 | **Triagem** | Atualização, Configuração, Defeito, Divergência Relatórios, Emissão de Documento Fiscal, Implantação, Melhoria, Outros, Treinamento |
-| 3 | **Desenvolvimento** | Defeito, Incidente, Melhoria |
-| 4 | **Desenvolvimento/Web** | Atualização, Defeito, Divergência Relatórios, Emissão de Documento Fiscal, Melhoria, Outros |
-| 5 | **Backlog** | Melhoria |
-| 6 | **CS - Customer Success** | Outros, Visita |
-| 7 | **DEMONSTRAÇÃO** | Duvidas, Implantação |
-| 8 | **IMPLANTAÇÃO** | Implantação |
-| 9 | **UAR** | Atualização, Configuração, Defeito, Divergência Relatórios, Duvidas, Emissão de Documento Fiscal, Incidente, Melhoria, Outros, POS Venda |
-
-## Regras Gerais
+## Regras Gerais (resumo — fonte única em `references/regras-gerais.md`)
 
 1. **NUNCA execute ações no TomTicket sem confirmação explícita do usuário.**
 2. **SEMPRE exiba o template preenchido antes de criar ou editar.**
 3. **Leia o arquivo de referência adequado antes de iniciar qualquer fluxo.**
-4. **Leia `references/regras-gerais.md` antes de qualquer fluxo que crie/edite/comente/transfira** — contém as regras não negociáveis comuns a todas as operações.
 
-> **Regra:** lance um sub-agente (`Agent`, tipo `general-purpose`) para pesquisar os dados reais (cliente/departamento/categoria/operador/chamado existente) e montar a prévia + payload HTML em contexto isolado — o prompt do sub-agente inclui `references/regras-gerais.md`, o arquivo do fluxo correspondente (`abrir.md`/`editar.md`/`comentar.md`/`transferir.md`) e `templates/chamado.md`, e a instrução explícita de **nunca** chamar `criar_chamado`, `editar_chamado`, `comentar_chamado` ou `transferir_chamado` — só as tools de leitura (`buscar_cliente`, `listar_*`, `ver_chamado`, `preparar_upload`, `mcp__gitlab__list_merge_requests`, `mcp__gitlab__get_merge_request`). O sub-agente só devolve a prévia + payload para esta skill. Se o MCP do GitLab falhar, o fallback `glab` (só leitura) é executado pelo agente principal, nunca pelo sub-agente. A confirmação `[S]/[N]` e a chamada da tool de escrita sempre ficam aqui, no agente principal.
+> **Regra:** lance um sub-agente isolado de propósito geral (o tipo disponível no ambiente) para pesquisar os dados reais e montar prévia + payload HTML em contexto isolado — nunca chama tools de escrita, só leitura; confirmação `[S]/[N]` e escrita ficam no agente principal. Detalhe em `references/regras-gerais.md`.
 
 ## Roteamento
 

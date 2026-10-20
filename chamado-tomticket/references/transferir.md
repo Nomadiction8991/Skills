@@ -52,10 +52,10 @@ Responsável atual : <operador>
 Tentar inferir a partir do destino capturado no Passo 1. Só perguntar o que não for possível inferir com confiança:
 
 Se o departamento não estiver claro, chamar `listar_departamentos()` e perguntar:
-> "Para qual departamento transferir? `[1] <sugerido>` `[2] <próximo>` ..." | `[N] Manter o departamento atual`
+> "Para qual departamento transferir? `[1] <sugerido>` `[2] <próximo>` ..." | `[M] Manter o departamento atual`
 
 Se o operador não estiver claro, e um departamento de destino já estiver definido (o novo ou o atual), chamar `listar_operadores(departamento="<departamento de destino>")` e perguntar:
-> "Para qual operador transferir? `[1] <nome>` `[2] <nome>` ..." | `[N] Não atribuir/manter atual`
+> "Para qual operador transferir? `[1] <nome>` `[2] <nome>` ..." | `[M] Não atribuir/manter atual`
 
 Pelo menos um dos dois (departamento ou operador) deve ficar definido ao final deste passo — se nenhum for informado, repetir a pergunta.
 

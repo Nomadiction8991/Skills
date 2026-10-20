@@ -34,7 +34,7 @@ Vale a regra geral #1 (`regras-gerais.md`) sem exceção: nunca subir/embutir im
 
 - **Abertura/edição: nunca no corpo.** Imagem nunca vai no corpo estruturado (`../templates/chamado.md`) via `editar_chamado`, porque essa via não gera anexo real. Imagem vai sempre em comentário (ver Passo 5).
 - **Comentário**: no ponto do texto em que faz sentido — normalmente ao final da explicação textual relacionada à imagem.
-- **Múltiplas imagens em comentário (galeria, ver Passo 4b)**: usar uma seção própria `<h4>Imagens</h4>` (mesmo padrão de cabeçalho azul das demais seções, ver `templates/chamado.md`) dentro do comentário — em vez de tentar encaixar a galeria inline dentro de outro trecho.
+- **Múltiplas imagens em comentário (galeria, ver Passo 4b)**: colar só a `<table>` da galeria no ponto do texto que fizer sentido — comentário não é seccionado, sem `<h4>`.
 
 ---
 

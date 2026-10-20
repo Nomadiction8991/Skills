@@ -1,0 +1,59 @@
+{
+  "skill_name": "chamado-tomticket",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "abre um chamado: erro 500 ao finalizar pedido no módulo de entregas da Ello Delivery",
+      "expected_output": "Zero perguntas: cliente Ello Tecnologia por padrão, departamento/categoria via API, prioridade inferida, tudo montado direto na prévia em Markdown + payload HTML — pedido [S/N] antes de qualquer escrita, e nada criado sem o S",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Não pergunta nada do coletável (cliente, departamento, prioridade, ambiente, responsável) — vai tudo com default/inferência para a prévia",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Título/corpo descrevem só o problema, sem hash/branch/solução, e HTML sem style direto em heading",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "resumo dos chamados abertos no Suporte",
+      "expected_output": "Fluxo pesquisar somente-leitura: listar_chamados com filtro nativo, agregação com números primeiro, aviso se a varredura foi parcial, pergunta se quer aprofundar — sem confirmação prévia pois não escreve",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Usa filtro nativo + client-side, sem inventar parâmetro que a API não tem",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Oferece aprofundar em vez de entrar em cada chamado de cara",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "comenta no chamado 3790 que a correção foi feita",
+      "expected_output": "Lê o chamado, reescreve sem jargão (sem hash/branch/arquivo), prévia em Markdown separada do pedido [S/N], envio em HTML com interno=true — comentário irreversível nunca sai sem prévia",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Comentário traduz causa/efeito para linguagem de suporte, mesmo em nota interna",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Nada é enviado antes do [S] explícito sobre o conteúdo final",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    }
+  ]
+}

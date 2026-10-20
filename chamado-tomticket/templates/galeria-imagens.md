@@ -1,10 +1,8 @@
-Template para inserir uma **galeria de múltiplas imagens** no corpo de um chamado (abertura/edição) ou comentário. Ver `../references/imagens.md` (Passo 4b) para quando usar e como conseguir as URLs (upload via `preparar_upload`+curl).
+Template para inserir uma **galeria de múltiplas imagens** em comentário. Ver `../references/imagens.md` (Passo 4b) para quando usar e como conseguir as URLs (upload via `preparar_upload`+curl).
 
 Não reconstruir a formatação do zero — só duplicar o bloco de uma célula por imagem e trocar o `src`.
 
-**Vale igual para `criar_chamado`/`editar_chamado`/`comentar_chamado`** — o HTML da tabela é sempre o mesmo, só muda onde encaixar:
-- **Abertura/edição**: dentro do corpo estruturado, com o `<h4>Imagens</h4>` (ver bloco abaixo) como seção própria logo após **Descrição** — ver `imagens.md`, "Onde posicionar".
-- **Comentário**: colar só a `<table>` (sem o `<h4>Imagens</h4>`) direto no ponto do texto que fizer sentido — comentário não é seccionado como abertura/edição.
+**Só em comentário** — galeria nunca vai no corpo de abertura/edição (imagem só existe em comentário, embutida + anexada; ver `imagens.md`, Passo 5). Colar só a `<table>` abaixo (sem o `<h4>Imagens</h4>` de seção) direto no ponto do texto que fizer sentido — comentário não é seccionado.
 
 ---
 
@@ -24,7 +22,6 @@ A tabela HTML abaixo é só para o payload — nunca colar HTML cru na prévia m
 ## Padrão: tabela fixa + `<img>` com `max-width`/`max-height`
 
 ```html
-<h4><span style="color: rgb(52, 152, 219); font-size: 14px;"><strong>Imagens</strong></span></h4>
 <table style="width: 660px; table-layout: fixed; border-collapse: collapse; border: none;">
   <tbody>
     <tr>
