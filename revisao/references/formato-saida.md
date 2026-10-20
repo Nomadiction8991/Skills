@@ -4,11 +4,13 @@ Objetivo: relatório curto e direto, sem jargão. Baseado no exemplo aprovado pe
 
 ## Linguagem dos achados
 
-Escreva como se estivesse explicando o problema a uma pessoa que não conhece o código. Não mostre nomes de funções, variáveis, classes, arquivos, pastas, caminhos, linhas ou outros detalhes técnicos. Explique o que acontece, em que situação acontece, por que isso é um problema e como deve ser corrigido, usando termos do negócio e frases simples.
+Escreva como se estivesse explicando o problema a uma pessoa que não conhece o código. A explicação usa termos do negócio e frases simples: o que acontece, em que situação, por que é um problema e qual deve ser o resultado correto. Nomes de função/variável ficam fora da explicação.
+
+Cada achado termina com uma linha `Onde:` com âncora curta para achar o ponto em 30 segundos (arquivo, tela/ação ou fluxo — ex.: `Onde: tela de cartas / ordenação por coluna`). Sem SHA e sem número de linha no relatório final (linha fica só na validação interna).
 
 ## Cabeçalho
 
-Primeira linha conforme o modo (ver `processo.md:1`):
+Primeira linha conforme o modo (formatos abaixo; cabeçalho de cada modo em `git.md`, `branch.md` ou `processo.md` Parte B):
 
 - modo git/local: `Revisão das alterações não commitadas (N arquivos). X achados, <resumo>.`
 - modo branch/ponto fixo: `Revisão da branch <atual> vs <base> (N arquivos, M commits). X achados, <resumo>.` ou `Revisão desde <ponto> (N arquivos, M commits). X achados, <resumo>.`
@@ -20,20 +22,21 @@ Exemplos:
 
 ## Achados (se houver) — só o que o diff tocou
 
-Lista numerada **sempre** do mais crítico ao menor. **Todo achado dentro do escopo do diff, mesmo pequeno, entra numerado aqui** — nunca esconder em parágrafo. Máximo 5; se houver mais, mantenha os 5 mais relevantes numerados e agrupe o resto como 1 item menor extra.
+Lista numerada **sempre** do mais crítico ao menor. **Todo achado validado entra numerado aqui** — nunca esconder em parágrafo, nunca cortar por limite numérico, nunca agrupar à força: o contexto já foi lido e validado, cada achado real vale o espaço.
 
 ```
 1. <Título curto> — <severidade>
 
 <2-4 frases em linguagem simples explicando o que acontece, em que situação, por que isso é um problema e qual deve ser o resultado correto>
 
-Como corrigir: <ação concreta descrita em linguagem de negócio, sem nomes ou caminhos do código — apenas orientação conceitual para o usuário, não aplicar>
+Como corrigir: <ação concreta em linguagem de negócio — apenas orientação conceitual, não aplicar>
+Onde: <arquivo, tela/ação ou fluxo — âncora curta, sem SHA/linha>
 ```
 
 Severidade em texto simples (sem emoji, sem Crítico/Alto):
 - `bloqueia` — quebra build/teste/funcionalidade principal, não mergear
 - `importante` — comportamento errado, corrigir antes de mergear
-- `menor` — risco baixo ou dívida técnica, pode ir no mesmo MR (mesmo menor dentro do escopo deve ser numerado aqui)
+- `menor` — risco baixo ou dívida técnica, pode ir no mesmo MR
 
 Exemplo real (1 achado dentro do escopo):
 
@@ -41,6 +44,21 @@ Exemplo real (1 achado dentro do escopo):
 1. O mesmo pedido mostra valores diferentes — importante
 Ao consultar os pedidos, a pessoa vê um valor na lista e outro quando abre os detalhes do mesmo pedido. Isso pode acontecer depois que o preço de uma região é alterado, fazendo o histórico parecer errado e gerando dúvida sobre o que foi realmente cobrado.
 Como corrigir: mostrar em todos os lugares o valor que foi cobrado no momento da compra.
+Onde: tela de pedidos / lista vs detalhes
+```
+
+Exemplo com 2 achados (ordem: bloqueia primeiro, `Onde:` em todo item):
+
+```
+1. Falha de rede apaga um registro que pode ter sido efetivado — bloqueia
+Se a resposta do serviço externo se perde no caminho, o fluxo trata como falha definitiva e apaga o registro local. Quando o serviço já tinha efetivado, o dado some dos dois lados e a nova tentativa é rejeitada como duplicidade.
+Como corrigir: tratar falha de transporte como estado indeterminado, sem apagar, com caminho próprio de conciliação.
+Onde: envio ao serviço externo / tratamento de timeout
+
+2. Comentário em idioma diferente da convenção — menor
+O projeto comenta em português e o diff trouxe um comentário em inglês. Não quebra nada, mas destoa do padrão que o time lê.
+Como corrigir: reescrever o comentário no idioma da convenção do arquivo.
+Onde: migration nova / comentário no topo
 ```
 
 ## Veredicto
@@ -73,7 +91,7 @@ Se 0 achados, omita a pergunta.
 
 - **Apenas diagnóstico:** NUNCA aplique correções, NUNCA altere arquivos e NUNCA apresente o resumo final como se os problemas já estivessem resolvidos. Sempre mostre os problemas encontrados e pare para aguardar a decisão do usuário.
 - Não use seções separadas `## Padrões` / `## Especificação` / `## Roda Reinventada` — unifique em uma lista numerada do mais crítico ao menor para achados dentro do escopo.
-- **Todo achado dentro do escopo entra numerado em Achados**, mesmo `menor` — nunca em parágrafo solto. Problemas fora do escopo não entram no relatório.
-- Não use blocos `Linguagem simples / Linguagem técnica / Recomendação` — use o formato curto acima (explicação + Como corrigir).
+- **Todo achado validado entra numerado em Achados** — nunca em parágrafo solto, nunca cortado por limite. Problemas fora do escopo não entram no relatório.
+- Não use blocos `Linguagem simples / Linguagem técnica / Recomendação` — use o formato curto acima (explicação + Como corrigir + Onde).
 - Sem emojis, sem tabelas de nível. Severidade é só a palavra no título.
 - Se esta revisão corrige afirmações imprecisas de relatórios anteriores, acrescente antes do Veredicto: `Correção de relatório anterior: <o que foi corrigido>.`

@@ -4,16 +4,16 @@
     {
       "id": 1,
       "prompt": "revisa isso — tenho alterações não commitadas no meu projeto Node, quero saber se pode mergear",
-      "expected_output": "Relatório em formato formato-saida.md com cabeçalho 'Revisão das alterações não commitadas (N arquivos). X achados...', lista numerada até 5 com severidade bloqueia/importante/menor e Como corrigir só textual, sem nomes de arquivo/código, sem link SHA, mais Veredicto e Resumo final fiel (nunca 'já corrigido')",
+      "expected_output": "Relatório em formato formato-saida.md com cabeçalho 'Revisão das alterações não commitadas (N arquivos). X achados...', lista numerada com severidade bloqueia/importante/menor e Como corrigir só textual + Onde com âncora curta, sem link SHA, mais Veredicto e Resumo final fiel (nunca 'já corrigido')",
       "files": [],
       "assertions": [
         {
-          "text": "Usa modo git (git diff + cached) e não lê branch/processo",
+          "text": "Usa modo git (git diff + cached) via git.md + agents.md + processo.md Parte A; não lê branch.md",
           "passed": false,
           "evidence": ""
         },
         {
-          "text": "Filtra <80 e pré-existente, reescreve em linguagem simples sem caminhos",
+          "text": "Filtra <80 e pré-existente, reescreve explicação em linguagem simples com Onde técnico curto",
           "passed": false,
           "evidence": ""
         },
@@ -27,7 +27,7 @@
     {
       "id": 2,
       "prompt": "revisa a branch feature/pagamento vs main — tem 4 commits e mistura renomeação com nova regra de cálculo",
-      "expected_output": "Revisão da branch feature/pagamento vs main (N arquivos, M commits) com achado validacoes#8 (separação refatoração vs feature) se misturar, mais checagem de AGENTS.md por diretório e validacoes 1-15",
+      "expected_output": "Revisão da branch feature/pagamento vs main (N arquivos, M commits) com achado validacoes#8 (separação refatoração vs feature) se misturar, mais checagem de AGENTS.md por diretório e validacoes 1-24",
       "files": [],
       "assertions": [
         {
@@ -36,12 +36,12 @@
           "evidence": ""
         },
         {
-          "text": "A1/A2 citam regra literal de AGENTS.md/REVIEW.md e B1 só diff-only",
+          "text": "As 2 instâncias de A citam regra literal de AGENTS.md/REVIEW.md e B1 só diff-only",
           "passed": false,
           "evidence": ""
         },
         {
-          "text": "Deduplica e ordena bloqueia>importante>menor, máx 5",
+          "text": "Deduplica e ordena bloqueia>importante>menor; todos os validados numerados, sem teto nem agrupamento forçado",
           "passed": false,
           "evidence": ""
         }
@@ -50,7 +50,7 @@
     {
       "id": 3,
       "prompt": "revisa desde HEAD~2 — quero ver o que mudou nos últimos 2 commits antes de abrir MR",
-      "expected_output": "Revisão desde HEAD~2 (N arquivos, M commits) via processo.md, com checklist 7 eixos + 15 validações, testes rodados e resumo final fiel",
+      "expected_output": "Revisão desde HEAD~2 (N arquivos, M commits) via processo.md, com checklist 7 eixos + 24 validações, testes rodados e resumo final fiel",
       "files": [],
       "assertions": [
         {
@@ -65,6 +65,29 @@
         },
         {
           "text": "Nunca altera arquivos nem commita, só diagnostica",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "revisa a branch feat/cce-comprovante-4309 vs master — migração com xml_evento/pdf/resposta_json, troca do envio legado por integração direta, tela nova com ordenação e mensagem de erro alterada",
+      "expected_output": "Revisão que pega os furos que reprovaram o MR 352 na prática: timeout tratado como falha definitiva com apaga (#16), mensagem que perdeu cstat-xmotivo (#17), throw sem catcher com 500 silencioso (#18), estado INDETERMINADO sem saída (#19), resposta_json com blob duplicado + escrita dupla (#20), texto de tela vazando para contrato externo após remover legado (#21), config paralela + certificado lido 2x (#22), orderBy anulado pelo sort do framework (#23), rota nova sem permissão na fonte + sequência sem retry (#24), comentário fora do idioma (#13) e MR gigante misturado pedindo fatiamento (gate 0)",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Compara antes/depois: mensagem antiga com causa vs nova genérica, função legada removida vs mapeamento no código novo",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Todo achado validado entra numerado com Onde técnico; nenhum risco real cortado por limite numérico",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Gate de tamanho dispara: MR gigante misturado recebe bloqueia com sugestão de fatiamento ordenado",
           "passed": false,
           "evidence": ""
         }

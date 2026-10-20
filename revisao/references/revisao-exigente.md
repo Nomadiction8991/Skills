@@ -4,9 +4,9 @@ Vale para qualquer projeto/stack. Se passar aqui, passa em review sênior sem re
 
 ## 0. Gates (falhou 1 = não abre MR)
 
-1. **Tamanho:** MR >300 linhas ou >10 arquivos ou >1 responsabilidade = fatiar. Nenhum commit >200 linhas sem justificativa. Nenhum MR >1000 linhas nunca.
+1. **Tamanho:** MR >300 linhas ou >10 arquivos ou >1 responsabilidade = fatiar. Nenhum commit >200 linhas sem justificativa. Nenhum MR >1000 linhas nunca. MR com ~2900 linhas num único commit = bloqueia direto, mesmo com código certo — ninguém revisa isso com segurança (ex.: extraído de MR que misturava fix, tela nova e troca de integração fiscal num commit só).
 2. **1 commit = 1 conquista completa:** compila + teste verde sozinho, reversível sozinho. Ordem cronológica não importa.
-3. **Refactor separado de feature:** `chore:`/`refactor:` em MR própria. `feat:`/`fix:` só com mínimo do ticket.
+3. **Refactor separado de feature:** `chore:`/`refactor:` em MR própria. `feat:`/`fix:` só com mínimo do ticket. Sinais de mistura no mesmo diff: migration + tela + troca de integração + fix pontual juntos; renomeação/movimentação junto de regra nova; função legada removida + comportamento novo no mesmo commit.
 4. **Sem dev-tool no código prod:** sem rota extra pra túnel, sem reescrita global de URL, sem middleware só pra dev, sem plugin de hot-reload, sem script de boot multi-processo, sem imagem prod com pacote de teste, sem comando que quebra em worktree.
 5. **Sem arquivo local/gerado:** sem ignore de agente, sem ajuste em `.gitignore` pra ferramenta, sem doc gerada, sem `console.log`/`TODO`/`credencial`.
 6. **Testes verdes full:** suíte completa rodada local (ex.: `make teste`). Falha causada pelo diff = bloqueia.
@@ -65,15 +65,19 @@ Rebaseado no dia, sem conflito, sem `merge base into...`, Draft só pra CI, pron
 
 ## 6. Checklist 2 min
 
-[ ] <300 linhas, 1 ticket, 1 responsabilidade?
+[ ] <300 linhas, 1 ticket, 1 responsabilidade? (se misturou fix + tela + integração, fatie antes — ex.: 1. correções pontuais → 2. feature visível → 3. troca de integração arriscada)
 [ ] refactor/chore separado?
 [ ] dor + repro + prova na descrição?
 [ ] cada commit compila e testa sozinho?
 [ ] testes full verdes?
 [ ] ID trocado na URL não vaza?
 [ ] sem duplicação, sem morto, sem wrapper inútil?
+[ ] sem dado repetido no banco, sem escrita dupla?
+[ ] erro de transporte não apaga? mensagem preserva a causa? exceção tem dono? estado tem saída?
+[ ] contrato externo preservado após remover legado? config central reaproveitada?
 [ ] pipeline só app, env certo?
 [ ] schema com migração + rollback?
+[ ] nova rota com permissão? sequência retry-safe?
 [ ] sem dev-tool no prod?
 [ ] UI com evidência?
 

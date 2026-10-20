@@ -9,35 +9,32 @@ allowed-tools: Read Bash Grep Glob mcp__gitlab__*
 
 # Revisão de Branch
 
-## Roteamento — leia só o que o argumento pede (validacoes pontuais + code-review genérico reaproveitado)
+Revisão diagnóstica, somente leitura, em 3 modos. Cada modo captura seu diff e lança os mesmos 4 agents (`agents.md`); a skill filtra, reescreve em linguagem simples e formata via `formato-saida.md`. Escopo, técnica e ranking: `regras.md` (fonte da verdade — leia primeiro).
 
-Modos definidos em `references/regras.md`. Cada modo chama agents com contexto limpo e **reaproveita** a skill `code-review` oficial do Claude (se instalada) como base genérica:
+## Roteamento — leia só o que o argumento pede
 
-- `args` vazio ou `git` → modo git/local: `references/git.md` → reaproveita code-review + `validacoes.md`
-- `args` começa com `branch` → modo branch: `references/branch.md` → branch atual vs base/pai explícita ou detectada, reaproveita code-review + `validacoes.md`
-- `args` é um SHA de commit ou tag (`HEAD~N`, `v1.2.0`, etc.) → modo ponto fixo: `references/processo.md` → reaproveita code-review + `validacoes.md`
+- `args` vazio ou `git` → `git.md` (diff local) → `agents.md`
+- `args` começa com `branch` → `branch.md` (branch atual vs base) → `agents.md`
+- `args` é SHA/tag (`HEAD~N`, `v1.2.0`) → `processo.md` Parte B (ponto fixo) → `agents.md`
 
-A skill `revisao` sempre controla o retorno: filtra, reescreve em linguagem simples, ordena do mais crítico ao menor e formata via `formato-saida.md`. Não leia referências que o modo não pede. Em todos os modos, `references/regras.md` (permissão de uso único) vale.
-
-## Regra obrigatória de escopo
-
-A revisão deve ficar restrita ao conteúdo do escopo selecionado pelo argumento e pelo diff correspondente. Arquivos completos, busca global, histórico, código vizinho, documentação e testes podem ser consultados apenas como contexto; não ampliam o escopo. Só reporte problemas introduzidos pelo diff ou diretamente no conteúdo revisado. Descarte problemas pré-existentes, não relacionados ou fora do diff.
+Fluxo comum a todos: `processo.md` Parte A. Não leia referências que o modo não pede. Permissão de uso único em `regras.md`.
 
 ## Arquivos de referência
 
-- `references/regras.md` — **fonte da verdade** para modos e permissão de uso único — leia primeiro
-- `references/git.md` — modo git/local: diff não commitado + agents
-- `references/branch.md` — modo branch: diff da branch atual contra a base/pai + agents
-- `references/processo.md` — fluxo base (fixar ponto, ler arquivos, checklist, validar, agregar)
-- `references/validacoes.md` — 15 validações genéricas para qualquer stack (inclui pipeline/config, migração, idioma, rodar testes e comentários só quando necessário)
-- `references/revisao-exigente.md` — padrão exigente padrão: gates de tamanho, dor primeiro, baby steps, checklist pré-MR
-- `references/formato-saida.md` — formato obrigatório do relatório
-- `references/code-smells.md` — baseline complementar (usada dentro de validacoes #3 e #5)
-- `references/context7.md` — quando e como usar o MCP context7
-- evals/evals.json — conjunto de evals (prompt → saída esperada + assertions) para validar comportamento da skill
+- `references/regras.md` — **fonte da verdade**: modos, técnica code-review, escopo, ranking sem teto, regras rígidas de leitura/permissão
+- `references/git.md` — modo git/local: só a captura do diff
+- `references/branch.md` — modo branch: só resolução da base + captura
+- `references/agents.md` — os 4 agents compartilhados (briefings + pós-agents; tabela de donos em `validacoes.md`)
+- `references/processo.md` — Parte A fluxo comum + Parte B modo ponto fixo
+- `references/validacoes.md` — 24 validações genéricas + tabela de donos (cada agent lê só seu subconjunto)
+- `references/revisao-exigente.md` — gates de tamanho/mistura, dor primeiro, checklist pré-MR
+- `references/formato-saida.md` — formato obrigatório do relatório (explicação simples + `Como corrigir` + `Onde:`)
+- `references/code-smells.md` — baseline complementar de B2 (dentro de #4 e #5)
+- `references/context7.md` — quando e como usar o MCP context7 (opcional)
+- evals/evals.json — evals (prompt → saída esperada + assertions); `evals/run.md` — como rodar
 
 ## Exemplo
-Usuário: "revisa a branch" → resolve a base, roda `git diff <base>...HEAD`, resume o diff em 1-2 frases e aplica validacoes.md + formato-saida.md.
+Usuário: "revisa a branch" → resolve a base (`branch.md`), roda `git diff <base>...HEAD`, resume em 1-2 frases, lança `agents.md` e agrega via `processo.md` (A4) + `formato-saida.md`.
 ## Troubleshooting
 - Base indeterminável com segurança → interrompe e pede `/revisao branch <base>` explícita.
 - Achado fora do diff ou pré-existente → descarta, não entra no relatório.

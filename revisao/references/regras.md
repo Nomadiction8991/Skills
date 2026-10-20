@@ -6,35 +6,35 @@
 - `branch` ou `branch <base>` → modo branch: `git diff <base>...HEAD`, sempre com a branch atual em `HEAD`. A base é, nesta ordem: 2º token; `branch.<nome-atual>.base`; upstream configurado quando ele aponta para uma branch diferente da atual; ou a branch registrada no reflog como origem da criação. Não assumir `main`, `master` ou outra base por convenção; se a base não puder ser determinada com segurança, interromper e informar que é necessário usar `/revisao branch <base>`.
 - SHA de commit ou tag passado diretamente (`HEAD~N`, SHA, `v1.2.0`, etc.) → modo ponto fixo: `git diff <ponto>...HEAD`
 
-Detalhes de captura em `references/processo.md#1` e agents em `references/git.md` e `references/branch.md`.
+Detalhes de captura em `references/processo.md` (Parte A, A1) e briefings em `references/agents.md`.
 
 ## Técnica oficial `code-review` adaptada (extraída do plugin oficial)
 
-Extraído de `anthropics/claude-code/plugins/code-review` (README + `code.claude.com/docs/en/code-review`) e `claude-plugins-official/plugins/skill-creator` (progressive disclosure). A `revisao` mantém seus 3 modos (`git`/`branch`/`SHA`, sem modo PR) mas reaproveita os steps 1-8 do `code-review` — fonte única deste bloco (não repetir em `processo.md#0`):
+Extraído de `anthropics/claude-code/plugins/code-review` (README + `code.claude.com/docs/en/code-review`) e `claude-plugins-official/plugins/skill-creator` (progressive disclosure). A `revisao` mantém seus 3 modos (`git`/`branch`/`SHA`, sem modo PR) mas reaproveita os steps 1-8 do `code-review` — fonte única deste bloco (não repetir em `processo.md`):
 
 1. **Checar se revisão é necessária:** pule se diff vazio, trivial (só lockfile/gerado), ou já revisada. Não rode linter — descarte só pós-scoring.
 2. **Coletar guias `AGENTS.md` (+ `REVIEW.md` se existir):** liste `AGENTS.md` da raiz + cada pasta com arquivo tocado (ex.: `src/pedidos/svc.go` → `/AGENTS.md`, `/src/AGENTS.md`, `/src/pedidos/AGENTS.md`). Use `Glob` + `Read`. Cada agent só avalia regra cujo caminho é prefixo do arquivo. Se houver `REVIEW.md` na raiz, trate como instrução só-de-revisão (complementa `AGENTS.md` com severidade, caps de nit e checks específicos).
 3. **Resumir mudanças:** gere 1-2 frases do que o diff faz (arquivos tocados, intenção). O resumo alimenta os 4 agents e evita alucinação.
-4. **Lançar 4 agents paralelos independentes (general-purpose, só leitura):**
-   - **A1 e A2 — AGENTS compliance (redundância):** auditam aderência a regras explícitas de `AGENTS.md`/`REVIEW.md`. Só apontam violação quando citam a regra exata. Dois agents reduzem falso negativo.
-   - **B1 — Bugs rasos diff-only:** olha só o diff, sem contexto extra. Aponta só bug que quebra build ou dá resultado errado sempre (sintaxe, tipo, import faltando, referência não resolvida, lógica invertida). Ignora nitpick.
-   - **B2 — Histórico/blame + lógica introduzida:** usa `git blame`/`git log`/`git show` para código introduzido. Busca segurança, lógica incorreta e divergência que só aparece com histórico.
+4. **Lançar 4 agents paralelos independentes (A em 2 instâncias + B1 + B2, só leitura):** briefings em `references/agents.md`.
+   - Papéis e donos de validações em `agents.md`: **A** compliance (2 instâncias, focos distintos) + **B1** bugs certos diff-only + **B2** histórico/lógica + riscos 19–24.
    Se um agent falhar por indisponibilidade ou limite do provedor, não repita a mesma chamada nem crie tarefas equivalentes para contornar o erro. Continue com os resultados disponíveis e faça a análise faltante diretamente, em modo somente leitura, seguindo o escopo e os critérios deste fluxo. Se um validador também estiver indisponível, confirme o achado diretamente no código atual; descarte o que não puder confirmar com alta confiança. Informe a indisponibilidade apenas se impedir uma validação relevante.
 5. **Scoring 0-100 por achado (interno, nunca no relatório):** 0 falso positivo, 25 talvez real, 50 moderado menor, 75 altamente confiante importante, 100 certeza crítica — mapeado em faixas 0-25 pré-existente/falso, 26-50 menor não citado, 51-75 válido baixo impacto, 76-90 importante, 91-100 bloqueia. Só mantém ≥80 para validação. Limiar padrão 80 (configurável: edite este arquivo se o projeto quiser 70/85). Relatório final só usa `bloqueia`/`importante`/`menor`, sem número e sem link SHA.
 6. **Filtros de falsos positivos (antes e depois da validação):** descarte pré-existente fora do diff; parece bug mas está correto; pedante que sênior não barraria; linter já pegaria (não rodar linter); qualidade geral sem regra explícita em `AGENTS.md`/`REVIEW.md`; silenciado por `lint-ignore`/`eslint-disable`. Sem bloco de sugestão aplicável.
 7. **Validação (1 validador por achado ≥80):** prefira sub-agent independente para confirmar `arquivo:linha` no código atual + cenário concreto de falha ("usuário B abre /pedido/17 → vê do A"). Se indisponível por falha do provedor, confirme diretamente no código atual; sem confirmação com alta confiança, descarte. Não repita chamadas indisponíveis. `arquivo:linha` só para validação interna, nunca no relatório.
-8. **Deduplicação e ranking:** após validação, deduplique achados do mesmo trecho/causa e ordene por severidade textual `bloqueia` (91-100 ou quebra) > `importante` (80-90 com impacto real) > `menor` (80-90 baixo risco). Limite a 5 numerados; extras agrupados como 1 `menor` extra. `Como corrigir:` só orientação textual.
+8. **Deduplicação e ranking:** após validação, deduplique achados do mesmo trecho/causa e ordene por severidade textual `bloqueia` (91-100 ou quebra) > `importante` (80-90 com impacto real) > `menor` (80-90 baixo risco). Todo achado validado entra numerado, sem teto e sem agrupamento forçado — o contexto já foi lido e validado, cortar achado real desperdiça a revisão. `Como corrigir:` só orientação textual.
 
-Compatibilidade: o genérico pega bugs rasos + `AGENTS.md` compliance; `validacoes.md` (15) + 7 eixos pegam o que reprova na prática (autorização, divergência, código morto etc.). `processo.md#3` une ambos; `processo.md#3.5` continua rodando testes sempre.
+Compatibilidade: o genérico pega bugs rasos + `AGENTS.md` compliance; `validacoes.md` (24) + 7 eixos pegam o que reprova na prática (autorização, divergência, código morto, erro destrutivo, mensagem sem causa, estado sem saída, dado repetido, contrato externo etc.). `processo.md` (A3) une ambos; `processo.md` (A3.5) continua rodando testes sempre.
 
-## Antes de analisar
+## Escopo (vale para todos os modos)
 
-- Defina o escopo pelo modo escolhido: alterações locais (`git diff`/`git diff --cached`), branch atual contra a base (`git diff <base>...HEAD`) ou ponto SHA/tag (`git diff <ponto>...HEAD`). O escopo não pode ser ampliado durante a revisão.
-- Resuma o diff em 1-2 frases antes de lançar agents (arquivos tocados + intenção).
-- Leia `validacoes.md` (15 validações pontuais, incluindo pipeline, migração, idioma, rodar testes e comentários só quando necessário) além do checklist de 7 eixos e do code-review genérico acima — todo diff passa pelos três.
-- Identifique tecnologias no diff e use MCP `context7` (`context7.md`) se disponível; roda reinventada já está em `validacoes.md#4` e `#9`.
-- Entregue no formato de `formato-saida.md`. A revisão é estritamente diagnóstica e de somente leitura: nunca altera arquivos, nunca aplica correções no código e nunca commita. A skill `revisao` apenas reporta os problemas encontrados e controla o retorno do code-review genérico.
-- Use arquivos completos, busca global, histórico, código vizinho, documentação e testes somente para entender o escopo. Reporte apenas problemas introduzidos pelo diff ou diretamente no conteúdo revisado; descarte achados pré-existentes, não relacionados ou fora do diff.
+A revisão fica restrita ao conteúdo do escopo selecionado pelo argumento e pelo diff correspondente. Arquivos completos, busca global, histórico, código vizinho, documentação e testes servem apenas como contexto; não ampliam o escopo. Só reporte problemas introduzidos pelo diff ou diretamente no conteúdo revisado. Descarte pré-existentes, não relacionados ou fora do diff.
+
+## Antes de analisar (pre-flight — detalhes nas seções indicadas)
+
+- Diff do modo resolvido (comandos em `processo.md`, A1) e resumo de 1-2 frases pronto antes de lançar agents (`regras.md` step 3).
+- Guias coletados (`AGENTS.md` por diretório + `REVIEW.md`); checklist triplo: code-review genérico + 7 eixos + `validacoes.md` (24) — todo diff passa pelos três.
+- `context7.md` se disponível; entrega em `formato-saida.md`; escopo conforme seção Escopo acima.
+- Revisão estritamente diagnóstica e somente leitura: nunca altera arquivos, nunca aplica correções e nunca commita.
 
 ## Comunicação durante a revisão
 

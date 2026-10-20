@@ -1,73 +1,47 @@
-# Processo de Code Review — fluxo base
+# Processo — fluxo comum (Parte A) + modo ponto fixo (Parte B)
 
-Modos definidos em `regras.md`. Este arquivo descreve o fluxo comum; `git.md` e `branch.md` descrevem os agents específicos de cada modo.
+## Parte A — comum aos 3 modos
 
-## 0. Garantir Context7 e reaproveitar técnica code-review oficial (adaptada, sem modo PR)
+### A0. Context7 e técnica oficial
 
-Ver `regras.md` Técnica oficial `code-review` adaptada (steps 1-8) — fonte única. Aqui só orquestração mínima:
+Técnica `code-review` adaptada: fonte única em `regras.md` (steps 1-8). Aqui só orquestração: gere o resumo do diff (1-2 frases), colete `AGENTS.md` por diretório + `REVIEW.md` se existir. Se diff vazio, falha; se trivial (só `*.lock`, `src/gen/**`, vendored), retorne `Nenhum achado — diff trivial` sem agents. Context7: ver `context7.md` (opcional, nunca instalar sozinho).
 
-- **Context7 (opcional):** ver `context7.md` — use se disponível, senão siga sem; nunca instale automaticamente.
-- **Orquestração:** gere resumo do diff (1-2 frases) e colete `AGENTS.md` por diretório + `REVIEW.md` se existir; envie a todos os agents. Se `git diff` trivial, retorne `Nenhum achado — diff trivial` sem agents. Detalhe dos 4 agents, scoring, filtros e dedup em `regras.md` e `git.md`/`branch.md`.
+### A1. Fixar o ponto de referência
 
-## 1. Fixar o ponto de referência
+| Modo | Comando |
+|---|---|
+| git/local | `git status`; `git diff` + `git diff --cached`; `git log --oneline -5` |
+| branch | `git diff <base>...HEAD` + `git log <base>..HEAD` (base conforme `branch.md`) |
+| ponto fixo | `git diff <ponto>...HEAD` + `git log <ponto>..HEAD`; validar `git rev-parse <ponto>` |
 
-- **git/local:** `git status`; `git diff` + `git diff --cached`; `git log --oneline -5` (contexto). Falha se ambos vazios.
-- **branch:** revisar a branch atual (`git branch --show-current`) contra a base/pai. Usar, nesta ordem, o 2º token, `git config --get "branch.<atual>.base"`, o upstream (`git rev-parse --abbrev-ref --symbolic-full-name @{u}`) somente se ele apontar para uma branch diferente da atual, ou o registro `branch: Created from <base>` no reflog (`git reflog show --format=%gs <atual>`). Validar com `git rev-parse <base>` e então executar `git diff <base>...HEAD` e `git log <base>..HEAD --oneline`. Se não houver uma base confiável, parar com a orientação `/revisao branch <base>`; não presumir `main`, `master` ou `develop`.
-- **SHA/tag direto:** `git diff <ponto>...HEAD` + `git log <ponto>..HEAD`; validar `git rev-parse <ponto>`.
+Detalhe de cada modo no seu arquivo (`git.md`, `branch.md`, Parte B abaixo).
 
-Em todos os modos: falhar se diff vazio antes de lançar agents; se diff trivial (só `*.lock`, `src/gen/**`, vendored), retorne `Nenhum achado — diff trivial` sem agents. Agents são lançados por `git.md` ou `branch.md`.
+Continuidade em worktree (só leitura até aqui): se o usuário pedir depois uma ação Git em um worktree, encerre o escopo da revisão e confirme o destino (`pwd`, `git rev-parse --show-toplevel`, `git status --short` no alvo) antes de orientar ou executar. Nunca reutilize caminho/branch/status de outro worktree; sem destino claro, pergunte.
 
-### Continuidade após a revisão: identidade do worktree e confirmação
+### A2. Ler arquivos + comparar antes/depois
 
-A revisão continua sendo somente leitura. Se o usuário pedir depois uma ação Git em um worktree, encerre o escopo da revisão e confirme o destino antes de orientar ou executar essa ação: consulte `pwd`, `git rev-parse --show-toplevel` e `git status --short` no worktree alvo. Não reutilize como atual o caminho, branch ou status de outro worktree; se houver mais de um candidato ou o destino não estiver claro, pergunte qual é o correto. Antes de qualquer alteração, confira que os caminhos pedidos pertencem ao worktree confirmado. Depois, repita `git status --short` nesse mesmo worktree e só diga que a ação foi concluída se a saída comprovar o resultado; se não comprovar, informe claramente que falhou ou segue pendente. Nunca declare restauração, edição ou outro efeito com base apenas na intenção ou no comando tentado.
+Abra por inteiro os arquivos que o diff toca (o diff esconde o método irmão que já valida). Abra também o **antes** (base) dos trechos-chave: mensagem de erro antiga vs nova (a causa sumiu?); função removida vs nova (o mapeamento veio junto?); ordenação/permissão antiga vs nova. Quem só lê o depois não vê regressão. Tudo fora do diff é só contexto: nenhum problema externo vira achado (ver `regras.md`, Escopo).
 
-## 2. Ler arquivos completos sem ampliar o escopo
+### A3. Checklist (genérico + 7 eixos + 24 validações)
 
-Não revise só o diff — abra os arquivos inteiros que o diff toca para entender o contexto. O diff esconde o método irmão que já valida, o outro lugar que calcula o mesmo dado e o padrão dos vizinhos. Esses arquivos e buscas adicionais são apenas contexto: nenhum problema fora do diff pode virar achado.
+Primeiro os achados genéricos do code-review (se houve). Depois as 24 validações de `validacoes.md` — cada agent cobre só seu subconjunto (`agents.md`, Donos). Para cada validação 16–24, o orquestrador exige evidência explícita no relatório interno (trecho antes/depois ou "verificado sem achado"); pular em silêncio reprova a revisão. `code-smells.md` apoia B2 dentro de #4/#5.
 
-Também gere o resumo do diff (1-2 frases) e colete `AGENTS.md` por diretório + `REVIEW.md` se existir na raiz (ver `regras.md` step 2). Envie resumo + lista de guias para todos os agents.
+### A3.5. Rodar todos os testes (orquestrador, sempre)
 
-## 3. Passar o checklist obrigatório (genérico do code-review + 7 eixos + 15 validações pontuais)
+Descubra o comando nesta ordem: `Makefile` (`make test`/`tests`/`check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`tox`, `cargo test`, `./test.sh`, `docker exec`. Rode a suíte completa assim que diff e comando existirem. Só reporte falha causada pelo conteúdo revisado; pré-existente fica fora. Sem como rodar, declare "testes não executados — motivo".
 
-Analise todos os eixos internamente, mas mostre no relatório somente os achados:
+### A4. Validação e agregação
 
-1. Autorização e escopo do dono do dado
-2. Mesma informação derivada de formas divergentes
-3. Código morto introduzido
-4. Estado assíncrono e timers no front
-5. Consistência com os arquivos vizinhos
-6. Correção e borda dos dados
-7. Testes
+Validação 1:1 e filtros em `agents.md` (pós-agents); ranking sem teto em `regras.md` step 8. Agregue abaixo:
 
-Primeiro, se o passo 0 retornou achados genéricos do code-review, mantenha-os como base. Depois, passar as 15 validações pontuais de `references/validacoes.md` (autorização, divergência, código morto, indireção, duplicação, responsabilidade, API simples, separação de MR, padrões do stack, infra, pipeline/config, migração, idioma consistente, rodar testes, comentários só quando necessário) — são o diferencial que o genérico não pega. Inclua `code-smells.md` dentro dos eixos 3/5. A skill `revisao` controla e reescreve tudo: filtra <80, deduplica, remove pré-existente fora do diff e reordena.
+1. Cabeçalho do modo (`X` = achados deduplicados do diff)
+2. Lista numerada do mais crítico ao menor, todos os validados sem teto: `1. Título — severidade` + explicação simples + `Como corrigir: ...` + `Onde: ...`. `Como corrigir` é orientação conceitual, **nunca** alteração a aplicar agora.
+3. `Veredicto: ...` (uma linha, só sobre o diff como está)
+4. `Resumo final: ...` (escopo, X achados, conclusão — sempre fiel aos achados pendentes, **nunca** "já corrigido")
+5. Pergunta final (sem aplicar nada antes)
 
-## 3.5 Rodar todos os testes (sempre)
+Sem seções `## Padrões`/`## Especificação` separadas e sem blocos `Linguagem simples / técnica` — achado direto em linguagem simples. Se corrigir relatório anterior, acrescente antes do veredicto: `Correção de relatório anterior: ...`. Se dois achados colidirem no mesmo trecho, mantenha o de maior confiança.
 
-Identifique cedo como rodar os testes no repo em que está — procure nesta ordem: `Makefile` (`make test`/`make tests`/`make check`), `README.md`/`AGENTS.md`/`CONTRIBUTING.md`, `package.json` (`scripts.test`), `composer.json`, `pyproject.toml`/`tox`, `cargo test`, `./test.sh`, `docker exec` etc. Leia o arquivo e extraia o comando exato; rode a suíte completa assim que o diff e o comando estiverem definidos, sem deixar essa validação para depois de toda a análise. Só reporte falhas causadas pelo conteúdo revisado; falhas pré-existentes ou sem relação ficam fora do relatório. Se não houver como rodar (sem Docker/env), declare "testes não executados — motivo" em vez de silenciar.
+## Parte B — particular do modo ponto fixo (SHA/tag)
 
-Se agents ou validadores falharem por limite/indisponibilidade do provedor, siga o fallback descrito em `regras.md`: não repita chamadas equivalentes; complete a análise no agente principal com ferramentas de leitura e valide achados no código. Mantenha os updates ao usuário apenas para mudanças relevantes de estado ou bloqueios, sem anunciar espera por cada tarefa paralela.
-
-## 4. Validar antes de reportar
-
-Para cada achado ≥80, lance 1 validador paralelo (modelo do autor: forte para B1/B2, leve para A1/A2) que:
-
-- Reabre o arquivo e confirma `arquivo:linha` no código atual + cenário concreto ("usuário B abre /pedido/17 → vê pedido do A"); guarde `arquivo:linha` só para validação, nunca no relatório
-- Confirma que o problema foi introduzido pelo diff ou está diretamente no conteúdo revisado; se já existia antes, não foi tocado ou não tem relação direta, descarte
-- Verifica citação explícita de `AGENTS.md`/`REVIEW.md` para achados de compliance; sem citação literal, descarte
-- Não inflar severidade; não alterar arquivos
-
-Descarte não confirmados. Depois deduplique achados que falam do mesmo trecho/causa antes de agregar.
-
-## 5. Agregar
-
-Una os dois eixos em um único relatório direto, seguindo obrigatoriamente `references/formato-saida.md`:
-
-1. Cabeçalho conforme o modo: `Revisão das alterações não commitadas (N arquivos). X achados, <resumo>.` — `X` conta os achados introduzidos pelo diff (deduplicados)
-2. Lista numerada **sempre do mais crítico ao menor, todo achado dentro do escopo numerado inclusive menor**: `1. Título — severidade` + explicação simples + `Como corrigir: ...`, sem nomes ou caminhos técnicos (máx 5; se houver mais, manter os 5 mais relevantes). `Como corrigir` é apenas uma orientação conceitual em texto, **nunca** uma alteração a ser aplicada agora.
-3. `Veredicto: ...` (uma linha — só sobre o diff atual como está)
-4. `Resumo final: ...` conforme o modelo de `references/formato-saida.md` (sempre retratando o estado real encontrado com seus achados pendentes de decisão do usuário, **nunca** resumindo como "já corrigido")
-5. Pergunta final para decisão do usuário (sem nunca aplicar alterações antes).
-
-Não crie seções `## Padrões` / `## Especificação` separadas e não duplique `Linguagem simples / técnica` — mostre direto o achado em linguagem simples. Se corrigir relatório anterior, acrescente antes do veredicto: `Correção de relatório anterior: ...`
-
-Se dois achados colidirem no mesmo trecho, mantenha o de maior confiança e descarte o outro na deduplicação.
+`args` é commit ou tag (`HEAD~N`, SHA, `v1.2.0`): valide com `git rev-parse <ponto>`, capture `git diff <ponto>...HEAD` + `git log <ponto>..HEAD --oneline` e aplique a Parte A na ordem (A0→A3.5), lançando os 4 agents de `agents.md` com esse diff. Cabeçalho: `Revisão desde <ponto> (N arquivos, M commits). X achados, <resumo>.`
