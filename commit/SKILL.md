@@ -3,7 +3,7 @@ name: commit
 description: "Avalia pendentes, separa em branches/MRs empilhadas e cria commits conventional commits. Use via /commit ou sempre que o usuário falar sobre commit/comitar, separar mudanças em branches, dividir MR, empilhar branches ou 1 branch 1 MR. Do NOT use for creating MRs, reviewing code, or pushing branches."
 model: haiku
 effort: low
-argument-hint: "[mensagem]"
+argument-hint: "[mensagem | separar]"
 allowed-tools: Read Bash Grep Glob
 ---
 
@@ -11,11 +11,13 @@ allowed-tools: Read Bash Grep Glob
 
 Avalia os pendentes, propõe a divisão em branches/MRs empilhadas (ideal 1 branch = 1 MR = 1 commit) e cria o commit bem formatado: $ARGUMENTS
 
-## Regra de ouro: contexto isolado
+Mensagem montada **somente** do git real (`git status`, `git diff`, `git log` + leitura dos arquivos) — nunca do histórico da conversa. Avaliação (2.5) e montagem (Passo 4) rodam em sub-agente isolado; confirmação `[S]/[N]` e `git commit` ficam no agente principal.
 
-A mensagem do commit é montada **somente** a partir do estado real do repositório — `git status`, `git diff`, `git log` e a leitura dos arquivos alterados. **Nunca** usar histórico da conversa, resumos do chat ou descrições do usuário como fonte da mensagem: se o diff não confirma, não entra no commit.
+## Roteamento — leia só o que o argumento pede
 
-> **Regra:** as etapas de avaliação (Passo 2.5) e montagem (Passo 4) lançam sub-agentes (`Agent`, tipo `general-purpose`) em contexto isolado a partir do git real — nunca do histórico da conversa. Detalhe de entradas e proibições em `references/fluxo.md` (Passo 2.5 e Passo 4). A confirmação `[S]/[N]` e o `git commit` em si sempre ficam aqui, no agente principal (Passo 5 de `references/fluxo.md`).
+- `args` menciona separar/dividir/empilhar, ou diff com frentes distintas → ir direto ao Passo 2.5 de `references/fluxo.md`
+- `args` vazio ou instrução sobre a mensagem → fluxo completo (`references/fluxo.md`)
+- Projeto Ello (detectado no Passo 0) → mensagem pela variante `references/ello.md`, resto pelo fluxo geral
 
 ## Estado Atual do Repositório
 
@@ -29,15 +31,17 @@ A mensagem do commit é montada **somente** a partir do estado real do repositó
 Usuário alterou 3 arquivos de um fix e pede commit → 1 commit conventional com subject + corpo em linguagem simples.
 
 ## Troubleshooting
-- Mudanças lógicas distintas no diff → ir ao Passo 2.5 (separar em MRs) antes de montar a mensagem.
+- Arquivo compartilhado por mais de uma frente ou teste fora da pasta do código → partição cirúrgica (`references/particao-cirurgica.md`) no Passo 2.5.
 - Projeto Ello estando na base (main/master) → criar branch antes, nunca commitar direto.
 
 ## Referências
 
 - **Regras gerais (não negociáveis, inclui limites de tamanho):** `references/regras-gerais.md`
 - **Fluxo do comando (passo a passo, inclui detecção de projeto Ello):** `references/fluxo.md`
+- **Partição cirúrgica (staging parcial, arquivos compartilhados, régua estrita e rascunhos):** `references/particao-cirurgica.md`
 - **Especificação Conventional Commits:** `references/conventional-commits.md`
 - **Variante Ello (projetos do Ello ERP):** `references/ello.md` + `templates/ello-commit.md`
 - **Template de mensagem:** `templates/commit.md`
 - **Template do plano de MRs (grafo de branches):** `templates/mr-plan.md`
 - **Ajuda:** `help.md`
+- evals/evals.json — evals (prompt → saída esperada + assertions); `evals/run.md` — como rodar

@@ -6,7 +6,7 @@ Quando o projeto atual for detectado como Ello (Passo 0 de `fluxo.md`), esta var
 
 ## 1. Subject — padrão Ello (não usa Conventional Commits)
 
-O subject **não** leva o prefixo `tipo(escopo):` do Conventional Commits. Começa com **verbo no presente** (Corrige, Implementa, Adiciona, Remove, Extrai, Substitui, Revisa, Melhoria, Atualiza, Bloqueia, Registra, Oculta...) e segue com o contexto:
+O subject **não** leva o prefixo `tipo(escopo):` do Conventional Commits. Começa com **verbo no presente** (Corrige, Implementa, Adiciona, Remove, Extrai, Substitui, Revisa, Melhora, Atualiza, Bloqueia, Registra, Oculta...) e segue com o contexto:
 
 - Máximo 80 caracteres
 - Português brasileiro com acentos
@@ -76,4 +76,4 @@ Reforço da regra geral #3 (`regras-gerais.md`): **nunca** incluir `Co-Authored-
 
 ## 5. Chamado TomTicket (regra #5 aplicada no Ello)
 
-O ticket do Ello vai no **subject** como `(tt-XXXX)`. Além dele, a regra geral #5 vale em projetos Ello: perguntar se o commit está relacionado a um **chamado TomTicket** (via skill `chamado`) — se houver, usar o rodapé `Refs: #<número>` + título e link abaixo do subject.
+O ticket do Ello vai no **subject** como `(tt-XXXX)`. Além dele, a regra geral #5 vale em projetos Ello: perguntar se o commit está relacionado a um **chamado TomTicket** (via skill `chamado-tomticket`) — se houver, usar o rodapé `Refs: #<número>` + título e link abaixo do subject.

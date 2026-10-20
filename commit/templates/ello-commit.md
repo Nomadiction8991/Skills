@@ -1,7 +1,7 @@
 Template da mensagem de commit da **variante Ello** (projetos do Ello ERP) — usada no lugar do template conventional. Ver `../references/ello.md` para as regras detalhadas e `../references/fluxo.md` (Passo 0) para a detecção.
 
 ```
-[Subject: verbo no presente, ≤80 caracteres, contexto da tela/módulo] [(tt-XXXX) | *]
+[Subject: verbo no presente, ≤80 caracteres, contexto da tela/módulo] [sufixo: (tt-XXXX) com ticket | * sem ticket e fora do changelog | nada sem ticket e no changelog]
 
 [Body opcional — contexto e solução em linguagem simples; jargão técnico
 só quando facilitar o entendimento; conciso, até ~400 caracteres, linhas

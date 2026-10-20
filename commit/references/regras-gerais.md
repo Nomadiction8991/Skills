@@ -30,11 +30,11 @@ Se as verificações de pre-commit falharem, investigar e corrigir a causa raiz 
 
 A vinculação de chamado do TomTicket só ocorre em **projetos do Ello** (detecção no Passo 0 do fluxo). Em qualquer outro projeto, **não perguntar** — seguir sem esta seção.
 
-Em projeto Ello, se a skill `chamado` estiver disponível para o usuário (listada entre as skills instaladas):
+Em projeto Ello, se a skill `chamado-tomticket` estiver disponível para o usuário (listada entre as skills instaladas):
 
-1. **Buscar candidatos antes de perguntar:** usar a skill `chamado` para listar chamados prováveis — `mcp__tomticket__listar_chamados` (começar pelo status aberto; se o diff apontar um departamento específico, testar `departamento`). Filtrar/ranquear pelo contexto do diff (módulo, cliente, palavras-chave) e selecionar os 2–4 **títulos mais prováveis**.
+1. **Buscar candidatos antes de perguntar:** usar a skill `chamado-tomticket` para listar chamados prováveis — `mcp__tomticket__listar_chamados` (começar pelo status aberto; se o diff apontar um departamento específico, testar `departamento`). Filtrar/ranquear pelo contexto do diff (módulo, cliente, palavras-chave) e selecionar os 2–4 **títulos mais prováveis**.
 2. **Apresentar os candidatos** ao usuário com os números, perguntando se o commit está relacionado a algum deles, e incluir a opção **"preencher manualmente"** para quando o chamado não estiver entre os listados.
-3. Se o usuário escolher um candidato ou digitar o número: obter o **título** com a skill `chamado` (fluxo ler, `mcp__tomticket__ver_chamado`). Se o número não existir na API: avisar e **nunca adivinhar** outro número parecido — pedir o correto. A API não retorna o link do chamado (não pode ser inferido/gerado) — pedir o **link** diretamente ao usuário.
+3. Se o usuário escolher um candidato ou digitar o número: obter o **título** com a skill `chamado-tomticket` (fluxo ler, `mcp__tomticket__ver_chamado`). Se o número não existir na API: avisar e **nunca adivinhar** outro número parecido — pedir o correto. A API não retorna o link do chamado (não pode ser inferido/gerado) — pedir o **link** diretamente ao usuário.
 4. Se o usuário disser que não há chamado, seguir sem esta seção.
 
 Quando houver chamado vinculado, o rodapé segue este formato (abaixo de outros rodapés, se houver):
@@ -52,16 +52,11 @@ A linha do subject **nunca passa de 80 caracteres** — vale para qualquer proje
 
 ## 7. Corpo conciso — no máximo ~400 caracteres
 
-O corpo não deve virar textão: **no máximo ~400 caracteres** (cerca de 6 linhas de ~72). Resumir ao essencial — o que mudou e por quê. Vale para qualquer projeto, inclusive na variante Ello (que tem corpo opcional).
+O corpo não deve virar textão: **no máximo ~400 caracteres** (cerca de 6 linhas de ~72). Resumir ao essencial — o que mudou e por quê. Vale para qualquer projeto, inclusive na variante Ello (que tem corpo opcional). Siga o idioma dominante do histórico do repo (ex.: PT-BR).
 
 ## 8. Manter 1 commit por branch — usar `--amend` quando possível
 
-Esta skill tenta manter **um único commit por branch**. Quando o usuário fizer novas alterações depois de um commit:
-
-1. Verificar se as alterações atuais ainda são **válidas para o mesmo commit** — mesmo contexto/lógica do commit existente. Se forem outro trabalho → ir ao Passo 2.5 de `fluxo.md` (pode virar branch empilhada em vez de segundo commit na mesma branch).
-2. Verificar se o commit atual **já foi enviado ao remoto**: `git log origin/<branch>..HEAD` vazio (ou branch sem remota) → ainda não enviado.
-3. **Não enviado** e mesmo contexto → fazer `git add` dos arquivos e `git commit --amend` (sem alterar a mensagem se ela ainda descreve bem as mudanças; editar a mensagem se o conteúdo mudou).
-4. **Já enviado** (e mesmo trabalho) → **nunca** usar amend (evita reescrever histórico remoto): criar commit novo e avisar o usuário. Se for outro trabalho, vale o Passo 2.5 de `fluxo.md`.
+Esta skill tenta manter **um único commit por branch**. Procedimento completo no Passo 1.5 de `fluxo.md`: mesmo trabalho + não enviado → `git add` + `git commit --amend` (editando a mensagem se o conteúdo mudou); commit já enviado → nunca amend, cria commit novo; outro trabalho → Passo 2.5 (pode virar branch empilhada).
 
 ## 9. Nunca executar `git commit` sem confirmação explícita do usuário
 

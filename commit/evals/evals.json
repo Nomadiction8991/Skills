@@ -1,0 +1,59 @@
+{
+  "skill_name": "commit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "commita isso — alterei 2 arquivos do mesmo fix de paginação, sem nada em staging, projeto sem Ello nem changelog",
+      "expected_output": "1 commit conventional (tipo fix + escopo + descrição imperativa ≤80) com corpo obrigatório em linguagem simples (≤400), montado do diff real, prévia com mensagem + arquivos e pedido [S/N] antes de qualquer git commit",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Não usa amend sem verificar (Passo 1.5) nem pula a confirmação (regra #9)",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Mensagem derivada do diff, sem rodapé de IA e sem jargão no corpo",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/commit separar — diff com refactor de logs + fix de regra de negócio em módulos distintos",
+      "expected_output": "Plano 2.5 no formato mr-plan.md (grafo + 1 seção por branch com subject/body/justificativa), refactor à parte da feature, nenhuma branch criada sem [S]",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Detecta as 2 frentes e propõe split com dependência unidirecional",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Nunca cria branch nem commita antes do [S] explícito",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "commita de novo — fiz mais um ajuste do mesmo trabalho em cima de commit ainda não enviado",
+      "expected_output": "Informa que será amend do commit existente, reavalia diff completo e edita a mensagem se o conteúdo mudou; se já enviado, cria commit novo em vez de amend",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Verifica remoto (origin/<branch>..HEAD) antes de decidir amend vs commit novo",
+          "passed": false,
+          "evidence": ""
+        },
+        {
+          "text": "Prévia informa o amend e mostra a mensagem final completa",
+          "passed": false,
+          "evidence": ""
+        }
+      ]
+    }
+  ]
+}
