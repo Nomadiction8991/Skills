@@ -54,9 +54,13 @@ A linha do subject **nunca passa de 80 caracteres** — vale para qualquer proje
 
 O corpo não deve virar textão: **no máximo ~400 caracteres** (cerca de 6 linhas de ~72). Resumir ao essencial — o que mudou e por quê. Vale para qualquer projeto, inclusive na variante Ello (que tem corpo opcional). Siga o idioma dominante do histórico do repo (ex.: PT-BR).
 
-## 8. Manter 1 commit por branch — usar `--amend` quando possível
+## 8. Poucos commits por branch — o mínimo possível, até ~5
 
-Esta skill tenta manter **um único commit por branch**. Procedimento completo no Passo 1.5 de `fluxo.md`: mesmo trabalho + não enviado → `git add` + `git commit --amend` (editando a mensagem se o conteúdo mudou); commit já enviado → nunca amend, cria commit novo; outro trabalho → Passo 2.5 (pode virar branch empilhada).
+Depois de separar as responsabilidades em MRs (Passo 2.5), a branch **pode ter mais de um commit** quando o MR tem partes distintas. Mire sempre no **menor número possível**. Até 5 é o normal; não é regra dura, mas **passou de 5 é demais** — rever se dá para fundir commits ou se algo deveria virar outra branch.
+
+**Conteúdo bem separado entre commits:** cada commit cobre uma responsabilidade só, não carrega pedaço de outro commit, e a mensagem descreve exatamente o seu conteúdo. Nada de commit "ajustes" ou "wip".
+
+Procedimento no Passo 1.5 de `fluxo.md`: mesmo trabalho de um commit não enviado → juntar nele (amend no último; `fixup` + autosquash num anterior); parte nova e distinta do mesmo MR → commit novo na mesma branch; commit já enviado → nunca reescrever, cria commit novo; outro trabalho fora do MR → Passo 2.5 (pode virar branch empilhada).
 
 ## 9. Nunca executar `git commit` sem confirmação explícita do usuário
 
@@ -70,4 +74,4 @@ Quando a regra #8 indicar `--amend`, mostrar também que será um **amend do com
 
 ## 10. Mentalidade MR — avaliar quebra em branches antes da mensagem
 
-Todo commit vai para MR (ideal **1 branch = 1 MR = 1 commit**). Antes de montar qualquer mensagem, avaliar os pendentes no Passo 2.5 de `fluxo.md` — os critérios de separação (o que mantém junto, plano empilhado unidirecional, quando não separa bem) vivem lá, não aqui. Nunca criar branches sem confirmação explícita.
+Todo commit vai para MR (**1 branch = 1 MR**, com o mínimo de commits — regra #8). Antes de montar qualquer mensagem, avaliar os pendentes no Passo 2.5 de `fluxo.md` — os critérios de separação (o que mantém junto, plano empilhado unidirecional, quando não separa bem) vivem lá, não aqui. Nunca criar branches sem confirmação explícita.

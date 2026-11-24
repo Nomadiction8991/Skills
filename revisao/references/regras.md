@@ -10,7 +10,7 @@ Detalhes de captura em `references/processo.md` (Parte A, A1) e briefings em `re
 
 ## Técnica oficial `code-review` adaptada (extraída do plugin oficial)
 
-Extraído de `anthropics/claude-code/plugins/code-review` (README + `code.claude.com/docs/en/code-review`) e `claude-plugins-official/plugins/skill-creator` (progressive disclosure). A `revisao` mantém seus 3 modos (`git`/`branch`/`SHA`, sem modo PR) mas reaproveita os steps 1-8 do `code-review` — fonte única deste bloco (não repetir em `processo.md`):
+Extraído de `anthropics/claude-code/plugins/code-review` (README + `code.claude.com/docs/en/code-review`). A `revisao` mantém seus 3 modos (`git`/`branch`/`SHA`, sem modo PR) mas reaproveita os steps 1-8 do `code-review` — fonte única deste bloco (não repetir em `processo.md`):
 
 1. **Checar se revisão é necessária:** pule se diff vazio, trivial (só lockfile/gerado), ou já revisada. Não rode linter — descarte só pós-scoring.
 2. **Coletar guias `AGENTS.md` (+ `REVIEW.md` se existir):** liste `AGENTS.md` da raiz + cada pasta com arquivo tocado (ex.: `src/pedidos/svc.go` → `/AGENTS.md`, `/src/AGENTS.md`, `/src/pedidos/AGENTS.md`). Use `Glob` + `Read`. Cada agent só avalia regra cujo caminho é prefixo do arquivo. Se houver `REVIEW.md` na raiz, trate como instrução só-de-revisão (complementa `AGENTS.md` com severidade, caps de nit e checks específicos).

@@ -9,7 +9,7 @@ allowed-tools: Read Bash Grep Glob
 
 # Commit + Separação em MRs
 
-Avalia os pendentes, propõe a divisão em branches/MRs empilhadas (ideal 1 branch = 1 MR = 1 commit) e cria o commit bem formatado: $ARGUMENTS
+Avalia os pendentes, propõe a divisão em branches/MRs empilhadas (1 branch = 1 MR, com o mínimo de commits — até ~5, cada um com conteúdo bem separado) e cria o commit bem formatado: $ARGUMENTS
 
 Mensagem montada **somente** do git real (`git status`, `git diff`, `git log` + leitura dos arquivos) — nunca do histórico da conversa. Avaliação (2.5) e montagem (Passo 4) rodam em sub-agente isolado; confirmação `[S]/[N]` e `git commit` ficam no agente principal.
 

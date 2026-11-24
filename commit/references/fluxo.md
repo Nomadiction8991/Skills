@@ -30,14 +30,15 @@ Checar `git status` (já injetado no SKILL.md, seção "Estado Atual do Reposit�
 
 ---
 
-## Passo 1.5 — Verificar amend (1 commit por branch)
+## Passo 1.5 — Juntar em commit existente ou criar novo (mínimo de commits)
 
 Se a branch **já tem commit** (HEAD não é o commit inicial da branch) e há novas alterações:
 
 1. Verificar se o último commit **já foi enviado ao remoto**: primeiro confira se a branch tem remota (`git branch -r | grep <branch>`); sem remota → ainda não enviado. Com remota, `git log --oneline origin/<branch>..HEAD` vazio → não enviado; com commits → enviado.
 2. Verificar se as alterações atuais são do **mesmo trabalho** do commit existente (mesmo contexto/lógica). Se forem outro trabalho → **ir ao Passo 2.5 antes de decidir**: pode virar branch empilhada em vez de segundo commit na mesma branch.
-3. **Não enviado + mesmo trabalho** → informar o usuário que será um amend, fazer `git add` dos arquivos e `git commit --amend`. Reavaliar o diff completo (commit anterior + novos) e **editar a mensagem se necessário** para descrever o conjunto final; se a mensagem atual já cobre, mantê-la.
-4. **Já enviado** (e mesmo trabalho) → não usar amend (regra geral #8): criar commit novo e avisar.
+3. **Não enviado + mesmo trabalho de um commit da branch** → juntar nele, sem criar commit novo. Se for o último commit: `git add` + `git commit --amend`. Se for um commit anterior: `git commit --fixup <sha>` + `GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash <base>` (com ponteiro de backup antes). Reavaliar o diff do commit e **editar a mensagem se necessário**; se a mensagem atual já cobre, mantê-la.
+4. **Parte nova e distinta, mas do mesmo MR** → commit novo na mesma branch (regra geral #8), com conteúdo que não se mistura com os commits existentes. Se a branch já tem 5 commits, avisar que está passando do ideal e sugerir fundir ou mover para outra branch.
+5. **Já enviado** (e mesmo trabalho) → não reescrever (regra geral #8): criar commit novo e avisar.
 
 Em seguida, seguir para o Passo 2 com o diff resultante.
 
@@ -49,14 +50,14 @@ Executar `git diff --cached` (ou `git diff` se acabou de fazer `git add`) para e
 
 Analisar se há **múltiplas alterações lógicas distintas** no diff (ex.: uma refatoração + uma feature nova, ou mudanças em dois módulos não relacionados).
 
-- Se detectar múltiplas alterações distintas, **ir ao Passo 2.5 antes de decidir**: primeiro avalia-se a separação em MRs/branches; só o que ficar junto no mesmo MR pode ser dividido em commits menores. Perguntar ao usuário se prefere separar ou manter tudo junto.
+- Se detectar múltiplas alterações distintas, **ir ao Passo 2.5 antes de decidir**: primeiro avalia-se a separação em MRs/branches; só o que ficar junto no mesmo MR pode ser dividido em commits — o mínimo possível (até ~5), cada um com uma responsabilidade só e sem misturar conteúdo entre eles. Perguntar ao usuário se prefere separar ou manter tudo junto.
 - Se for uma alteração lógica única (mesmo que toque vários arquivos), seguir com um commit só (o Passo 2.5 confirma antes de montar a mensagem).
 
 ---
 
 ## Passo 2.5 — Avaliar separação em MRs (antes de montar a mensagem)
 
-Todo commit desta skill **vai para MR** (ideal **1 branch = 1 MR = 1 commit**) — exceto em projeto que por convenção commita direto na base (repo pessoal/docs sem MR flow): aí o 2.5 avalia só "1 commit por unidade lógica", sem criar branches. Antes de montar qualquer mensagem, avaliar o que faz sentido manter junto no mesmo MR e o que dá para separar.
+Todo commit desta skill **vai para MR** (**1 branch = 1 MR**, com o mínimo de commits — até ~5, regra geral #8) — exceto em projeto que por convenção commita direto na base (repo pessoal/docs sem MR flow): aí o 2.5 avalia só "1 commit por unidade lógica", sem criar branches. Antes de montar qualquer mensagem, avaliar o que faz sentido manter junto no mesmo MR e o que dá para separar.
 
 **Diff grande** (medir com `git diff --numstat`: mais de ~500 linhas ou ~10 arquivos): recomendar a divisão com ênfase e avisar a carga do revisor — MR grande mistura riscos e o rollback vira tudo-ou-nada.
 
@@ -66,7 +67,7 @@ Fonte principal: **alterações pendentes** (`git status --porcelain`, `git diff
 
 O sub-agente agrupa os pendentes em **unidades lógicas** (por área/módulo, por natureza `feat` vs `fix` vs `refactor` vs `chore`, por dependência: A funciona sem B?) e devolve:
 
-1. O que **mantém junto** (mesmo MR) e por quê.
+1. O que **mantém junto** (mesmo MR) e por quê — e, se o MR tiver partes distintas, em quantos commits divide (o mínimo; até ~5), cada um com conteúdo bem separado do outro.
 2. O que **separa** — plano empilhado: ordem da base ao topo, o que vai em cada branch, qual é a base de cada uma, com dependência sempre **unidirecional** (base → branch1 → branch2).
 3. O que **não separa bem** e por quê (dependência circular, mudança atômica como rename + todos os usos, ou unidade que sozinha quebra o build/testes).
 
@@ -74,7 +75,7 @@ Arquivos compartilhados entre frentes **não vetam** a separação: propor o spl
 
 O agente principal primeiro confere se todo pendente entrou em exatamente uma unidade (nada de fora, nada em duas) e apresenta o plano no formato de `../templates/mr-plan.md` — grafo só com os nomes (topologia real: ramos lado a lado ou aninhados) e uma seção por branch com subject, body e justificativa, sem listar arquivos (o padrão vive no template) — e pergunta se o usuário quer separar agora ou manter tudo junto. Com mais de 3 branches na pilha, alertar que a revisão fica pesada e sugerir fundir as menores unidades. **Nunca** criar branches sem confirmação explícita. Se nem em camadas separar bem, diz o porquê em 1–2 frases e segue.
 
-Com `[S]` para separar, o agente principal executa o plano antes de montar qualquer mensagem: cria as branches na ordem da base ao topo (`git checkout -b <nova> <base>` a partir da base certa de cada uma — sem stash, a árvore viaja intacta), leva para cada branch só a fatia da sua unidade (`git add` cirúrgico + `git diff --cached --stat` antes de cada commit) e roda os Passos 1–5 em cada branch (1 commit por branch), sem reabrir o 2.5 — a separação já foi decidida — e pulando o Passo 1.5 (branch recém-criada não tem commit próprio para amend). Antes de criar cada branch, conferir `git branch --list <nome>` — se já existir, parar e informar o que já foi criado e como retomar. Antes de qualquer reescrita (`amend`/`rebase`), criar ponteiros de backup (`git branch backup/<nome> <branch>`) e apagá-los ao final da pilha verde (`git branch -d backup/<nome>`). Depois de commitar em cada branch da pilha, rodar nela a suíte de testes do projeto (descobrir o comando antes de começar — `Makefile`, `package.json`, `composer.json`, etc.) como atestado de "não quebrou" (nunca como prova de lugar certo); se falhar, parar, mostrar a falha e não avançar para a próxima branch. Se o projeto não tiver suíte de testes, declarar "sem testes a rodar" e seguir — só parar em falha real de teste executado. Ao final, conferir a soma: os diffs commitados na pilha devem igualar os pendentes originais (nenhuma linha a mais ou a menos). Antes do push, aplicar a regra de nada-de-órfão (`particao-cirurgica.md`): pilha interligada mergeia junta, de baixo para cima — NUNCA aterrissar a base sozinha sem decisão explícita. No fim da pilha, fazer a volta final: checkout em cada branch + suíte verde + soma igual aos pendentes — só então declara pronto.
+Com `[S]` para separar, o agente principal executa o plano antes de montar qualquer mensagem: cria as branches na ordem da base ao topo (`git checkout -b <nova> <base>` a partir da base certa de cada uma — sem stash, a árvore viaja intacta), leva para cada branch só a fatia da sua unidade (`git add` cirúrgico + `git diff --cached --stat` antes de cada commit) e roda os Passos 1–5 em cada branch (os commits que o plano definiu para ela — `git add` cirúrgico por commit, sem misturar conteúdo entre eles), sem reabrir o 2.5 — a separação já foi decidida — e pulando o Passo 1.5 (branch recém-criada não tem commit próprio para amend). Antes de criar cada branch, conferir `git branch --list <nome>` — se já existir, parar e informar o que já foi criado e como retomar. Antes de qualquer reescrita (`amend`/`rebase`), criar ponteiros de backup (`git branch backup/<nome> <branch>`) e apagá-los ao final da pilha verde (`git branch -d backup/<nome>`). Depois de commitar em cada branch da pilha, rodar nela a suíte de testes do projeto (descobrir o comando antes de começar — `Makefile`, `package.json`, `composer.json`, etc.) como atestado de "não quebrou" (nunca como prova de lugar certo); se falhar, parar, mostrar a falha e não avançar para a próxima branch. Se o projeto não tiver suíte de testes, declarar "sem testes a rodar" e seguir — só parar em falha real de teste executado. Ao final, conferir a soma: os diffs commitados na pilha devem igualar os pendentes originais (nenhuma linha a mais ou a menos). Antes do push, aplicar a regra de nada-de-órfão (`particao-cirurgica.md`): pilha interligada mergeia junta, de baixo para cima — NUNCA aterrissar a base sozinha sem decisão explícita. No fim da pilha, fazer a volta final: checkout em cada branch + suíte verde + soma igual aos pendentes — só então declara pronto.
 
 Só depois dessa decisão seguir para o Passo 3/4 (montar a mensagem do trabalho atual).
 

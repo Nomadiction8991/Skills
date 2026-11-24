@@ -6,7 +6,7 @@ Regras do grafo:
 - Cada linha do grafo tem **só o nome da branch**. Nada de commit no grafo.
 - Abaixo do grafo, **uma seção por branch**: cabeçalho com o nome entre linhas de `===` (uma antes, uma depois), seguido de subject, body e justificativa (1–2 frases: por que existe e por que parte desta base).
 - **Sem lista de arquivos** no grafo e nas seções. A confirmação do Passo 5 continua exibindo mensagem + arquivos (regra geral #9).
-- Ideal **1 branch = 1 MR = 1 commit**.
+- **1 branch = 1 MR**, com o mínimo de commits. Mais de um commit só quando o MR tem partes distintas; até ~5 é o normal, passou disso é demais. Nesse caso, repetir subject + body por commit na seção da branch, cada um com conteúdo bem separado.
 - Nome da branch: `tipo/resumo-do-que-foi-feito-tt-XXXX` — sempre com prefixo (`feat`, `fix`, `chore`, etc.), resumo o mais completo possível, `tt-XXXX` no final só quando houver ticket. Máximo 70 caracteres no total; se passar, encurtar o resumo em palavras inteiras, nunca o prefixo nem o ticket. Sem parênteses ou espaços (colam em qualquer comando git).
 
 ```

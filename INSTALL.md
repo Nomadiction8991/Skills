@@ -61,7 +61,6 @@ Após instalar, reinicie a sessão do agente e teste:
 
 - `/commit` — commit no padrão Conventional Commits
 - `/chamado-tomticket` — fluxos do TomTicket
-- `/criar-skill` — criar/refatorar skills
 - `/mr-gitlab` — na primeira execução verifica o MCP GitLab (ver `mr-gitlab/referencias/install.md`)
 
 Confirme onde instalou:
@@ -93,9 +92,6 @@ Cada skill é autocontida: basta a pasta com `SKILL.md` + `references/` + `templ
 |-------|---------|-------|
 | Chamado TomTicket | `/chamado-tomticket` | `chamado-tomticket/` |
 | Commit | `/commit` | `commit/` |
-| Criar Skill | `/criar-skill` | `criar-skill/` |
-| Entreviste-me | `/entreviste-me` | `entreviste-me/` |
-| Frontend Design | `/frontend-design` | `frontend-design/` |
 | Linguagem | `/linguagem` | `linguagem/` |
 | Manter Sessão | `/manter-sessao` | `manter-sessao/` |
 | MR GitLab | `/mr-gitlab` | `mr-gitlab/` |

@@ -4,7 +4,7 @@
 /commit [instrução opcional sobre o commit]
 ```
 
-Avalia os pendentes, separa em branches/MRs empilhadas (ideal 1 branch = 1 MR = 1 commit, com grafo do plano) e cria o commit seguindo o padrão [Conventional Commits](https://www.conventionalcommits.org/), analisando o diff real das mudanças (staged ou não) para montar tipo, escopo e descrição — nunca só pelo pedido do usuário ou nomes de arquivo.
+Avalia os pendentes, separa em branches/MRs empilhadas (1 branch = 1 MR, com o mínimo de commits — até ~5, cada um com conteúdo bem separado, com grafo do plano) e cria o commit seguindo o padrão [Conventional Commits](https://www.conventionalcommits.org/), analisando o diff real das mudanças (staged ou não) para montar tipo, escopo e descrição — nunca só pelo pedido do usuário ou nomes de arquivo.
 
 **Exemplos:**
 ```
