@@ -1,18 +1,21 @@
-# Referência — Instalação/Autoinstalação do MCP GitLab
+# Referência — Detectar acesso ao GitLab (MCP ou glab) e autoinstalação
 
-Esta skill depende do MCP server `gitlab` (pacote `@zereight/mcp-gitlab`). Antes de qualquer operação, verificar se ele já está instalado e conectado **nesta sessão**.
+A skill tem duas vias para o GitLab: o MCP `gitlab` (pacote `@zereight/mcp-gitlab`) e o `glab` (CLI oficial do GitLab). Antes de qualquer operação, descobrir qual está disponível **nesta sessão**. Só dizer "sem acesso ao GitLab" depois de testar as duas.
 
-## 1. Verificar se já existe e está conectado
+## 1. Detectar a via (nesta ordem, para na primeira que funcionar)
 
 ```bash
-claude mcp list
+claude mcp list 2>/dev/null | grep -i gitlab
+command -v glab && glab auth status 2>&1 | head -5
 ```
 
-- Se aparecer `gitlab: ... - ✔ Connected` → seguir direto para `toolsearch.md`, nada a instalar.
-- Se aparecer `gitlab: ... - ✘` (erro) → é problema de configuração/token existente, não falta de instalação. Avisar o usuário do erro específico (ex: 401, comando não encontrado) e perguntar como prosseguir — não tentar adivinhar/corrigir credencial sozinho.
-- Se **não aparecer nenhum servidor `gitlab`** → seguir para o passo 2 (autoinstalação).
+1. **MCP:** `gitlab: ... - ✔ Connected` **e** o `ToolSearch` carrega as tools `mcp__gitlab__*` → usar MCP. Seguir para `toolsearch.md`.
+2. **glab:** MCP ausente, com erro ou sem tools nesta sessão, mas `glab auth status` mostra `✓ Logged in to <host>` → usar `glab`. Seguir `glab.md`. Não instalar MCP, não pedir token, não pedir sessão nova. Avisar em uma linha: "MCP do GitLab não está conectado; usando o glab (logado como <usuário>)."
+   - Conferir que o host logado bate com o host do remote do repo (`git remote get-url origin`). Se não bater, tratar como sem glab.
+3. **MCP com erro e sem glab:** `gitlab: ... - ✘` → problema de configuração/token existente. Avisar o erro específico (ex: 401) e perguntar como prosseguir — não adivinhar/corrigir credencial sozinho.
+4. **Nenhum dos dois:** seguir para o passo 2 (autoinstalação do MCP). Mencionar que instalar e logar o `glab` (`glab auth login`) também resolve, sem precisar de sessão nova.
 
-## 2. Autoinstalação (quando o MCP `gitlab` não existe em nenhum escopo)
+## 2. Autoinstalação (quando não há MCP `gitlab` em nenhum escopo nem `glab` logado)
 
 **Nunca hardcodar ou escrever um token de GitLab dentro de arquivos desta skill** (SKILL.md, references/*, templates/*). Esses arquivos podem ser versionados/compartilhados — gravar um Personal Access Token aqui seria vazar uma credencial. O token só pode existir dentro do comando `claude mcp add` executado via Bash (que grava em `~/.claude.json`, fora do controle desta skill) ou nas variáveis de ambiente do processo.
 

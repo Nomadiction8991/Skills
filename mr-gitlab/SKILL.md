@@ -1,6 +1,6 @@
 ---
 name: mr-gitlab
-description: "Consulta, comenta, aprova, cria ou atualiza Merge Requests (MRs) no GitLab. Use via /gitlab ou SEMPRE que a palavra 'mr' (isolada ou dentro da frase) aparecer se referindo a Merge Request do GitLab, mesmo sem sintaxe exata — ex: 'abre uma mr pra isso', 'o que tem na mr 123', 'comenta na mr que...', 'aprova a mr 45', 'lista as mrs abertas', 'muda o título da mr 12'. Também aciona por 'merge request' ou 'pull request do gitlab' por extenso. Se o MCP do GitLab ainda não estiver instalado/conectado nesta sessão, a skill se autoinstala antes de qualquer operação. Do NOT use for local git commits, pushes, or code review — GitLab MRs only."
+description: "Consulta, comenta, aprova, cria ou atualiza Merge Requests (MRs) no GitLab. Use via /gitlab ou SEMPRE que a palavra 'mr' (isolada ou dentro da frase) aparecer se referindo a Merge Request do GitLab, mesmo sem sintaxe exata — ex: 'abre uma mr pra isso', 'o que tem na mr 123', 'comenta na mr que...', 'aprova a mr 45', 'lista as mrs abertas', 'muda o título da mr 12'. Também aciona por 'merge request' ou 'pull request do gitlab' por extenso. Usa o MCP do GitLab; se ele não estiver conectado, usa o glab (CLI do GitLab) quando estiver logado; só autoinstala o MCP se nenhum dos dois existir. Do NOT use for local git commits, pushes, or code review — GitLab MRs only."
 model: haiku
 effort: medium
 argument-hint: "listar [filtro] | ver <id> | comentar <id> <mensagem> | aprovar <id> | aprovar <id> | criar <descrição> | atualizar <id> <o que mudar> | merge <id>"
@@ -9,13 +9,14 @@ allowed-tools: Read Bash mcp__gitlab__list_merge_requests mcp__gitlab__get_merge
 
 # Skill — GitLab (Merge Requests)
 
-Você é um assistente que gerencia Merge Requests no GitLab via MCP.
+Você é um assistente que gerencia Merge Requests no GitLab via MCP ou, na falta dele, via `glab` (CLI do GitLab).
 
 ## Referências
 
 Leia os arquivos relevantes antes de executar qualquer fluxo:
 
-- **Instalação/autoinstalação do MCP (ler PRIMEIRO, sempre, antes de qualquer operação):** `references/install.md`
+- **Detectar acesso (MCP ou glab) e autoinstalação (ler PRIMEIRO, sempre, antes de qualquer operação):** `references/install.md`
+- **Fallback via glab (quando o MCP não está conectado):** `references/glab.md`
 - **Regras gerais (não negociáveis, valem para toda operação):** `references/regras-gerais.md`
 - **Listar MRs:** `references/listar.md`
 - **Ver MR:** `references/ver.md`
@@ -29,8 +30,8 @@ Leia os arquivos relevantes antes de executar qualquer fluxo:
 
 ## Ordem de execução obrigatória
 
-1. **Sempre primeiro:** ler `references/install.md` e confirmar que o MCP `gitlab` está conectado nesta sessão. Se não estiver, seguir o fluxo de autoinstalação ali descrito antes de tentar qualquer tool.
-2. Ler `references/toolsearch.md` e carregar via `ToolSearch` os schemas das tools que serão usadas no fluxo pedido.
+1. **Sempre primeiro:** ler `references/install.md` e detectar a via: MCP `gitlab` conectado → MCP; senão `glab` logado → glab; senão autoinstalação.
+2. Via MCP: ler `references/toolsearch.md` e carregar via `ToolSearch` os schemas das tools do fluxo. Via glab: ler `references/glab.md` e trocar cada tool `mcp__gitlab__*` do fluxo pelo comando equivalente da tabela.
 3. Ler `references/regras-gerais.md` antes de qualquer ação de escrita (comentar, aprovar, criar, atualizar, merge).
 4. Executar o fluxo pedido.
 
@@ -38,7 +39,7 @@ Leia os arquivos relevantes antes de executar qualquer fluxo:
 Usuário: "lista minhas MRs abertas" → ler `references/install.md` + `references/toolsearch.md`, chamar `list_merge_requests` sem `project_id` (`state: opened`) e listar uma por linha.
 
 ## Troubleshooting
-- MCP gitlab não conectado nesta sessão → seguir `references/install.md` (autoinstalação exige nova sessão).
+- MCP gitlab não conectado nesta sessão → checar `glab auth status`; se logado, usar `references/glab.md`. Só sem glab seguir a autoinstalação de `references/install.md` (exige nova sessão).
 - `InputValidationError` ao chamar tool → fazer ToolSearch do schema antes (`references/toolsearch.md`).
 
 ## Roteamento

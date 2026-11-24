@@ -19,3 +19,5 @@ A skill `/gitlab` deve fazer esse `ToolSearch` automaticamente logo após confir
 ## Pré-requisito
 
 Este passo só funciona se o MCP `gitlab` já estiver **conectado nesta sessão** (ver `install.md`). Um MCP recém-adicionado via `claude mcp add` só aparece disponível numa sessão nova — `ToolSearch` não consegue carregar schema de um servidor que a sessão atual nunca conectou.
+
+Se o `ToolSearch` não carregar as tools `mcp__gitlab__*`, não parar: usar o `glab` conforme `glab.md` (se estiver logado).

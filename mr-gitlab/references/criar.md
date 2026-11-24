@@ -30,13 +30,13 @@ Usar quando o pedido mencionar publicar branches, escadinha, stack, pilha, "uma 
 
 ### Passo 0 — Validar MCP (somente leitura, sem poluir o repo)
 
-1. `claude mcp list` → esperar `gitlab: ... - ✔ Connected`. Se não existir, seguir `install.md` antes de continuar.
+1. Detectar a via conforme `install.md` (MCP → glab → autoinstalação). **Via glab:** pular os itens 2–4 e validar com `glab auth status`, `glab api user`, `glab api "projects/<namespace%2Frepo>"` e `glab mr list` (não duplicar); criar com `glab mr create` conforme `glab.md`.
 2. `claude mcp get gitlab` → conferir escopo e `GITLAB_API_URL`, sem exibir o token.
 3. Teste funcional read-only com a mesma credencial do MCP (não cria/comenta nada):
    - `GET /user` → 200 (username autenticado).
    - `GET /projects/<namespace%2Frepo>` → 200 (id, path_with_namespace).
    - `GET /projects/<id>/merge_requests?state=opened` → 200 (lista de MRs abertas, para não duplicar).
-4. Exceção — somente se as tools `mcp__gitlab__*` estiverem indisponíveis/deferred nesta sessão (ToolSearch não carrega): usar fallback via API direta com o token já configurado em `~/.claude.json` (`mcpServers.gitlab.env`). Obter e usar o valor em processo único, sem `cat` e sem imprimir o token (ex.: script Python/`urllib` compacto que lê o JSON, extrai o token em memória e já faz a chamada com header `PRIVATE-TOKEN`); nunca exibir o token na resposta nem gravá-lo em arquivo da skill. Todas as chamadas usam como base o `GITLAB_API_URL` conferido no item 2. Endpoints mínimos: `GET /user` (id/username; `assignee_id` numérico quando necessário); `GET /projects/<namespace%2Frepo>` (id, path_with_namespace — path normalizado conforme `Normalização do remote`); `GET /projects/<id>/merge_requests?state=opened` (não duplicar); `POST /projects/<id>/merge_requests` com `source_branch`, `target_branch`, `title` e `description`, mais `assignee_id` só quando houver responsável (opções 1–2, id numérico); na opção 3 (Sem responsável), omitir o campo. A opção "Outra pessoa" exige resolver o nome via `GET /users?username=<nome>` para obter o id numérico antes do POST; nunca enviar username como `assignee_id`.
+4. Exceção — somente se as tools `mcp__gitlab__*` estiverem indisponíveis/deferred nesta sessão (ToolSearch não carrega) **e** o `glab` não estiver logado: usar fallback via API direta com o token já configurado em `~/.claude.json` (`mcpServers.gitlab.env`). Obter e usar o valor em processo único, sem `cat` e sem imprimir o token (ex.: script Python/`urllib` compacto que lê o JSON, extrai o token em memória e já faz a chamada com header `PRIVATE-TOKEN`); nunca exibir o token na resposta nem gravá-lo em arquivo da skill. Todas as chamadas usam como base o `GITLAB_API_URL` conferido no item 2. Endpoints mínimos: `GET /user` (id/username; `assignee_id` numérico quando necessário); `GET /projects/<namespace%2Frepo>` (id, path_with_namespace — path normalizado conforme `Normalização do remote`); `GET /projects/<id>/merge_requests?state=opened` (não duplicar); `POST /projects/<id>/merge_requests` com `source_branch`, `target_branch`, `title` e `description`, mais `assignee_id` só quando houver responsável (opções 1–2, id numérico); na opção 3 (Sem responsável), omitir o campo. A opção "Outra pessoa" exige resolver o nome via `GET /users?username=<nome>` para obter o id numérico antes do POST; nunca enviar username como `assignee_id`.
 
 ### Passo 1 — Detectar a escadinha (somente leitura)
 
@@ -117,7 +117,7 @@ Só avançar para o Passo 7 se todos os pushs funcionarem. Se um falhar, parar e
 
 ### Passo 7 — Criar as MRs encadeadas + verificar
 
-Via MCP (`mcp__gitlab__create_merge_request` com `project_id` normalizado conforme `Normalização do remote` — `namespace/repo` ou id do `GET /projects/...`, nunca a URL bruta do remote — `source_branch`, `target_branch`, `title`/`description` conforme o princípio central — 1 commit exclusivo — ou a síntese dos Passos 3–4 do modo único — 2+ commits, `assignee_id` se houver) ou via fallback API direta da exceção do Passo 0 (item 4) quando deferred. Uma MR por branch, na ordem 1→N.
+Via MCP (`mcp__gitlab__create_merge_request` com `project_id` normalizado conforme `Normalização do remote` — `namespace/repo` ou id do `GET /projects/...`, nunca a URL bruta do remote — `source_branch`, `target_branch`, `title`/`description` conforme o princípio central — 1 commit exclusivo — ou a síntese dos Passos 3–4 do modo único — 2+ commits, `assignee_id` se houver) ou via `glab mr create` (`glab.md`) quando o MCP não está conectado, ou via fallback API direta da exceção do Passo 0 (item 4) se nem glab houver. Uma MR por branch, na ordem 1→N.
 
 Após criar, verificar e exibir: lista de MRs abertas (`!<iid> <origem> -> <destino> | <título>` + `web_url`) e `git branch -vv` com upstream tracking.
 
@@ -210,7 +210,7 @@ Ler `../templates/mr.md` (formato único), preencher os `[colchetes]` com os dad
 
 ---
 
-### Passo 8 — Criar via MCP
+### Passo 8 — Criar via MCP (ou glab)
 
 ```
 mcp__gitlab__create_merge_request(
@@ -223,6 +223,6 @@ mcp__gitlab__create_merge_request(
 )
 ```
 
-Para descobrir `project_id`, seguir a seção `Normalização do remote` acima; nunca usar a URL bruta do remote. Em sessão deferred, usar o fallback via API direta da exceção do Passo 0 da escadinha (item 4).
+Para descobrir `project_id`, seguir a seção `Normalização do remote` acima; nunca usar a URL bruta do remote. Sem MCP conectado: usar `glab mr create ... --push=false --yes` (ver `glab.md`); só sem glab usar o fallback via API direta da exceção do Passo 0 da escadinha (item 4).
 
 Após a criação, exibir ao usuário o link/IID da MR retornado.
