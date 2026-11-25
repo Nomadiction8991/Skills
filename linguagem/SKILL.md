@@ -1,8 +1,6 @@
 ---
 name: linguagem
 description: "Define o idioma e o formato das respostas em português brasileiro. Use quando o usuário ou outra skill precisar aplicar os modos `simples`, `tecnica`, `separada` ou `simples-com-termos`; também pode ser chamada manualmente com `/linguagem`. O modo padrão é `simples-com-termos`. Do NOT use for coding tasks — response language and formatting only."
-model: haiku
-effort: low
 argument-hint: "[modo]"
 allowed-tools: Read
 ---

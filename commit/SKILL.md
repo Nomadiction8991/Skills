@@ -1,8 +1,6 @@
 ---
 name: commit
 description: "Avalia pendentes, separa em branches/MRs empilhadas e cria commits conventional commits. Use via /commit ou sempre que o usuário falar sobre commit/comitar, separar mudanças em branches, dividir MR, empilhar branches ou 1 branch 1 MR. Do NOT use for creating MRs, reviewing code, or pushing branches."
-model: haiku
-effort: low
 argument-hint: "[mensagem | separar]"
 allowed-tools: Read Bash Grep Glob
 ---

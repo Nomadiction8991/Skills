@@ -1,8 +1,6 @@
 ---
 name: mr-gitlab
 description: "Consulta, comenta, aprova, cria ou atualiza Merge Requests (MRs) no GitLab. Use via /gitlab ou SEMPRE que a palavra 'mr' (isolada ou dentro da frase) aparecer se referindo a Merge Request do GitLab, mesmo sem sintaxe exata — ex: 'abre uma mr pra isso', 'o que tem na mr 123', 'comenta na mr que...', 'aprova a mr 45', 'lista as mrs abertas', 'muda o título da mr 12'. Também aciona por 'merge request' ou 'pull request do gitlab' por extenso. Usa o MCP do GitLab; se ele não estiver conectado, usa o glab (CLI do GitLab) quando estiver logado; só autoinstala o MCP se nenhum dos dois existir. Do NOT use for local git commits, pushes, or code review — GitLab MRs only."
-model: haiku
-effort: medium
 argument-hint: "listar [filtro] | ver <id> | comentar <id> <mensagem> | aprovar <id> | aprovar <id> | criar <descrição> | atualizar <id> <o que mudar> | merge <id>"
 allowed-tools: Read Bash mcp__gitlab__list_merge_requests mcp__gitlab__get_merge_request mcp__gitlab__get_merge_request_diffs mcp__gitlab__list_merge_request_changed_files mcp__gitlab__create_merge_request mcp__gitlab__update_merge_request mcp__gitlab__create_merge_request_note mcp__gitlab__create_merge_request_discussion_note mcp__gitlab__get_merge_request_notes mcp__gitlab__approve_merge_request mcp__gitlab__unapprove_merge_request mcp__gitlab__get_merge_request_approval_state mcp__gitlab__merge_merge_request
 ---

@@ -1,8 +1,6 @@
 ---
 name: manter-sessao
 description: "Instala no crontab do usuário um agendamento que envia uma mensagem mínima (\"oi\") ao Claude Code em horários fixos, para ancorar o reset da janela de uso de 5h perto do meio dos turnos de trabalho do usuário. Use quando o usuário pedir para manter/alinhar a sessão do Claude, resetar o limite de uso num horário específico, ou mencionar 'janela de 5h' / 'sessão de 5h' junto com turnos de trabalho. Do NOT use for general scheduling or one-off reminders."
-model: haiku
-effort: low
 argument-hint: "[turnos]"
 allowed-tools: Read Bash
 ---

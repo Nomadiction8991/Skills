@@ -1,8 +1,6 @@
 ---
 name: chamado-tomticket
 description: "Abre, edita, lê, comenta, transfere ou pesquisa/resume chamados de suporte no TomTicket. Use via /chamado ou SEMPRE que a palavra chamado/ticket aparecer em qualquer frase do usuário envolvendo o TomTicket, mesmo que a frase não siga um padrão exato — inclusive pedidos indiretos como quero comentar no chamado o que fizemos pra resolver, referenciando um commit/branch/PR. Não é preciso a frase citar comentar_chamado/editar_chamado explicitamente; o gatilho é a menção ao chamado, não a sintaxe do pedido. Outros exemplos: abre um chamado sobre X, edita o chamado 3790, o que tem no chamado 3790, comenta no chamado 3790 que..., transfere o chamado 3790 pra..., resumo dos chamados do cliente X, quantos chamados abertos no Suporte, mesmo sem digitar a barra. Do NOT use for git commits or MRs that only cite a ticket number — use /commit or /gitlab."
-effort: low
-model: haiku
 argument-hint: "abrir <descrição> | editar <número> <o que editar> | ler <número> | comentar <número> <mensagem> | transferir <número> <departamento/operador> | pesquisar <critério>"
 allowed-tools: Read Bash mcp__tomticket__buscar_cliente mcp__tomticket__listar_departamentos mcp__tomticket__listar_categorias mcp__tomticket__listar_operadores mcp__tomticket__listar_status mcp__tomticket__listar_chamados mcp__tomticket__criar_chamado mcp__tomticket__editar_chamado mcp__tomticket__ver_chamado mcp__tomticket__comentar_chamado mcp__tomticket__transferir_chamado mcp__tomticket__alterar_status_chamado mcp__tomticket__preparar_upload mcp__gitlab__list_merge_requests mcp__gitlab__get_merge_request
 ---
